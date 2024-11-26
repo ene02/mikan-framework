@@ -8,9 +8,12 @@ namespace Toolbox.Tests;
 /// </summary>
 public partial class MainWindow
 {
+    private readonly Toolbox.Audio.SoundPlayer _soundPlayer = new Toolbox.Audio.SoundPlayer();
+    
     public MainWindow()
     {
         InitializeComponent();
+        MusicPlayerSelectionButton.Click += MusicPlayerSelectionButton_Click;
     }
 
     private void MusicPlayerSelectionButton_Click(object sender, RoutedEventArgs e)
@@ -26,7 +29,7 @@ public partial class MainWindow
 
         if (result == true)
         {
-            // TODO: Do stuff with the file selected.
+            _soundPlayer.Play(dialog.FileName);
         }
     }
 }

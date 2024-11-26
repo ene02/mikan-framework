@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Toolbox.Tests"
         mc:Ignorable="d"
-        Title="EneSoundPlayer" Height="450" Width="800">
+        Title="Toolbox.UI" Height="450" Width="800">
     <Grid x:Name="RootGrid" Background="#FF121212">
         <ScrollViewer x:Name="ScrollViewer">
             <StackPanel x:Name="Elements">
