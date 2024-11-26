@@ -1,33 +1,32 @@
 ﻿using System.Windows;
 using Microsoft.Win32;
 
-namespace Toolbox.Tests
+namespace Toolbox.Tests;
+
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public MainWindow()
     {
-        public MainWindow()
+        InitializeComponent();
+    }
+
+    private void MusicPlayerSelectionButton_Click(object sender, RoutedEventArgs e)
+    {
+        OpenFileDialog dialog = new()
         {
-            InitializeComponent();
-        }
+            CheckFileExists = true,
+            ShowHiddenItems = true,
+            Filter = "mp3|*.mp3|All files|*.*"
+        };
 
-        private void MusicPlayerSelectionButton_Click(object sender, RoutedEventArgs e)
+        bool? result = dialog.ShowDialog();
+
+        if (result == true)
         {
-            OpenFileDialog dialog = new()
-            {
-                CheckFileExists = true,
-                ShowHiddenItems = true,
-                Filter = "mp3|*.mp3|All files|*.*"
-            };
-
-            bool? result = dialog.ShowDialog();
-
-            if (result == true)
-            {
-                // TODO: Do stuff with the file selected.
-            }
+            // TODO: Do stuff with the file selected.
         }
     }
 }
