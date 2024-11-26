@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
-namespace Toolbox
+namespace Toolbox.IO
 {
     static public class FilenameParser
     {
@@ -28,7 +23,7 @@ namespace Toolbox
                         string fpn = fullParsedName.ToString();
                         string nxn = noExtParsedName.ToString();
 
-                        if (canIncludeExtension || nxn.ToString() == string.Empty)
+                        if (canIncludeExtension || nxn == string.Empty)
                         {
                             return new string(fpn.Reverse().ToArray());
                         }

@@ -12,7 +12,9 @@
                 <TextBlock x:Name="TrackTitle" TextWrapping="Wrap" Text="No file selected" Foreground="White" Margin="20,10,0,0" FontSize="20"/>
                 <Button x:Name="MusicPlayerSelectionButton" Content="Select song" HorizontalAlignment="Left" Margin="20,5,0,0" Width="119" Height="38"/>
                 <TextBlock x:Name="TrackVolume" TextWrapping="Wrap" Text="Volume (%100)" Foreground="White" Margin="20,10,0,0"/>
-                <Slider x:Name="VolumeSlider" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Margin="20,0,0,0" Maximum="1" SmallChange="0.1" TickFrequency="0.1" Value="1" IsSnapToTickEnabled="True"/>
+                <Slider x:Name="VolumeSlider" Margin="20,0,500,0" Maximum="1" SmallChange="0.1" TickFrequency="0.1" Value="1" IsSnapToTickEnabled="True"/>
+                <TextBlock x:Name="TrackTime" TextWrapping="Wrap" Text="Time (0:00)" Foreground="White" Margin="20,0,0,0"/>
+                <Slider x:Name="PositionSlider" Maximum="100" SmallChange="1" Value="1" IsSnapToTickEnabled="True" Margin="20,0,500,0"/>
             </StackPanel>
         </ScrollViewer>
 
