@@ -3,24 +3,34 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolbox", "toolbox\Toolbox.csproj", "{66F82494-47B0-44B5-B690-0FFB62AB7EC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolbox", "toolbox\Toolbox.csproj", "{66F82494-47B0-44B5-B690-0FFB62AB7EC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolbox.UsageSamples", "Toolbox.UsageSamples\Toolbox.UsageSamples.csproj", "{9359387E-43E2-4044-830D-EEA5D086045D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples", "Toolbox.UsageSamples\Samples.csproj", "{9359387E-43E2-4044-830D-EEA5D086045D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{66F82494-47B0-44B5-B690-0FFB62AB7EC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{66F82494-47B0-44B5-B690-0FFB62AB7EC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66F82494-47B0-44B5-B690-0FFB62AB7EC2}.Debug|x86.ActiveCfg = Debug|x86
+		{66F82494-47B0-44B5-B690-0FFB62AB7EC2}.Debug|x86.Build.0 = Debug|x86
 		{66F82494-47B0-44B5-B690-0FFB62AB7EC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66F82494-47B0-44B5-B690-0FFB62AB7EC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66F82494-47B0-44B5-B690-0FFB62AB7EC2}.Release|x86.ActiveCfg = Release|x86
+		{66F82494-47B0-44B5-B690-0FFB62AB7EC2}.Release|x86.Build.0 = Release|x86
 		{9359387E-43E2-4044-830D-EEA5D086045D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9359387E-43E2-4044-830D-EEA5D086045D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9359387E-43E2-4044-830D-EEA5D086045D}.Debug|x86.ActiveCfg = Debug|x86
+		{9359387E-43E2-4044-830D-EEA5D086045D}.Debug|x86.Build.0 = Debug|x86
 		{9359387E-43E2-4044-830D-EEA5D086045D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9359387E-43E2-4044-830D-EEA5D086045D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9359387E-43E2-4044-830D-EEA5D086045D}.Release|x86.ActiveCfg = Release|x86
+		{9359387E-43E2-4044-830D-EEA5D086045D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,16 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Toolbox.Tests"
         mc:Ignorable="d"
-        Title="Toolbox.UI" Height="450" Width="800">
+        Title="Toolbox.Audio.UI" Height="450" Width="800">
     <Grid x:Name="RootGrid" Background="#FF121212">
         <ScrollViewer x:Name="ScrollViewer">
             <StackPanel x:Name="Elements">
-                <TextBlock x:Name="TrackTitle" TextWrapping="Wrap" Text="No file selected" Foreground="White" Margin="20,10,0,0" FontSize="20"/>
-                <Button x:Name="MusicPlayerSelectionButton" Content="Select song" HorizontalAlignment="Left" Margin="20,5,0,0" Width="119" Height="38"/>
+                <TextBlock x:Name="TrackTitle" TextWrapping="Wrap" Text="No file selected" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,10,0,0"/>
+                <Button x:Name="MusicPlayerSelectionButton" Content="Select song" HorizontalAlignment="Center" Width="119" Height="38" Margin="0,10,0,0"/>
                 <TextBlock x:Name="TrackVolume" TextWrapping="Wrap" Text="Volume (%100)" Foreground="White" Margin="20,10,0,0"/>
-                <Slider x:Name="VolumeSlider" Margin="20,0,500,0" Maximum="1" SmallChange="0.1" TickFrequency="0.1" Value="1" IsSnapToTickEnabled="True"/>
-                <TextBlock x:Name="TrackTime" TextWrapping="Wrap" Text="Time (0:00)" Foreground="White" Margin="20,0,0,0"/>
-                <Slider x:Name="PositionSlider" Maximum="100" SmallChange="1" Value="1" IsSnapToTickEnabled="True" Margin="20,0,500,0"/>
+                <Slider x:Name="VolumeSlider" Maximum="1" SmallChange="0.01" TickFrequency="0.1" Value="1" RenderTransformOrigin="0.5,0.5" Width="200" HorizontalAlignment="Left" Margin="-20,0,0,0" LargeChange="0.1">
+                    <Slider.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="0.6" ScaleY="0.6"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Slider.RenderTransform>
+                </Slider>
+                <TextBlock x:Name="TrackTime" TextWrapping="Wrap" Text="(0:00 - 0:00)" Foreground="White" Margin="20,0,0,0"/>
+                <Slider x:Name="PositionSlider" Maximum="1" VerticalAlignment="Bottom" Margin="20,0,20,0" Background="#FF191919" BorderBrush="#FF424242" LargeChange="0.1" TickFrequency="0.1" IsSnapToTickEnabled="True"/>
             </StackPanel>
         </ScrollViewer>
 
