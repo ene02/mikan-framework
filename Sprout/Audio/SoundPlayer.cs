@@ -3,7 +3,7 @@ using ManagedBass.Fx;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 
-namespace Toolbox.Audio;
+namespace Sprout.Audio;
 
 /// <summary>
 /// A basic single SoundPlayer based on BASS.Net

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolbox", "Toolbox\Toolbox.csproj", "{66F82494-47B0-44B5-B690-0FFB62AB7EC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sprout", "Sprout\Sprout.csproj", "{66F82494-47B0-44B5-B690-0FFB62AB7EC2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toolbox.WPF.UI", "Toolbox.WPF.UI\Toolbox.WPF.UI.csproj", "{9359387E-43E2-4044-830D-EEA5D086045D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sprout.WPF.UI", "Sprout.WPF.UI\Sprout.WPF.UI.csproj", "{9359387E-43E2-4044-830D-EEA5D086045D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

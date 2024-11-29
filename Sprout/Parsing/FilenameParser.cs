@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Toolbox.IO;
+namespace Sprout.IO;
 
 public static class FilenameParser
 {
