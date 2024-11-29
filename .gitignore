@@ -385,3 +385,4 @@ FodyWeavers.xsd
 /Sprout.WPF.UI/MainWindow.xaml
 /Sprout.WPF.UI/Sprout.WPF.UI.csproj
 /Sprout.WPF.UI/MainWindow.xaml.cs
+/Sprout.WPF.UI/App.xaml.cs
