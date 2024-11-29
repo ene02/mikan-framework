@@ -1,28 +1,48 @@
 using ManagedBass;
 using ManagedBass.Fx;
 using System.Diagnostics;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Sprout.Audio;
 
 /// <summary>
-/// A basic single SoundPlayer based on BASS.Net
+/// A basic sound player class based on the BASS library.
 /// </summary>
 public class SoundPlayer : IDisposable
 {
-    private bool _isDisposed, _isPlaying;
-    private int _streamHandle = -1;
-    private double _volume = 1;
-    private float _panning = 0;
-    private float _speed = 0;
-    private float _pitch = 0;
+    private bool _isDisposed, _isPlaying; // States.
+    private int _streamHandle = -1; // Handle.
+    private float _volume = 1, _panning = 0, _speed = 0, _pitch = 0; // Channel attributes.
+    private int? _highPassFilter = null, _lowPassFilter = null; // Hz pass.
     private bool _isSettingsGlobal = true;
 
-    public double Volume => _volume;
+    /// <summary>
+    /// Current volume.
+    /// </summary>
+    public float Volume => _volume;
+
+    /// <summary>
+    /// Current panning.
+    /// </summary>
     public float Panning => _panning;
+
+    /// <summary>
+    /// Current speed.
+    /// </summary>
     public float Speed => _speed;
+
+    /// <summary>
+    /// Current pitch.
+    /// </summary>
     public float Pitch => _pitch;
+
+    /// <summary>
+    /// Returns a true or false depending if the SoundPlayer was disposed.
+    /// </summary>
     public bool IsDisposed => _isDisposed;
+
+    /// <summary>
+    /// Current playback state.
+    /// </summary>
     public bool IsPlaying => _isPlaying;
 
     /// <summary>
@@ -41,8 +61,14 @@ public class SoundPlayer : IDisposable
         }
     }
 
-    public EventHandler PlaybackEnded;
+    /// <summary>
+    /// Event that triggers when playback ends.
+    /// </summary>
+    public EventHandler? PlaybackEnded;
 
+    /// <summary>
+    /// Returns the audio file time lenght in seconds.
+    /// </summary>
     public double AudioLenght
     {
         get
@@ -108,16 +134,13 @@ public class SoundPlayer : IDisposable
 
             if (_isSettingsGlobal)
             {
-                SetVolume(_volume);
-                SetPanning(_panning);
-                SetSpeed(_speed);
-                SetPitch(_pitch);
+                SetGlobalAttributes();
             }
 
             // playback ended event.
             Bass.ChannelSetSync(_streamHandle, SyncFlags.End, 0, (handle, channel, data, user) =>
             {
-                PlaybackEnded.Invoke(this, EventArgs.Empty);
+                PlaybackEnded?.Invoke(this, EventArgs.Empty);
 
                 _isPlaying = false;
 
@@ -159,18 +182,6 @@ public class SoundPlayer : IDisposable
     }
 
     /// <summary>
-    /// Sets the volume of the current sound player.
-    /// </summary>
-    /// <param name="volume"></param>
-    public void SetVolume(double volume)
-    {
-        if (_streamHandle != 0)
-            Bass.ChannelSetAttribute(_streamHandle, ChannelAttribute.Volume, volume);
-
-        _volume = volume;
-    }
-
-    /// <summary>
     /// Change the position of the audio playback in miliseconds.
     /// </summary>
     /// <param name="miliseconds"></param>
@@ -183,31 +194,46 @@ public class SoundPlayer : IDisposable
         }
     }
 
-    public void SetPanning(float panning) // TODO: this can cause a crash because the panning value can be higher than 1 or less than -1.
+    public void SetVolume(float volume) => SetAttribute(_streamHandle, ChannelAttribute.Volume, volume);
+
+    public void SetPanning(float panning) => SetAttribute(_streamHandle, ChannelAttribute.Pan, panning);
+
+    public void SetSpeed(float speed) => SetAttribute(_streamHandle, ChannelAttribute.Tempo, speed);
+
+    public void SetPitch(float pitch) => SetAttribute(_streamHandle, ChannelAttribute.Pitch, pitch);
+
+    private void SetAttribute(int handle, ChannelAttribute attribute, float value)
     {
         if (_streamHandle != 0)
+            return;
+
+        Bass.ChannelSetAttribute(_streamHandle, attribute, value);
+
+        if (attribute == ChannelAttribute.Volume)
         {
-            Bass.ChannelSetAttribute(_streamHandle, ChannelAttribute.Pan, panning);
-            _panning = panning;
+            _volume = value;
         }
+        else if (attribute == ChannelAttribute.Pan)
+        {
+            _panning = value;
+        }
+        else if (attribute == ChannelAttribute.Tempo)
+        {
+            _speed = value;
+        }
+        else if (attribute == ChannelAttribute.Pitch)
+        {
+            _pitch = value;
+        }
+
     }
 
-    public void SetSpeed(float speed)
+    private void SetGlobalAttributes()
     {
-        if (_streamHandle != 0)
-        {
-            Bass.ChannelSetAttribute(_streamHandle, ChannelAttribute.Tempo, speed);
-            _speed = speed;
-        }
-    }
-
-    public void SetPitch(float pitch)
-    {
-        if (_streamHandle != 0)
-        {
-            Bass.ChannelSetAttribute(_streamHandle, ChannelAttribute.Pitch, pitch);
-            _pitch = pitch;
-        }
+        SetVolume(_volume);
+        SetPanning(_panning);
+        SetSpeed(_speed);
+        SetPitch(_pitch);
     }
 
     /// <summary>
