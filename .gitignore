@@ -376,3 +376,11 @@ FodyWeavers.xsd
 /Toolbox.WPF.UI/MainWindow.xaml
 /Toolbox.WPF.UI/MainWindow.xaml.cs
 /Toolbox.WPF.UI/Toolbox.WPF.UI.csproj
+/Sampling.WPF.UI/App.xaml
+/Sampling.WPF.UI/AssemblyInfo.cs
+/Sampling.WPF.UI/MainWindow.xaml
+/Sampling.WPF.UI/Sampling.WPF.UI.csproj
+/Sprout.WPF.UI/App.xaml
+/Sprout.WPF.UI/AssemblyInfo.cs
+/Sprout.WPF.UI/MainWindow.xaml
+/Sprout.WPF.UI/Sprout.WPF.UI.csproj
