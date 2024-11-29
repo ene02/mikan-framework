@@ -362,3 +362,11 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Toolbox.UsageSamples/Samples.csproj
+/Toolbox.UsageSamples/MainWindow.xaml
+/Toolbox.UsageSamples/AssemblyInfo.cs
+/Toolbox.UsageSamples/App.xaml
+/Toolbox.UsageSamples/App.xaml
+/Toolbox.UsageSamples/App.xaml.cs
+/Toolbox.UsageSamples/AssemblyInfo.cs
+/Toolbox.UsageSamples/MainWindow.xaml
+/Toolbox.UsageSamples/MainWindow.xaml.cs
