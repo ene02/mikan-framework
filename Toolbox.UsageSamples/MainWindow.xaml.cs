@@ -11,6 +11,7 @@ public partial class MainWindow
 {
     private readonly Toolbox.Audio.SoundPlayer _soundPlayer = new Toolbox.Audio.SoundPlayer();
     private bool _timeSliderPressed = false;
+    private string _filepath;
 
     public MainWindow()
     {
@@ -20,6 +21,9 @@ public partial class MainWindow
         PositionSlider.PreviewMouseLeftButtonDown += PositionSlider_PreviewMouseLeftButtonDown;
         PositionSlider.PreviewMouseLeftButtonUp += PositionSlider_PreviewMouseLeftButtonUp;
         PositionSlider.ValueChanged += PositionSlider_ValueChanged;
+        PanningSlider.ValueChanged += PanningSlider_ValueChanged;
+        SpeedSlider.ValueChanged += SpeedSlider_ValueChanged;
+        PitchSlider.ValueChanged += PitchSlider_ValueChanged;
 
         _soundPlayer.PlaybackEnded += (s, e) =>
         {
@@ -30,8 +34,31 @@ public partial class MainWindow
         };
     }
 
+    private void SpeedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        _soundPlayer.SetSpeed((float)e.NewValue);
+        VelocidadTitle.Text = $"Velocidad ({Math.Round(e.NewValue, 1)})";
+    }
+
+    private void PitchSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        _soundPlayer.SetPitch((float)e.NewValue);
+        PitchTitle.Text = $"Agudez ({Math.Round(e.NewValue, 1)})";
+    }
+
+    private void PanningSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        _soundPlayer.SetPanning((float)e.NewValue);
+        PanningTitle.Text = $"Lado ({Math.Round(e.NewValue, 1)})";
+    }
+
     private void PositionSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
+        if (!_soundPlayer.IsPlaying) // If the song already ended (disposed)...
+        {
+            _soundPlayer.Play(_filepath); // restart song before applying position changes.
+        }
+
         if (_timeSliderPressed)
         {
             _soundPlayer.SetPosition((int)e.NewValue * 1000);
@@ -55,7 +82,7 @@ public partial class MainWindow
     private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         _soundPlayer.SetVolume(e.NewValue);
-        TrackVolume.Text = $"Volume (%{Math.Round(e.NewValue * 100, 0)})";
+        TrackVolume.Text = $"Volumen (%{Math.Round(e.NewValue * 100, 0)})";
     }
 
     private void MusicPlayerSelectionButton_Click(object sender, RoutedEventArgs e)
@@ -71,8 +98,10 @@ public partial class MainWindow
 
         if (result == true)
         {
-            _soundPlayer.Play(dialog.FileName);
-            TrackTitle.Text = FilenameParser.Get(dialog.FileName);
+            _filepath = dialog.FileName;
+
+            _soundPlayer.Play(_filepath);
+            TrackTitle.Text = FilenameParser.Get(_filepath);
             TrackTime.Text = $"(0:00 - {ConvertToMinAndSec(_soundPlayer.AudioLenght)})";
             PositionSlider.Maximum = _soundPlayer.AudioLenght;
             MonitorTrackPosition();

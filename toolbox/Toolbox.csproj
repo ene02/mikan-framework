@@ -9,7 +9,8 @@
 
   <ItemGroup>
     <PackageReference Include="ManagedBass" Version="3.1.1" />
-    <PackageReference Include="Toolbox.Libs" Version="1.0.0" />
+    <PackageReference Include="ManagedBass.Fx" Version="3.1.1" />
+    <PackageReference Include="Toolbox.Libs" Version="1.0.1" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 using ManagedBass;
+using ManagedBass.Fx;
 using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 
@@ -12,10 +13,33 @@ public class SoundPlayer : IDisposable
     private bool _isDisposed, _isPlaying;
     private int _streamHandle = -1;
     private double _volume = 1;
+    private float _panning = 0;
+    private float _speed = 0;
+    private float _pitch = 0;
+    private bool _isSettingsGlobal = true;
 
     public double Volume => _volume;
+    public float Panning => _panning;
+    public float Speed => _speed;
+    public float Pitch => _pitch;
     public bool IsDisposed => _isDisposed;
     public bool IsPlaying => _isPlaying;
+
+    /// <summary>
+    /// Sets if new files should keep using the given attributes or if should they start with new ones.
+    /// </summary>
+    public bool IsSettingsGlobal
+    {
+        get
+        {
+            return _isSettingsGlobal;
+        }
+
+        set
+        {
+            _isSettingsGlobal = value;
+        }
+    }
 
     public EventHandler PlaybackEnded;
 
@@ -68,7 +92,10 @@ public class SoundPlayer : IDisposable
         try
         {
             // create stream from filepath.
-            _streamHandle = Bass.CreateStream(filePath);
+            _streamHandle = Bass.CreateStream(filePath, 0, 0, BassFlags.Decode);
+
+            // wrap the stream into a tempo stream for better managment.
+            _streamHandle = BassFx.TempoCreate(_streamHandle, BassFlags.Default);
 
             if (_streamHandle == 0)
                 throw new InvalidOperationException("Failed to create stream: " + Bass.LastError);
@@ -79,7 +106,13 @@ public class SoundPlayer : IDisposable
 
             _isPlaying = true;
 
-            SetVolume(_volume);
+            if (_isSettingsGlobal)
+            {
+                SetVolume(_volume);
+                SetPanning(_panning);
+                SetSpeed(_speed);
+                SetPitch(_pitch);
+            }
 
             // playback ended event.
             Bass.ChannelSetSync(_streamHandle, SyncFlags.End, 0, (handle, channel, data, user) =>
@@ -147,6 +180,33 @@ public class SoundPlayer : IDisposable
         {
             long newPos = Bass.ChannelSeconds2Bytes(_streamHandle, miliseconds / 1000);
             Bass.ChannelSetPosition(_streamHandle, newPos);
+        }
+    }
+
+    public void SetPanning(float panning) // TODO: this can cause a crash because the panning value can be higher than 1 or less than -1.
+    {
+        if (_streamHandle != 0)
+        {
+            Bass.ChannelSetAttribute(_streamHandle, ChannelAttribute.Pan, panning);
+            _panning = panning;
+        }
+    }
+
+    public void SetSpeed(float speed)
+    {
+        if (_streamHandle != 0)
+        {
+            Bass.ChannelSetAttribute(_streamHandle, ChannelAttribute.Tempo, speed);
+            _speed = speed;
+        }
+    }
+
+    public void SetPitch(float pitch)
+    {
+        if (_streamHandle != 0)
+        {
+            Bass.ChannelSetAttribute(_streamHandle, ChannelAttribute.Pitch, pitch);
+            _pitch = pitch;
         }
     }
 

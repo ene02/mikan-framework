@@ -9,9 +9,9 @@
     <Grid x:Name="RootGrid" Background="#FF121212">
         <ScrollViewer x:Name="ScrollViewer">
             <StackPanel x:Name="Elements">
-                <TextBlock x:Name="TrackTitle" TextWrapping="Wrap" Text="No file selected" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,10,0,0"/>
-                <Button x:Name="MusicPlayerSelectionButton" Content="Select song" HorizontalAlignment="Center" Width="119" Height="38" Margin="0,10,0,0"/>
-                <TextBlock x:Name="TrackVolume" TextWrapping="Wrap" Text="Volume (%100)" Foreground="White" Margin="20,10,0,0"/>
+                <TextBlock x:Name="TrackTitle" TextWrapping="Wrap" Text="Nada seleccionado" Foreground="White" FontSize="20" TextAlignment="Center" Margin="0,10,0,0"/>
+                <Button x:Name="MusicPlayerSelectionButton" Content="Elegir cancion" HorizontalAlignment="Center" Width="119" Height="38" Margin="0,10,0,0"/>
+                <TextBlock x:Name="TrackVolume" TextWrapping="Wrap" Text="Volumen (%100)" Foreground="White" Margin="20,10,0,0"/>
                 <Slider x:Name="VolumeSlider" Maximum="1" SmallChange="0.01" TickFrequency="0.1" Value="1" RenderTransformOrigin="0.5,0.5" Width="200" HorizontalAlignment="Left" Margin="-20,0,0,0" LargeChange="0.1">
                     <Slider.RenderTransform>
                         <TransformGroup>
@@ -24,6 +24,12 @@
                 </Slider>
                 <TextBlock x:Name="TrackTime" TextWrapping="Wrap" Text="(0:00 - 0:00)" Foreground="White" Margin="20,0,0,0"/>
                 <Slider x:Name="PositionSlider" Maximum="1" VerticalAlignment="Bottom" Margin="20,0,20,0" Background="#FF191919" BorderBrush="#FF424242" LargeChange="0.1" TickFrequency="0.1" IsSnapToTickEnabled="True"/>
+                <TextBlock x:Name="PanningTitle" TextWrapping="Wrap" Text="Lado (0)" Foreground="White" Margin="20,30,20,0"/>
+                <Slider x:Name="PanningSlider" Maximum="1" Background="#FF191919" BorderBrush="#FF424242" LargeChange="0.1" TickFrequency="0.1" Margin="20,0,20,0" TickPlacement="BottomRight" Minimum="-1"/>
+                <TextBlock x:Name="VelocidadTitle" TextWrapping="Wrap" Text="Velocidad (0)" Foreground="White" Margin="20,5,20,0"/>
+                <Slider x:Name="SpeedSlider" Maximum="200" Background="#FF191919" BorderBrush="#FF424242" LargeChange="0.1" TickFrequency="0.1" Margin="20,5,20,0" Minimum="-200"/>
+                <TextBlock x:Name="PitchTitle" TextWrapping="Wrap" Text="Agudez (0)" Foreground="White" Margin="20,5,20,0"/>
+                <Slider x:Name="PitchSlider" Background="#FF191919" BorderBrush="#FF424242" LargeChange="0.1" TickFrequency="0.1" Margin="20,5,20,0" Minimum="-10" AutoToolTipPlacement="TopLeft"/>
             </StackPanel>
         </ScrollViewer>
 
