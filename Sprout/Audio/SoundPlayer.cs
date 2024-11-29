@@ -11,20 +11,22 @@ namespace Sprout.Audio;
 /// </summary>
 public class SoundPlayer : IDisposable
 {
+    public const float DEFAULT_VOLUME = 1, DEFAULT_PANNING = 0, DEFAULT_SPEED = 0, DEFAULT_PITCH = 0;
+
+    private bool _isDisposed, _isPlaying; // States.
+    private int _streamHandle = -1, _filterHandle; // Handles.
+    private float _volume = 1, _panning = 0, _speed = 0, _pitch = 0; // Channel attributes.
+    private double _filterPercentage = 0; // saved percentage for the hz pass filters
+    private PassFilter _savedFilter = PassFilter.None; // last filter used.
+    private SampleInfo _sampleInfo = new(); // saves info about the audio selected.
+    private bool _isSettingsGlobal = true;
+
     public enum PassFilter
     {
         High,
         Low,
         None,
     }
-
-    private bool _isDisposed, _isPlaying; // States.
-    private int _streamHandle = -1, _filterHandle; // Handles.
-    private float _volume = 1, _panning = 0, _speed = 0, _pitch = 0; // Channel attributes.
-    private double _filterPercentage = 0;
-    private PassFilter _savedFilter = PassFilter.None;
-    private SampleInfo _sampleInfo = new();
-    private bool _isSettingsGlobal = true;
 
     /// <summary>
     /// Current volume.
@@ -124,7 +126,7 @@ public class SoundPlayer : IDisposable
 
         if (_filterHandle != 0) // remove previous effects.
         {
-            RemoveFilter();
+            RemoveFXFilters();
         }
 
         try
@@ -162,7 +164,7 @@ public class SoundPlayer : IDisposable
 
                 _isPlaying = false;
 
-                RemoveFilter();
+                RemoveFXFilters();
                 Bass.StreamFree(_streamHandle); // free the stream
                 _streamHandle = 0; // reset the stream handle
 
@@ -214,14 +216,36 @@ public class SoundPlayer : IDisposable
         Bass.ChannelSetPosition(_streamHandle, newPos);
     }
 
+    /// <summary>
+    /// Change volume.
+    /// </summary>
+    /// <param name="volume"></param>
     public void SetVolume(float volume) => SetAttribute(_streamHandle, ChannelAttribute.Volume, volume);
 
+    /// <summary>
+    /// Set the volume for the left and right channels (less than 0 decreases the right channel, higher than 0 decreases the left channel).
+    /// </summary>
+    /// <param name="panning"></param>
     public void SetPanning(float panning) => SetAttribute(_streamHandle, ChannelAttribute.Pan, panning);
 
+    /// <summary>
+    /// Changes the playback speed.
+    /// </summary>
+    /// <param name="speed"></param>
     public void SetSpeed(float speed) => SetAttribute(_streamHandle, ChannelAttribute.Tempo, speed);
 
+    /// <summary>
+    /// Changes the pitch.
+    /// </summary>
+    /// <param name="pitch"></param>
     public void SetPitch(float pitch) => SetAttribute(_streamHandle, ChannelAttribute.Pitch, pitch);
 
+    /// <summary>
+    /// "Global" method used to set different attributes of a channel.
+    /// </summary>
+    /// <param name="handle"></param>
+    /// <param name="attribute"></param>
+    /// <param name="value"></param>
     private void SetAttribute(int handle, ChannelAttribute attribute, float value)
     {
         if (_streamHandle == 0)
@@ -246,12 +270,31 @@ public class SoundPlayer : IDisposable
         }
     }
 
-    private void SetGlobalAttributes()
+    /// <summary>
+    /// Sets all attributes to the ones used last time.
+    /// </summary>
+    private void SetGlobalAttributes(bool toDefault = false)
     {
+        if (toDefault)
+        {
+            _volume = DEFAULT_VOLUME;
+            _panning = DEFAULT_PANNING;
+            _speed = DEFAULT_SPEED;
+            _pitch = DEFAULT_PITCH;
+        }
+
         SetVolume(_volume);
         SetPanning(_panning);
         SetSpeed(_speed);
         SetPitch(_pitch);
+    }
+
+    /// <summary>
+    /// Resets all attributes like Volume, Speed, Panning and Pitch all to their default values.
+    /// </summary>
+    public void SetChannelAttributesToDefault()
+    {
+        SetGlobalAttributes(true);
     }
 
     /// <summary>
@@ -270,9 +313,9 @@ public class SoundPlayer : IDisposable
     }
 
     /// <summary>
-    /// Removes all FX filters applied.
+    /// Removes all effect filters applied (High/Low pass filters).
     /// </summary>
-    private void RemoveFilter()
+    public void RemoveFXFilters()
     {
         if (_streamHandle == 0)
             return;
@@ -283,11 +326,23 @@ public class SoundPlayer : IDisposable
         Debug.WriteLine($"[SoundPlayer] Removing filters");
     }
 
-    private float CalculateFrequency(double maxFreq, double percentage)
+    /// <summary>
+    /// Calculates the percentage of a certain value.
+    /// </summary>
+    /// <param name="maxFreq"></param>
+    /// <param name="percentage"></param>
+    /// <returns></returns>
+    private float CalculatePercentage(double value, double percentage)
     {
-        return (float)(maxFreq * percentage / 100); // rule of three based on the max sample rate from the file when an usuable percentage is given.
+        return (float)(value * percentage / 100); // classic rule of three.
     }
 
+    /// <summary>
+    /// Directly returns the BiquadFilterType depending on the PassFilter enum.
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     private BQFType GetBQFType(PassFilter filter)
     {
         return filter switch
@@ -298,6 +353,12 @@ public class SoundPlayer : IDisposable
         };
     }
 
+    /// <summary>
+    /// Applies a High/Low pass filter to the audio, select the range of Hz by percentage.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="percentage"></param>
+    /// <exception cref="InvalidOperationException"></exception>
     public void SetHzPassFilter(PassFilter type, double percentage = 0)
     {
         if (_streamHandle == 0)
@@ -316,18 +377,18 @@ public class SoundPlayer : IDisposable
         // if no filter is selected, then just remove it.
         if (_savedFilter == PassFilter.None)
         {
-            RemoveFilter();
+            RemoveFXFilters();
             return;
         }
 
         // TODO: for some reason, 1Hz should be "the default", but it bugs the audio, so for now we will just remove effects when 0% is selected.
         if (percentage <= 0)
         {
-            RemoveFilter();
+            RemoveFXFilters();
             return;
         }
 
-        float freq = CalculateFrequency(maxFreq, percentage);
+        float freq = CalculatePercentage(maxFreq, percentage);
 
         BQFParameters parameters = new()
         {
@@ -361,7 +422,7 @@ public class SoundPlayer : IDisposable
 
         if (!_isDisposed)
         {
-            RemoveFilter();
+            RemoveFXFilters();
 
             Bass.ChannelStop(_streamHandle); // Stop the stream if its playing
             Bass.Free(); // Free all BASS resources
