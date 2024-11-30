@@ -16,13 +16,11 @@ public class SoundPlayer : IDisposable
     public const float DEFAULT_VOLUME = 1, DEFAULT_PANNING = 0, DEFAULT_SPEED = 0, DEFAULT_PITCH = 0;
 
     private bool _isDisposed, _isPlaying; // States.
-    private int _filterHandle, _mixerHandle, _tempoMixerHandle; // Handles.
+    private int _filterHandle, _mixerHandle, _tempoMixerHandle, _lastStreamHandle; // Handles.
     private List<int> _streamHandlers = new();
     private float _volume = 1, _panning = 0, _speed = 0, _pitch = 0; // Channel attributes.
     private double _filterPercentage = 0; // saved percentage for the hz pass filters
     private PassFilter _savedFilter = PassFilter.None; // last filter used.
-
-    private bool _isSettingsGlobal = true;
 
     public enum PassFilter
     {
@@ -32,22 +30,27 @@ public class SoundPlayer : IDisposable
     }
 
     /// <summary>
-    /// Current volume.
+    /// Gives the handler of the last audio stream added.
+    /// </summary>
+    public int LastStreamAdded => _lastStreamHandle;
+
+    /// <summary>
+    /// Current volume of the mixer.
     /// </summary>
     public float Volume => _volume;
 
     /// <summary>
-    /// Current panning.
+    /// Current panning of the mixer.
     /// </summary>
     public float Panning => _panning;
 
     /// <summary>
-    /// Current speed.
+    /// Current speed of the mixer.
     /// </summary>
     public float Speed => _speed;
 
     /// <summary>
-    /// Current pitch.
+    /// Current pitch of the mixer.
     /// </summary>
     public float Pitch => _pitch;
 
@@ -57,25 +60,9 @@ public class SoundPlayer : IDisposable
     public bool IsDisposed => _isDisposed;
 
     /// <summary>
-    /// Current playback state.
+    /// Current playback state of the mixer.
     /// </summary>
     public bool IsPlaying => _isPlaying;
-
-    /// <summary>
-    /// Sets if new files should keep using the given attributes or if should they start with new ones.
-    /// </summary>
-    public bool IsSettingsGlobal
-    {
-        get
-        {
-            return _isSettingsGlobal;
-        }
-
-        set
-        {
-            _isSettingsGlobal = value;
-        }
-    }
 
     /// <summary>
     /// Event that triggers when mixer playback ends.
@@ -157,6 +144,7 @@ public class SoundPlayer : IDisposable
                 throw new InvalidOperationException("Failed to create stream: " + Bass.LastError);
 
             _streamHandlers.Add(streamHandle);
+            _lastStreamHandle = streamHandle;
 
             // add the stream to the mixer
             if (!BassMix.MixerAddChannel(_mixerHandle, streamHandle, BassFlags.Default))
