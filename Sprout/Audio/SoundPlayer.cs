@@ -29,6 +29,8 @@ public class SoundPlayer : IDisposable
         None,
     }
 
+    public IReadOnlyList<int> StreamHandles => _streamHandlers;
+
     /// <summary>
     /// Gives the handler of the last audio stream added.
     /// </summary>
