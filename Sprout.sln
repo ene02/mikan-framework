@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sprout", "Sprout\Sprout.csproj", "{66F82494-47B0-44B5-B690-0FFB62AB7EC2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sprout.WPF.UI", "Sprout.WPF.UI\Sprout.WPF.UI.csproj", "{9359387E-43E2-4044-830D-EEA5D086045D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sprout.SoundTests", "Sprout.SoundTests\Sprout.SoundTests.csproj", "{E216F42A-0959-4481-BA50-3D21842908B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +23,14 @@ Global
 		{66F82494-47B0-44B5-B690-0FFB62AB7EC2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{66F82494-47B0-44B5-B690-0FFB62AB7EC2}.Release|x86.ActiveCfg = Release|x86
 		{66F82494-47B0-44B5-B690-0FFB62AB7EC2}.Release|x86.Build.0 = Release|x86
-		{9359387E-43E2-4044-830D-EEA5D086045D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9359387E-43E2-4044-830D-EEA5D086045D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9359387E-43E2-4044-830D-EEA5D086045D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9359387E-43E2-4044-830D-EEA5D086045D}.Debug|x86.Build.0 = Debug|Any CPU
-		{9359387E-43E2-4044-830D-EEA5D086045D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9359387E-43E2-4044-830D-EEA5D086045D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9359387E-43E2-4044-830D-EEA5D086045D}.Release|x86.ActiveCfg = Release|x86
-		{9359387E-43E2-4044-830D-EEA5D086045D}.Release|x86.Build.0 = Release|x86
+		{E216F42A-0959-4481-BA50-3D21842908B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E216F42A-0959-4481-BA50-3D21842908B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E216F42A-0959-4481-BA50-3D21842908B3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E216F42A-0959-4481-BA50-3D21842908B3}.Debug|x86.Build.0 = Debug|Any CPU
+		{E216F42A-0959-4481-BA50-3D21842908B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E216F42A-0959-4481-BA50-3D21842908B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E216F42A-0959-4481-BA50-3D21842908B3}.Release|x86.ActiveCfg = Release|Any CPU
+		{E216F42A-0959-4481-BA50-3D21842908B3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
