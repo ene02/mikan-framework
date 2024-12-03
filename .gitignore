@@ -386,3 +386,8 @@ FodyWeavers.xsd
 /Sprout.WPF.UI/Sprout.WPF.UI.csproj
 /Sprout.WPF.UI/MainWindow.xaml.cs
 /Sprout.WPF.UI/App.xaml.cs
+/Sprout.SoundTests/Sprout.SoundTests.csproj
+/Sprout.SoundTests/Form1.cs
+/Sprout.SoundTests/Form1.Designer.cs
+/Sprout.SoundTests/Form1.resx
+/Sprout.SoundTests/Program.cs
