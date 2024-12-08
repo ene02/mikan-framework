@@ -391,3 +391,5 @@ FodyWeavers.xsd
 /Sprout.SoundTests/Form1.Designer.cs
 /Sprout.SoundTests/Form1.resx
 /Sprout.SoundTests/Program.cs
+/Sprout.Gtk/Program.cs
+/Sprout.Gtk/Sprout.Gtk.csproj
