@@ -5,16 +5,16 @@ using System.Diagnostics;
 namespace Mikan.Audio;
 
 /// <summary>
-/// A class designed for single-instance audio playback, where each new playback operation stops any currently playing audio. This ensures that only
+/// A class designed for quick change of audio playback, where each new playback operation stops any currently playing audio. This ensures that only
 /// one audio stream is active at a time, with new streams dynamically created for each playback and old streams cleared and removed.
 /// </summary>
-public class BasicPlayer : AudioProcessor
+public class QuickStreamPlayer : AudioProcessor
 {
     private readonly static string DEBUG_TITLE = $"{DateTime.Today} || [AudioPlayer]:";
 
     private int _streamHandle;
 
-    public BasicPlayer(int bufferLenghts = 100, int updatePeriods = 10)
+    public QuickStreamPlayer(int bufferLenghts = 100, int updatePeriods = 10)
     {
         CheckInit(bufferLenghts, updatePeriods);
     }

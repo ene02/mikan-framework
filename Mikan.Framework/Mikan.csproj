@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<PackageId>Mikan.Framework</PackageId>
-		<Version>0.0.1</Version>
+		<Version>0.0.2</Version>
 		<Authors>Ene</Authors>
 		<Description>A framework to do stuff.</Description>
 		<PackageTags>mikan;lib;library;framework;games</PackageTags>
@@ -32,6 +32,7 @@
 	<ItemGroup>
 		<PackageReference Include="ManagedBass" Version="3.1.1" />
 		<PackageReference Include="ManagedBass.Fx" Version="3.1.1" />
+		<PackageReference Include="Mikan.NativeLibs" Version="0.0.2" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
 	</ItemGroup>

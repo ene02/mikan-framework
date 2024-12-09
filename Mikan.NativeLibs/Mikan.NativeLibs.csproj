@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<PackageId>Mikan.NativeLibs</PackageId>
-		<Version>0.0.1</Version>
+		<Version>0.0.2</Version>
 		<Authors>Ene</Authors>
 		<Description>Native libs for Mikan.</Description>
 		<PackageTags>natives sprout</PackageTags>
