@@ -16,7 +16,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="resources\mikan-native.png">
+		<Content Include="Resources\mikan-native.png">
 			<Pack>true</Pack>
 			<PackagePath>mikan-native.png</PackagePath>
 		</Content>
@@ -30,7 +30,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<None Include="runtimes\**\native\*">
+		<None Include="Runtimes\**\native\*">
 			<Pack>true</Pack>
 			<PackagePath>runtimes</PackagePath>
 		</None>

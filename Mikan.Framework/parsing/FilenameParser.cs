@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Sprout.IO;
+namespace Mikan.Parsing;
 
 public static class FilenameParser
 {
@@ -51,4 +51,4 @@ public static class FilenameParser
     }
 }
 
-    
+

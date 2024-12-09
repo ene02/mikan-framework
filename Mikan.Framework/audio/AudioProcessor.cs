@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using ManagedBass;
 
-namespace Sprout.Audio;
+namespace Mikan.Audio;
 
 /// <summary>
 /// Defines methods and values for audio playback classes, allowing Play, Pause, Stop and a method to get the its handler.
@@ -77,24 +77,6 @@ public abstract class AudioProcessor
     /// Event that triggers when mixer playback ends.
     /// </summary>
     public EventHandler PlaybackEnded;
-
-    /// <summary>
-    /// Plays the the stream with the given file
-    /// </summary>
-    /// <param name="filePath"></param>
-    public abstract void Play(string filePath);
-
-    /// <summary>
-    /// Plays the given audio buffer.
-    /// </summary>
-    /// <param name="filePath"></param>
-    public abstract void Play(byte[] buffer);
-
-    /// <summary>
-    /// Plays whatever is availible, if theres something.
-    /// </summary>
-    /// <param name="filePath"></param>
-    public abstract void Play();
 
     /// <summary>
     /// Stops the stream playback.

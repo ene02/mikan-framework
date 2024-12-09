@@ -16,7 +16,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="resources\mikan-ico.png">
+		<Content Include="Resources\mikan-ico.png">
 			<Pack>true</Pack>
 			<PackagePath>mikan-ico.png</PackagePath>
 		</Content>

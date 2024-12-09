@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection.Metadata;
 
-namespace Sprout.Audio;
+namespace Mikan.Audio;
 
 /// <summary>
 /// A class that combines multiple StaticPlayer instances, enabling simultaneous or individual playback of
@@ -19,12 +19,12 @@ public class SampleMixer
     private readonly static string DEBUG_TITLE = $"{DateTime.Today} || [Mixer]:";
 
     // List of streams in the mixer, gets updated when a streams starts or finishes.
-    private List<StaticPlayer> _staticPlayers = new();
+    private List<SingleStreamPlayer> _staticPlayers = new();
 
     /// <summary>
     /// A read only list of the current sample players, ues this for effects or whatever you want, using these sample players to play other files WILL replace the files saved in the buffer.
     /// </summary>
-    public IReadOnlyList<StaticPlayer> StaticPlayers => _staticPlayers;
+    public IReadOnlyList<SingleStreamPlayer> StaticPlayers => _staticPlayers;
 
     /// <summary>
     /// Loads audio buffers into memory for quick playback.
@@ -34,7 +34,7 @@ public class SampleMixer
     {
         foreach (byte[] byteArray in buffers)
         {
-            StaticPlayer player = new()
+            SingleStreamPlayer player = new()
             {
                 AudioData = byteArray,
             };
@@ -75,7 +75,7 @@ public class SampleMixer
     /// </summary>
     public void StopAll()
     {
-        foreach (StaticPlayer player in _staticPlayers)
+        foreach (SingleStreamPlayer player in _staticPlayers)
         {
             player.Stop();
         }
@@ -106,7 +106,7 @@ public class SampleMixer
     {
         StopAll();
 
-        foreach (StaticPlayer player in _staticPlayers)
+        foreach (SingleStreamPlayer player in _staticPlayers)
         {
             player.Clear();
         }

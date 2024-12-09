@@ -1,10 +1,10 @@
 ﻿using ManagedBass;
 using System.Diagnostics;
 
-namespace Sprout.Audio;
+namespace Mikan.Audio;
 
 /// <summary>
-/// Extension methods for attributes of IAudioProcessor.
+/// Extension methods for attributes of AudioProcessors.
 /// </summary>
 public static class SoundAttributes
 {

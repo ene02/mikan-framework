@@ -2,8 +2,11 @@
 using ManagedBass;
 using System.Diagnostics;
 
-namespace Sprout.Audio;
+namespace Mikan.Audio;
 
+/// <summary>
+/// Extension methods for effects of AudioProcessors.
+/// </summary>
 public static class SoundEffects
 {
     private readonly static string DEBUG_TITLE = $"{DateTime.Today} || [SoundEffects]:";
