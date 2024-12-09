@@ -36,8 +36,4 @@
 		</None>
 	</ItemGroup>
 	
-	<ItemGroup>
-	  <PackageReference Include="Mikan.Resources" Version="0.0.1" />
-	</ItemGroup>
-	
 </Project>
