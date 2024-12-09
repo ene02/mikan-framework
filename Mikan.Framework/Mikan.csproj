@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<PackageId>Mikan.Framework</PackageId>
-		<Version>0.0.2</Version>
+		<Version>0.0.3</Version>
 		<Authors>Ene</Authors>
 		<Description>A framework to do stuff.</Description>
 		<PackageTags>mikan;lib;library;framework;games</PackageTags>

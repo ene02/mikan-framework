@@ -7,8 +7,7 @@ using System.Reflection;
 namespace Mikan.Audio;
 
 /// <summary>
-/// A class for playing a predefined audio file or buffer repeatedly without creating new streams for each playback. The playback
-/// operates on a single reusable stream, allowing consistent audio output unless manually reset.
+/// A class designed for playing a unique audio buffer that doesnt get removed automatically, perfect for samples or any kind of audio that needs to be replayed multiple times.
 /// </summary>
 public class SingleStreamPlayer : AudioProcessor
 {
