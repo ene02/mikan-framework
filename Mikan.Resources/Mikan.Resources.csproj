@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<PackageId>Mikan.Resources</PackageId>
+		<Version>0.0.1</Version>
+		<Authors>Ene</Authors>
+		<Description>Resources used by Mikan and other packages.</Description>
+		<PackageTags>mikan;resources;framework</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/ene02/sprout-lib</RepositoryUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>mikan-resources.png</PackageIcon>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="icons/mikan-resources.png">
+			<Pack>true</Pack>
+			<PackagePath>mikan-resources.png</PackagePath>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="icons/mikan-ico.png">
+			<Pack>true</Pack>
+			<PackagePath>mikan-ico.png</PackagePath>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="icons/mikan-native.png">
+			<Pack>true</Pack>
+			<PackagePath>mikan-native.png</PackagePath>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="README.md">
+			<Pack>true</Pack>
+			<PackagePath>README.md</PackagePath>
+		</Content>
+	</ItemGroup>
+
+</Project>

@@ -1,8 +1,6 @@
 using ManagedBass;
 using ManagedBass.Fx;
-using ManagedBass.Mix;
 using System.Diagnostics;
-using System.IO;
 
 namespace Sprout.Audio;
 
@@ -21,21 +19,9 @@ public class DisposablePlayer : AudioProcessor
         return _streamHandle;
     }
 
-    public DisposablePlayer(int bufferLenghts = 4, int updatePeriods = 4)
+    public DisposablePlayer(int bufferLenghts = 100, int updatePeriods = 10)
     {
-        if (Bass.Init())
-        {
-            Debug.WriteLine($"{DEBUG_TITLE} BASS initialized successfully");
-        }
-        else
-        {
-            Debug.WriteLine($"{DEBUG_TITLE} BASS already initialized or something went wrong: {Bass.LastError}");
-        }
-
-        Bass.Configure(Configuration.PlaybackBufferLength, bufferLenghts);
-        Bass.Configure(Configuration.UpdatePeriod, updatePeriods);
-        Bass.Configure(Configuration.DevicePeriod, updatePeriods);
-        Bass.Configure(Configuration.DeviceBufferLength, bufferLenghts);
+        CheckInit(bufferLenghts, updatePeriods);
     }
 
     public override void Play()

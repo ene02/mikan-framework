@@ -1,4 +1,8 @@
-﻿using ManagedBass;
+﻿using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using ManagedBass;
 
 namespace Sprout.Audio;
 
@@ -48,9 +52,31 @@ public abstract class AudioProcessor
     // 19 - Freeverb
 
     /// <summary>
+    /// Checks if BASS was initialized.
+    /// </summary>
+    /// <param name="bufferLenghts"></param>
+    /// <param name="updatePeriods"></param>
+    protected void CheckInit(int bufferLenghts, int updatePeriods)
+    {
+        if (Bass.Init())
+        {
+            Debug.WriteLine($"[AudioProcessor] BASS initialized successfully");
+        }
+        else
+        {
+            Debug.WriteLine($"[AudioProcessor] BASS already initialized or something went wrong: {Bass.LastError}");
+        }
+
+        Bass.Configure(Configuration.PlaybackBufferLength, bufferLenghts);
+        Bass.Configure(Configuration.UpdatePeriod, updatePeriods);
+        Bass.Configure(Configuration.DevicePeriod, updatePeriods);
+        Bass.Configure(Configuration.DeviceBufferLength, bufferLenghts);
+    }
+
+    /// <summary>
     /// Event that triggers when mixer playback ends.
     /// </summary>
-    public EventHandler? PlaybackEnded;
+    public EventHandler PlaybackEnded;
 
     /// <summary>
     /// Plays the the stream with the given file

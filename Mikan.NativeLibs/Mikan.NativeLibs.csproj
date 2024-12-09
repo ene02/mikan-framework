@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<PackageId>Mikan.NativeLibs</PackageId>
+		<Version>0.0.1</Version>
+		<Authors>Ene</Authors>
+		<Description>Native libs for Mikan.</Description>
+		<PackageTags>natives sprout</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/ene02/sprout-lib</RepositoryUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>mikan-native.png</PackageIcon>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="resources\mikan-native.png">
+			<Pack>true</Pack>
+			<PackagePath>mikan-native.png</PackagePath>
+		</Content>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Content Include="README.md">
+			<Pack>true</Pack>
+			<PackagePath>README.md</PackagePath>
+		</Content>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<None Include="runtimes\**\native\*">
+			<Pack>true</Pack>
+			<PackagePath>runtimes</PackagePath>
+		</None>
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <PackageReference Include="Mikan.Resources" Version="0.0.1" />
+	</ItemGroup>
+	
+</Project>
