@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Mikan.Parsing;
+namespace Mikan.Parsers;
 
 public static class FilenameParser
 {
