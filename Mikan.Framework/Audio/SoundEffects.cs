@@ -58,6 +58,51 @@ public static class SoundEffects
         }
     }
 
+    public static void SetEchoEffect(this AudioProcessor audioProcessor, float delay, float feedback, float wetMix, float dryMix)
+    {
+        int handler = audioProcessor.GetHandler();
+
+        if (handler == 0)
+            return;
+
+        EchoParameters parameters = new()
+        {
+            fDelay = delay,           // Delay in milliseconds
+            fFeedback = feedback,     // Feedback level (0 to 1)
+            fWetMix = wetMix    // Wet/Dry mix (0 to 1)
+        };
+
+        if (audioProcessor.GetFXHandler(EffectType.Echo) == 0) // Create effect if it doesn't exist.
+        {
+            Debug.WriteLine($"{DEBUG_TITLE} Echo effect didn't exist, creating...");
+
+            // Create a new FX handler for the Echo effect.
+            int newFxHandler = Bass.ChannelSetFX(handler, EffectType.Echo, 0);
+
+            // Pass to the audio processor.
+            audioProcessor.SetFXHandler(EffectType.Echo, newFxHandler);
+
+            if (newFxHandler == 0)
+                throw new InvalidOperationException($"{DEBUG_TITLE} Failed to create Echo effect: {Bass.LastError}");
+        }
+
+        if (audioProcessor.GetFXHandler(EffectType.Echo) != 0 && (Math.Abs(delay) < 1f || feedback <= 0f || wetMix <= 0f))
+        {
+            // Remove the effect if parameters result in an ineffective echo.
+            Bass.ChannelRemoveFX(handler, audioProcessor.GetFXHandler(EffectType.Echo));
+            audioProcessor.SetFXHandler(EffectType.Echo, 0);
+            Debug.WriteLine($"{DEBUG_TITLE} Echo effect removed due to negligible or invalid parameters.");
+        }
+        else
+        {
+            // Apply the echo effect parameters.
+            if (!Bass.FXSetParameters(audioProcessor.GetFXHandler(EffectType.Echo), parameters))
+                throw new InvalidOperationException($"{DEBUG_TITLE} Failed to apply parameters for Echo effect: {Bass.LastError}");
+        }
+    }
+
+
+
     /// <summary>
     /// Removes all effect filters applied to the streams.
     /// </summary>

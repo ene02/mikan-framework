@@ -98,6 +98,8 @@ public class QuickStreamPlayer : AudioProcessor
         Bass.ChannelSetSync(_streamHandle, SyncFlags.End, 0, (handle, channel, data, user) =>
         {
             PlaybackEnded?.Invoke(this, EventArgs.Empty);
+
+            SoundEffects.RemoveAllFx(this);
             Bass.StreamFree(_streamHandle); // free the stream
         });
     }
@@ -111,6 +113,7 @@ public class QuickStreamPlayer : AudioProcessor
             return;
 
         Bass.ChannelStop(_streamHandle);
+        SoundEffects.RemoveAllFx(this);
         Bass.StreamFree(_streamHandle);
 
         _streamHandle = 0;

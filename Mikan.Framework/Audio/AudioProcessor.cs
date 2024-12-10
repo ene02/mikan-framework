@@ -29,7 +29,7 @@ public abstract class AudioProcessor
 
     // Handlers for each EffectType in BassFx.
     // good or bad, i dont care what you think about this.
-    protected int[] _fxHandlers = new int[22]; // damn.
+    protected int[] _fxHandlers = new int[23]; // damn.
     // 0 - DXChorus
     // 1 - DXDistortion
     // 2 - DXEcho
