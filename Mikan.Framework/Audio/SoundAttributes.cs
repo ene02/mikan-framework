@@ -120,7 +120,7 @@ public static class SoundAttributes
         int handler = audioProcessor.GetHandler();
 
         // Ensure the handler is valid.
-        if (handler == 0)
+        if (handler == 0 && seconds < 0 && seconds > GetAudioLenght(audioProcessor))
             return;
 
         // Retrieve stream info to get sample rate and channels (assuming it's a stream).
@@ -134,7 +134,7 @@ public static class SoundAttributes
         // Set the position in bytes.
         if (!Bass.ChannelSetPosition(handler, bytes))
         {
-            throw new InvalidOperationException($"Failed to set position to {bytes} bytes: {Bass.LastError}");
+            Debug.WriteLine("[ManagedBass] Position was invalid");
         }
     }
 

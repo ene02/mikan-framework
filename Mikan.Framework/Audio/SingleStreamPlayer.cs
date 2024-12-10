@@ -103,6 +103,7 @@ public class SingleStreamPlayer : AudioProcessor
         Stop();
         SoundEffects.RemoveAllFx(this);
         Bass.StreamFree(_streamHandle);
+        _streamHandle = 0;
 
         _data = Array.Empty<byte>();
     }

@@ -64,6 +64,7 @@ public class QuickStreamPlayer : AudioProcessor
         {
             PlaybackEnded?.Invoke(this, EventArgs.Empty);
             Bass.StreamFree(_streamHandle); // free the stream
+            _streamHandle = 0;
         });
     }
 
