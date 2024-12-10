@@ -1,21 +1,24 @@
 ﻿using ManagedBass.Fx;
 using ManagedBass;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Reflection;
 
 namespace Mikan.Audio;
 
 /// <summary>
-/// A class designed for playing a unique audio buffer that doesnt get removed automatically, perfect for samples or any kind of audio that needs to be replayed multiple times.
+/// PersistentPlayer provides functionality to play audio from a reusable, persistent buffer. Unlike QuickPlayer, this class retains the audio data and stream<br />
+/// allowing the same audio to be replayed multiple times without reloading the data. This makes it ideal for playing sound samples, loops, or any audio requiring repeated<br />
+/// playback with minimal overhead.
 /// </summary>
-public class SingleStreamPlayer : AudioProcessor
+public class PersistentPlayer : AudioProcessor
 {
     private readonly static string DEBUG_TITLE = $"[ManagedBass]:";
 
     private int _streamHandle;
     private byte[] _data = Array.Empty<byte>();
 
+    /// <summary>
+    /// Audio buffer used for quick playback.
+    /// </summary>
     public byte[] AudioData
     {
         get
@@ -29,17 +32,29 @@ public class SingleStreamPlayer : AudioProcessor
         }
     }
 
-    public SingleStreamPlayer(Preset preset)
+    public PersistentPlayer(Preset preset)
     {
         CheckInit(preset);
     }
 
     /// <summary>
-    /// Plays the buffered audio data.
+    /// Plays the buffered audio data or replaces the AudioData in case a file or buffer is given.
     /// </summary>
     /// <exception cref="InvalidOperationException"></exception>
-    public void Play()
+    public override void Play(object data = null)
     {
+        if (data is string)
+        {
+            if (string.IsNullOrWhiteSpace((string)data) || !File.Exists((string)data))
+                throw new ArgumentException($"{DEBUG_TITLE} Invalid file path", (string)data);
+
+            AudioData = File.ReadAllBytes((string)data);
+        }
+        else if (data is byte[])
+        {
+            AudioData = (byte[])data;
+        }
+
         if (_streamHandle == 0)
         {
             // create a stream for the file

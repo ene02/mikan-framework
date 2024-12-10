@@ -1,13 +1,13 @@
-﻿using System;
-using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
 using ManagedBass;
 
 namespace Mikan.Audio;
 
 /// <summary>
-/// Defines methods and values for audio playback classes, allowing Play, Pause, Stop and a method to get the its handler.
+/// Provides a foundational abstraction for audio processing, encapsulating methods and properties<br />
+/// required for audio playback control and effect management. This class serves as a base for<br />
+/// implementing specific audio playback mechanisms while ensuring consistent handling of playback<br />
+/// states, audio attributes, and effect configurations.
 /// </summary>
 public abstract class AudioProcessor
 {
@@ -28,7 +28,6 @@ public abstract class AudioProcessor
     protected float _volume = SoundAttributes.DEFAULT_VOLUME, _panning = SoundAttributes.DEFAULT_PANNING, _speed = SoundAttributes.DEFAULT_SPEED, _pitch = SoundAttributes.DEFAULT_PITCH;
 
     // Handlers for each EffectType in BassFx.
-    // good or bad, i dont care what you think about this.
     protected int[] _fxHandlers = new int[23]; // damn.
     // 0 - DXChorus
     // 1 - DXDistortion
@@ -118,6 +117,8 @@ public abstract class AudioProcessor
     /// Event that triggers when mixer playback ends.
     /// </summary>
     public EventHandler PlaybackEnded;
+
+    public abstract void Play(object data = null);
 
     /// <summary>
     /// Stops the stream playback.

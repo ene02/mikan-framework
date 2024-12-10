@@ -1,30 +1,23 @@
-using ManagedBass;
-using ManagedBass.Fx;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Reflection.Metadata;
 
 namespace Mikan.Audio;
 
 /// <summary>
-/// A class that combines multiple StaticPlayer instances, enabling simultaneous or individual playback of
-/// preloaded audio samples. It supports customization of audio properties like effects and volume for each sample,
-/// facilitating dynamic audio compositions.
+/// AudioMixer is an utility for managing and playing multiple audio samples simultaneously. It allows efficient playback<br />
+/// of preloaded audio buffers, providing features such as playback control, buffer management, and cleanup. Designed for real-time audio applications<br />
+/// it ensures low-latency performance and seamless integration with other audio components.
 /// </summary>
-public class SampleMixer
+public class AudioMixer
 {
-    private readonly static string DEBUG_TITLE = $"[Mixer]:";
+    private readonly static string DEBUG_TITLE = $"[AudioMixer]:";
 
     // List of streams in the mixer, gets updated when a streams starts or finishes.
-    private List<SingleStreamPlayer> _staticPlayers = new();
+    private List<PersistentPlayer> _staticPlayers = new();
 
     /// <summary>
     /// A read only list of the current sample players, ues this for effects or whatever you want, using these sample players to play other files WILL replace the files saved in the buffer.
     /// </summary>
-    public IReadOnlyList<SingleStreamPlayer> StaticPlayers => _staticPlayers;
+    public IReadOnlyList<PersistentPlayer> StaticPlayers => _staticPlayers;
 
     /// <summary>
     /// Loads audio buffers into memory for quick playback.
@@ -34,7 +27,7 @@ public class SampleMixer
     {
         foreach (byte[] byteArray in buffers)
         {
-            SingleStreamPlayer player = new(AudioProcessor.Preset.Realtime)
+            PersistentPlayer player = new(AudioProcessor.Preset.Realtime)
             {
                 AudioData = byteArray,
             };
@@ -75,7 +68,7 @@ public class SampleMixer
     /// </summary>
     public void StopAll()
     {
-        foreach (SingleStreamPlayer player in _staticPlayers)
+        foreach (PersistentPlayer player in _staticPlayers)
         {
             player.Stop();
         }
@@ -106,7 +99,7 @@ public class SampleMixer
     {
         StopAll();
 
-        foreach (SingleStreamPlayer player in _staticPlayers)
+        foreach (PersistentPlayer player in _staticPlayers)
         {
             player.Clear();
         }

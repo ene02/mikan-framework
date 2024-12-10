@@ -5,16 +5,18 @@ using System.Diagnostics;
 namespace Mikan.Audio;
 
 /// <summary>
-/// A class designed for quick change of audio playback, where each new playback operation stops any currently playing audio. This ensures that only
-/// one audio stream is active at a time, with new streams dynamically created for each playback and old streams cleared and removed.
+/// QuickPlayer is designed for one-at-a-time audio playback. It dynamically creates a new stream for each playback request, ensuring that only one stream<br />
+/// is active at any given time. Existing streams are automatically stopped and cleared before initiating new playback. This makes QuickPlayer ideal for scenarios<br />
+/// where an audio source is not needed for long times, just load whatever file, play it and forget about it.
+/// <para>Since new files given are played on a new stream, all efects and attributes are reset by default on each new playback.</para>
 /// </summary>
-public class QuickStreamPlayer : AudioProcessor
+public class QuickPlayer : AudioProcessor
 {
     private readonly static string DEBUG_TITLE = $"[ManagedBass]:";
 
     private int _streamHandle;
 
-    public QuickStreamPlayer(Preset preset)
+    public QuickPlayer(Preset preset)
     {
         CheckInit(preset);
     }
@@ -34,10 +36,26 @@ public class QuickStreamPlayer : AudioProcessor
     /// <param name="filePath"></param>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="InvalidOperationException"></exception>
-    public void Play(string filePath)
+    public override void Play(object data = null)
     {
-        if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
-            throw new ArgumentException($"{DEBUG_TITLE} Invalid file path", nameof(filePath));
+        byte[] audioData = null;
+
+        if (data is string)
+        {
+            if (string.IsNullOrWhiteSpace((string)data) || !File.Exists((string)data))
+                throw new ArgumentException($"{DEBUG_TITLE} Invalid file path", (string)data);
+
+            audioData = File.ReadAllBytes((string)data);
+        }
+        else if (data is byte[])
+        {
+            audioData = (byte[])data;
+        }
+        else if (data is null)
+        {
+            Debug.WriteLine("[ManagedBass] QuickPlayer doesn't save audio data and no data has been given for playback");
+            return;
+        }
 
         if (_streamHandle != 0)
         {
@@ -45,43 +63,7 @@ public class QuickStreamPlayer : AudioProcessor
         }
 
         // create a stream for the file
-        _streamHandle = Bass.CreateStream(filePath, 0, 0, BassFlags.Decode);
-
-        // wrap in tempo stream
-        _streamHandle = BassFx.TempoCreate(_streamHandle, BassFlags.Default);
-
-        if (_streamHandle == 0)
-            throw new InvalidOperationException($"{DEBUG_TITLE} Failed to create stream: " + Bass.LastError);
-
-        // start playback
-        if (!Bass.ChannelPlay(_streamHandle))
-            throw new InvalidOperationException($"{DEBUG_TITLE} Failed to play stream: " + Bass.LastError);
-
-        _isPlaying = true;
-
-        // playback ended event
-        Bass.ChannelSetSync(_streamHandle, SyncFlags.End, 0, (handle, channel, data, user) =>
-        {
-            PlaybackEnded?.Invoke(this, EventArgs.Empty);
-            Bass.StreamFree(_streamHandle); // free the stream
-            _streamHandle = 0;
-        });
-    }
-
-    /// <summary>
-    /// Plays the given audio buffer.
-    /// </summary>
-    /// <param name="buffer"></param>
-    /// <exception cref="InvalidOperationException"></exception>
-    public void Play(byte[] buffer)
-    {
-        if (_streamHandle != 0)
-        {
-            Stop();
-        }
-
-        // create a stream for the buffer
-        _streamHandle = Bass.CreateStream(buffer, 0, buffer.Length, BassFlags.Decode);
+        _streamHandle = Bass.CreateStream(audioData, 0, audioData.Length, BassFlags.Decode);
 
         // wrap in tempo stream
         _streamHandle = BassFx.TempoCreate(_streamHandle, BassFlags.Default);
