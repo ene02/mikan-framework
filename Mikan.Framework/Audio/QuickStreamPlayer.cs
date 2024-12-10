@@ -39,39 +39,32 @@ public class QuickStreamPlayer : AudioProcessor
         if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
             throw new ArgumentException($"{DEBUG_TITLE} Invalid file path", nameof(filePath));
 
-        try
+        if (_streamHandle != 0)
         {
-            if (_streamHandle != 0)
-            {
-                Stop();
-            }
-
-            // create a stream for the file
-            _streamHandle = Bass.CreateStream(filePath, 0, 0, BassFlags.Decode);
-
-            // wrap in tempo stream
-            _streamHandle = BassFx.TempoCreate(_streamHandle, BassFlags.Default);
-
-            if (_streamHandle == 0)
-                throw new InvalidOperationException($"{DEBUG_TITLE} Failed to create stream: " + Bass.LastError);
-
-            // start playback
-            if (!Bass.ChannelPlay(_streamHandle))
-                throw new InvalidOperationException($"{DEBUG_TITLE} Failed to play stream: " + Bass.LastError);
-
-            _isPlaying = true;
-
-            // playback ended event
-            Bass.ChannelSetSync(_streamHandle, SyncFlags.End, 0, (handle, channel, data, user) =>
-            {
-                PlaybackEnded?.Invoke(this, EventArgs.Empty);
-                Bass.StreamFree(_streamHandle); // free the stream
-            });
+            Stop();
         }
-        catch (Exception ex)
+
+        // create a stream for the file
+        _streamHandle = Bass.CreateStream(filePath, 0, 0, BassFlags.Decode);
+
+        // wrap in tempo stream
+        _streamHandle = BassFx.TempoCreate(_streamHandle, BassFlags.Default);
+
+        if (_streamHandle == 0)
+            throw new InvalidOperationException($"{DEBUG_TITLE} Failed to create stream: " + Bass.LastError);
+
+        // start playback
+        if (!Bass.ChannelPlay(_streamHandle))
+            throw new InvalidOperationException($"{DEBUG_TITLE} Failed to play stream: " + Bass.LastError);
+
+        _isPlaying = true;
+
+        // playback ended event
+        Bass.ChannelSetSync(_streamHandle, SyncFlags.End, 0, (handle, channel, data, user) =>
         {
-            Debug.WriteLine($"{DEBUG_TITLE} {ex}");
-        }
+            PlaybackEnded?.Invoke(this, EventArgs.Empty);
+            Bass.StreamFree(_streamHandle); // free the stream
+        });
     }
 
     /// <summary>
@@ -81,39 +74,32 @@ public class QuickStreamPlayer : AudioProcessor
     /// <exception cref="InvalidOperationException"></exception>
     public void Play(byte[] buffer)
     {
-        try
+        if (_streamHandle != 0)
         {
-            if (_streamHandle != 0)
-            {
-                Stop();
-            }
-
-            // create a stream for the buffer
-            _streamHandle = Bass.CreateStream(buffer, 0, buffer.Length, BassFlags.Decode);
-
-            // wrap in tempo stream
-            _streamHandle = BassFx.TempoCreate(_streamHandle, BassFlags.Default);
-
-            if (_streamHandle == 0)
-                throw new InvalidOperationException($"{DEBUG_TITLE} Failed to create stream: " + Bass.LastError);
-
-            // start playback
-            if (!Bass.ChannelPlay(_streamHandle))
-                throw new InvalidOperationException($"{DEBUG_TITLE} Failed to play stream: " + Bass.LastError);
-
-            _isPlaying = true;
-
-            // playback ended event
-            Bass.ChannelSetSync(_streamHandle, SyncFlags.End, 0, (handle, channel, data, user) =>
-            {
-                PlaybackEnded?.Invoke(this, EventArgs.Empty);
-                Bass.StreamFree(_streamHandle); // free the stream
-            });
+            Stop();
         }
-        catch (Exception ex)
+
+        // create a stream for the buffer
+        _streamHandle = Bass.CreateStream(buffer, 0, buffer.Length, BassFlags.Decode);
+
+        // wrap in tempo stream
+        _streamHandle = BassFx.TempoCreate(_streamHandle, BassFlags.Default);
+
+        if (_streamHandle == 0)
+            throw new InvalidOperationException($"{DEBUG_TITLE} Failed to create stream: " + Bass.LastError);
+
+        // start playback
+        if (!Bass.ChannelPlay(_streamHandle))
+            throw new InvalidOperationException($"{DEBUG_TITLE} Failed to play stream: " + Bass.LastError);
+
+        _isPlaying = true;
+
+        // playback ended event
+        Bass.ChannelSetSync(_streamHandle, SyncFlags.End, 0, (handle, channel, data, user) =>
         {
-            Debug.WriteLine($"{DEBUG_TITLE} {ex}");
-        }
+            PlaybackEnded?.Invoke(this, EventArgs.Empty);
+            Bass.StreamFree(_streamHandle); // free the stream
+        });
     }
 
     /// <summary>

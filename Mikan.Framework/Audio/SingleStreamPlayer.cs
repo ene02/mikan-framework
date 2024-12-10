@@ -40,36 +40,29 @@ public class SingleStreamPlayer : AudioProcessor
     /// <exception cref="InvalidOperationException"></exception>
     public void Play()
     {
-        try
+        if (_streamHandle == 0)
         {
+            // create a stream for the file
+            _streamHandle = Bass.CreateStream(_data, 0, _data.Length, BassFlags.Decode);
+
+            // wrap in tempo stream
+            _streamHandle = BassFx.TempoCreate(_streamHandle, BassFlags.Default);
+
             if (_streamHandle == 0)
-            {
-                // create a stream for the file
-                _streamHandle = Bass.CreateStream(_data, 0, _data.Length, BassFlags.Decode);
-
-                // wrap in tempo stream
-                _streamHandle = BassFx.TempoCreate(_streamHandle, BassFlags.Default);
-
-                if (_streamHandle == 0)
-                    throw new InvalidOperationException($"{DEBUG_TITLE} Failed to create stream: " + Bass.LastError);
-            }
-
-            // start playback
-            if (!Bass.ChannelPlay(_streamHandle, true))
-                throw new InvalidOperationException($"{DEBUG_TITLE} Failed to play stream: " + Bass.LastError);
-
-            _isPlaying = true;
-
-            // playback ended event.
-            Bass.ChannelSetSync(_streamHandle, SyncFlags.End, 0, (handle, channel, data, user) =>
-            {
-                PlaybackEnded?.Invoke(this, EventArgs.Empty);
-            });
+                throw new InvalidOperationException($"{DEBUG_TITLE} Failed to create stream: " + Bass.LastError);
         }
-        catch (Exception ex)
+
+        // start playback
+        if (!Bass.ChannelPlay(_streamHandle, true))
+            throw new InvalidOperationException($"{DEBUG_TITLE} Failed to play stream: " + Bass.LastError);
+
+        _isPlaying = true;
+
+        // playback ended event.
+        Bass.ChannelSetSync(_streamHandle, SyncFlags.End, 0, (handle, channel, data, user) =>
         {
-            Debug.WriteLine($"{DEBUG_TITLE} {ex}");
-        }
+            PlaybackEnded?.Invoke(this, EventArgs.Empty);
+        });
     }
 
     public override void Stop()

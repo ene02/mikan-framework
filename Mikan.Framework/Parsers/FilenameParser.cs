@@ -14,11 +14,15 @@ public static class FilenameParser
 
         bool isExtensionDotFound = false;
 
+        char leftBar = '\\';
+
+        char rightBar = '/';
+
         if (File.Exists(filePath))
         {
             for (int i = filePath.Length - 1; i >= 0; i--)
             {
-                if (filePath[i] == '\\')
+                if (filePath[i] ==  leftBar || filePath[i] == rightBar)
                 {
                     string fpn = fullParsedName.ToString();
                     string nxn = noExtParsedName.ToString();
@@ -47,7 +51,7 @@ public static class FilenameParser
             }
         }
 
-        throw new ArgumentException($"Path is invalid. '{filePath}'", nameof(filePath));
+        return "FileParser failed lmao xd";
     }
 }
 
