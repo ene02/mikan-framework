@@ -101,8 +101,6 @@ public static class SoundEffects
         }
     }
 
-
-
     /// <summary>
     /// Removes all effect filters applied to the streams.
     /// </summary>

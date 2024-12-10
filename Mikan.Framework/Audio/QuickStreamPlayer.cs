@@ -14,9 +14,9 @@ public class QuickStreamPlayer : AudioProcessor
 
     private int _streamHandle;
 
-    public QuickStreamPlayer()
+    public QuickStreamPlayer(Preset preset)
     {
-        CheckInit();
+        CheckInit(preset);
     }
 
     /// <summary>

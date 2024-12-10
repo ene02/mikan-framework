@@ -29,9 +29,9 @@ public class SingleStreamPlayer : AudioProcessor
         }
     }
 
-    public SingleStreamPlayer()
+    public SingleStreamPlayer(Preset preset)
     {
-        CheckInit();
+        CheckInit(preset);
     }
 
     /// <summary>

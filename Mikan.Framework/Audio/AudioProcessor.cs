@@ -56,16 +56,43 @@ public abstract class AudioProcessor
     /// </summary>
     /// <param name="bufferLenghts"></param>
     /// <param name="updatePeriods"></param>
-    protected void CheckInit()
+    /// 
+
+    public enum Preset
+    {
+        /// <summary>
+        /// Default BASS preset.
+        /// </summary>
+        Default,
+
+        /// <summary>
+        /// For low latency.
+        /// </summary>
+        LowLatency,
+    }
+    protected void CheckInit(Preset preset)
     {
         if (Bass.Init())
         {
             Debug.WriteLine($"[ManagedBass] BASS initialized successfully");
 
-            Bass.Configure(Configuration.PlaybackBufferLength, 100);
-            Bass.Configure(Configuration.UpdatePeriod, 15);
-            Bass.Configure(Configuration.DevicePeriod, 20);
-            Bass.Configure(Configuration.DeviceBufferLength, 100);
+            switch (preset)
+            {
+                case Preset.Default:
+                    Bass.Configure(Configuration.DeviceBufferLength, 200);
+                    Bass.Configure(Configuration.DevicePeriod, 25);
+                    Bass.Configure(Configuration.UpdatePeriod, 25);
+                    Bass.Configure(Configuration.PlaybackBufferLength, 300);
+                    break;
+                case Preset.LowLatency:
+                    Bass.Configure(Configuration.DeviceBufferLength, 100);
+                    Bass.Configure(Configuration.DevicePeriod, 5);
+                    Bass.Configure(Configuration.UpdatePeriod, 5);
+                    Bass.Configure(Configuration.PlaybackBufferLength, 110);
+                    break;
+                default:
+                    break;
+            }
         }
         else
         {
