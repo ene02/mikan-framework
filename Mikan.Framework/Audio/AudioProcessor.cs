@@ -61,6 +61,11 @@ public abstract class AudioProcessor
         if (Bass.Init())
         {
             Debug.WriteLine($"[ManagedBass] BASS initialized successfully");
+
+            Bass.Configure(Configuration.PlaybackBufferLength, 100);
+            Bass.Configure(Configuration.UpdatePeriod, 15);
+            Bass.Configure(Configuration.DevicePeriod, 20);
+            Bass.Configure(Configuration.DeviceBufferLength, 100);
         }
         else
         {
@@ -69,11 +74,6 @@ public abstract class AudioProcessor
                 Debug.WriteLine($"[ManagedBass] BASS already initialized");
             }
         }
-
-        Bass.Configure(Configuration.PlaybackBufferLength, 100);
-        Bass.Configure(Configuration.UpdatePeriod, 15);
-        Bass.Configure(Configuration.DevicePeriod, 20);
-        Bass.Configure(Configuration.DeviceBufferLength, 100);
     }
 
     /// <summary>
