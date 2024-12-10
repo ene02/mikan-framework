@@ -188,6 +188,24 @@ public static class SoundEffects
             audioProcessor.SetFXHandler(EffectType.Freeverb, 0);
         }
 
+        if (audioProcessor.GetFXHandler(EffectType.Echo) != 0)
+        {
+            Bass.ChannelRemoveFX(handler, audioProcessor.GetFXHandler(EffectType.Freeverb));
+            audioProcessor.SetFXHandler(EffectType.Freeverb, 0);
+        }
+
+        if (audioProcessor.GetFXHandler(EffectType.Distortion) != 0)
+        {
+            Bass.ChannelRemoveFX(handler, audioProcessor.GetFXHandler(EffectType.Freeverb));
+            audioProcessor.SetFXHandler(EffectType.Freeverb, 0);
+        }
+
+        if (audioProcessor.GetFXHandler(EffectType.Chorus) != 0)
+        {
+            Bass.ChannelRemoveFX(handler, audioProcessor.GetFXHandler(EffectType.Freeverb));
+            audioProcessor.SetFXHandler(EffectType.Freeverb, 0);
+        }
+
         Debug.WriteLine($"{DEBUG_TITLE} All FX removed");
     }
 }
