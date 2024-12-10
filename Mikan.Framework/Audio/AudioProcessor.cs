@@ -69,6 +69,11 @@ public abstract class AudioProcessor
         /// Preset for low latency audio, perfect for effects and other stuff.
         /// </summary>
         LowLatency,
+
+        /// <summary>
+        /// A preset for the lowest latency posible, can be unstable and more CPU intensive.
+        /// </summary>
+        Realtime,
     }
     protected void CheckInit(Preset preset)
     {
@@ -89,6 +94,12 @@ public abstract class AudioProcessor
                     Bass.Configure(Configuration.DevicePeriod, 5);
                     Bass.Configure(Configuration.UpdatePeriod, 5);
                     Bass.Configure(Configuration.PlaybackBufferLength, 100);
+                    break;
+                case Preset.Realtime:
+                    Bass.Configure(Configuration.DeviceBufferLength, 10);
+                    Bass.Configure(Configuration.DevicePeriod, 3);
+                    Bass.Configure(Configuration.UpdatePeriod, 3);
+                    Bass.Configure(Configuration.PlaybackBufferLength, 20);
                     break;
                 default:
                     break;
