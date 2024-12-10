@@ -11,7 +11,7 @@ namespace Mikan.Audio;
 /// </summary>
 public class SingleStreamPlayer : AudioProcessor
 {
-    private readonly static string DEBUG_TITLE = $"{DateTime.Today} || [AudioPlayer]:";
+    private readonly static string DEBUG_TITLE = $"[ManagedBass]:";
 
     private int _streamHandle;
     private byte[] _data = Array.Empty<byte>();

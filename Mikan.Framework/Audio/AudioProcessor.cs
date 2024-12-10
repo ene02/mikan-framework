@@ -60,11 +60,14 @@ public abstract class AudioProcessor
     {
         if (Bass.Init())
         {
-            Debug.WriteLine($"[AudioProcessor] BASS initialized successfully");
+            Debug.WriteLine($"[ManagedBass] BASS initialized successfully");
         }
         else
         {
-            Debug.WriteLine($"[AudioProcessor] BASS already initialized or something went wrong: {Bass.LastError}");
+            if (Bass.LastError == Errors.Already)
+            {
+                Debug.WriteLine($"[ManagedBass] BASS already initialized");
+            }
         }
 
         Bass.Configure(Configuration.PlaybackBufferLength, bufferLenghts);
@@ -221,7 +224,7 @@ public abstract class AudioProcessor
                 _fxHandlers[19] = handler;
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(type), $"Effect type {type} is not recognized.");
+                throw new ArgumentOutOfRangeException(nameof(type), $"[ManagedBass] Effect type {type} is not recognized.");
         }
     }
 }

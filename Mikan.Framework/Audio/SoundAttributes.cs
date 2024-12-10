@@ -8,7 +8,7 @@ namespace Mikan.Audio;
 /// </summary>
 public static class SoundAttributes
 {
-    private readonly static string DEBUG_TITLE = $"{DateTime.Today} || [SoundAttributes]:";
+    private readonly static string DEBUG_TITLE = $"[ManagedBass]:";
 
     public const float DEFAULT_VOLUME = 1;
     public const float DEFAULT_PANNING = 0;

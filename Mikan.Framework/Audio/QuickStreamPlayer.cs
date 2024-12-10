@@ -10,7 +10,7 @@ namespace Mikan.Audio;
 /// </summary>
 public class QuickStreamPlayer : AudioProcessor
 {
-    private readonly static string DEBUG_TITLE = $"{DateTime.Today} || [AudioPlayer]:";
+    private readonly static string DEBUG_TITLE = $"[ManagedBass]:";
 
     private int _streamHandle;
 

@@ -16,7 +16,7 @@ namespace Mikan.Audio;
 /// </summary>
 public class SampleMixer
 {
-    private readonly static string DEBUG_TITLE = $"{DateTime.Today} || [Mixer]:";
+    private readonly static string DEBUG_TITLE = $"[Mixer]:";
 
     // List of streams in the mixer, gets updated when a streams starts or finishes.
     private List<SingleStreamPlayer> _staticPlayers = new();

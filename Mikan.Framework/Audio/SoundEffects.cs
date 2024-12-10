@@ -9,7 +9,7 @@ namespace Mikan.Audio;
 /// </summary>
 public static class SoundEffects
 {
-    private readonly static string DEBUG_TITLE = $"{DateTime.Today} || [SoundEffects]:";
+    private readonly static string DEBUG_TITLE = $"[ManagedBass]:";
 
     /// <summary>
     /// Applies a Biquad filter to the audio, select a filter type and a frequency.
@@ -44,9 +44,18 @@ public static class SoundEffects
                 throw new InvalidOperationException($"{DEBUG_TITLE} Failed to set {type.GetType().FullName} filter: {Bass.LastError}");
         }
 
-        // apply the filter parameters
-        if (!Bass.FXSetParameters(audioProcessor.GetFXHandler(EffectType.BQF), parameters))
-            throw new InvalidOperationException($"{DEBUG_TITLE} Failed to apply parameters for {type} filter: {Bass.LastError}");
+        if (audioProcessor.GetFXHandler(EffectType.BQF) != 0 && hz < 5) // Very small thresh holds are unnoticeable and for some reson they cause some weird behaviour.
+        {
+            Bass.ChannelRemoveFX(handler, audioProcessor.GetFXHandler(EffectType.BQF));
+            audioProcessor.SetFXHandler(EffectType.BQF, 0);
+            Debug.WriteLine($"{DEBUG_TITLE} Filter removed.");
+        }
+        else
+        {
+            // apply the filter parameters
+            if (!Bass.FXSetParameters(audioProcessor.GetFXHandler(EffectType.BQF), parameters))
+                throw new InvalidOperationException($"{DEBUG_TITLE} Failed to apply parameters for {type} filter: {Bass.LastError}");
+        }
     }
 
     /// <summary>
