@@ -102,6 +102,7 @@ public class QuickStreamPlayer : AudioProcessor
 
             SoundEffects.RemoveAllFx(this);
             Bass.StreamFree(_streamHandle); // free the stream
+            _streamHandle = 0;
         });
     }
 
