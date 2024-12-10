@@ -34,7 +34,7 @@ public class SampleMixer
     {
         foreach (byte[] byteArray in buffers)
         {
-            SingleStreamPlayer player = new(AudioProcessor.Preset.LowLatency)
+            SingleStreamPlayer player = new(AudioProcessor.Preset.Realtime)
             {
                 AudioData = byteArray,
             };
