@@ -29,7 +29,7 @@ public abstract class AudioProcessor
 
     // Handlers for each EffectType in BassFx.
     // good or bad, i dont care what you think about this.
-    protected int[] _fxHandlers = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // damn.
+    protected int[] _fxHandlers = new int[20]; // damn.
     // 0 - DXChorus
     // 1 - DXDistortion
     // 2 - DXEcho
@@ -56,7 +56,7 @@ public abstract class AudioProcessor
     /// </summary>
     /// <param name="bufferLenghts"></param>
     /// <param name="updatePeriods"></param>
-    protected void CheckInit(int bufferLenghts, int updatePeriods)
+    protected void CheckInit()
     {
         if (Bass.Init())
         {
@@ -70,10 +70,10 @@ public abstract class AudioProcessor
             }
         }
 
-        Bass.Configure(Configuration.PlaybackBufferLength, bufferLenghts);
-        Bass.Configure(Configuration.UpdatePeriod, updatePeriods);
-        Bass.Configure(Configuration.DevicePeriod, updatePeriods);
-        Bass.Configure(Configuration.DeviceBufferLength, bufferLenghts);
+        Bass.Configure(Configuration.PlaybackBufferLength, 100);
+        Bass.Configure(Configuration.UpdatePeriod, 15);
+        Bass.Configure(Configuration.DevicePeriod, 20);
+        Bass.Configure(Configuration.DeviceBufferLength, 100);
     }
 
     /// <summary>
@@ -142,17 +142,24 @@ public abstract class AudioProcessor
                 return _fxHandlers[14];
             case EffectType.Phaser:
                 return _fxHandlers[15];
-            case EffectType.VolumeEnvelope:
+            case EffectType.Chorus: // Added this effect
                 return _fxHandlers[16];
-            case EffectType.BQF:
+            case EffectType.Distortion: // Added this effect
                 return _fxHandlers[17];
-            case EffectType.PitchShift:
+            case EffectType.VolumeEnvelope:
                 return _fxHandlers[18];
-            case EffectType.Freeverb:
+            case EffectType.BQF:
                 return _fxHandlers[19];
+            case EffectType.PitchShift:
+                return _fxHandlers[20];
+            case EffectType.Freeverb:
+                return _fxHandlers[21];
+            case EffectType.Echo:
+                return _fxHandlers[22];
             default:
                 return -1; // Return -1 if the effect type is not recognized
         }
+
     }
 
     /// <summary>
@@ -211,20 +218,30 @@ public abstract class AudioProcessor
             case EffectType.Phaser:
                 _fxHandlers[15] = handler;
                 break;
-            case EffectType.VolumeEnvelope:
+            case EffectType.Chorus: // Added this effect
                 _fxHandlers[16] = handler;
                 break;
-            case EffectType.BQF:
+            case EffectType.Distortion: // Added this effect
                 _fxHandlers[17] = handler;
                 break;
-            case EffectType.PitchShift:
+            case EffectType.VolumeEnvelope:
                 _fxHandlers[18] = handler;
                 break;
-            case EffectType.Freeverb:
+            case EffectType.BQF:
                 _fxHandlers[19] = handler;
+                break;
+            case EffectType.PitchShift:
+                _fxHandlers[20] = handler;
+                break;
+            case EffectType.Freeverb:
+                _fxHandlers[21] = handler;
+                break;
+            case EffectType.Echo:
+                _fxHandlers[22] = handler;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), $"[ManagedBass] Effect type {type} is not recognized.");
         }
+
     }
 }

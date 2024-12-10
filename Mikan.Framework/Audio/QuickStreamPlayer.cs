@@ -14,9 +14,9 @@ public class QuickStreamPlayer : AudioProcessor
 
     private int _streamHandle;
 
-    public QuickStreamPlayer(int bufferLenghts = 100, int updatePeriods = 10)
+    public QuickStreamPlayer()
     {
-        CheckInit(bufferLenghts, updatePeriods);
+        CheckInit();
     }
 
     /// <summary>

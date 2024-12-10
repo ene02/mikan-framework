@@ -29,9 +29,9 @@ public class SingleStreamPlayer : AudioProcessor
         }
     }
 
-    public SingleStreamPlayer(int bufferLenghts = 100, int updatePeriods = 10)
+    public SingleStreamPlayer()
     {
-        CheckInit(bufferLenghts, updatePeriods);
+        CheckInit();
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public class SingleStreamPlayer : AudioProcessor
         if (_streamHandle == 0)
         {
             // create a stream for the file
-            _streamHandle = Bass.CreateStream(_data, 0, _data.Length, BassFlags.Decode);
+            _streamHandle = Bass.CreateStream(_data, 0, _data.Length, BassFlags.Decode | BassFlags.Float);
 
             // wrap in tempo stream
             _streamHandle = BassFx.TempoCreate(_streamHandle, BassFlags.Default);
