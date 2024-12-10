@@ -61,12 +61,12 @@ public abstract class AudioProcessor
     public enum Preset
     {
         /// <summary>
-        /// Default BASS preset.
+        /// Default preset, good for simple audio playback.
         /// </summary>
         Default,
 
         /// <summary>
-        /// For low latency.
+        /// Preset for low latency audio, perfect for effects and other stuff.
         /// </summary>
         LowLatency,
     }
@@ -82,13 +82,13 @@ public abstract class AudioProcessor
                     Bass.Configure(Configuration.DeviceBufferLength, 200);
                     Bass.Configure(Configuration.DevicePeriod, 25);
                     Bass.Configure(Configuration.UpdatePeriod, 25);
-                    Bass.Configure(Configuration.PlaybackBufferLength, 300);
+                    Bass.Configure(Configuration.PlaybackBufferLength, 400);
                     break;
                 case Preset.LowLatency:
-                    Bass.Configure(Configuration.DeviceBufferLength, 100);
+                    Bass.Configure(Configuration.DeviceBufferLength, 50);
                     Bass.Configure(Configuration.DevicePeriod, 5);
                     Bass.Configure(Configuration.UpdatePeriod, 5);
-                    Bass.Configure(Configuration.PlaybackBufferLength, 110);
+                    Bass.Configure(Configuration.PlaybackBufferLength, 100);
                     break;
                 default:
                     break;

@@ -115,6 +115,29 @@ public static class SoundAttributes
         return posInSec;
     }
 
+    public static void SetPositionInBytes(this AudioProcessor audioProcessor, float seconds)
+    {
+        int handler = audioProcessor.GetHandler();
+
+        // Ensure the handler is valid.
+        if (handler == 0)
+            return;
+
+        // Retrieve stream info to get sample rate and channels (assuming it's a stream).
+        int sampleRate = Bass.ChannelGetInfo(handler).Frequency;
+        int channels = Bass.ChannelGetInfo(handler).Channels;
+        int bitsPerSample = 16;
+
+        // Convert seconds to bytes.
+        long bytes = (long)(seconds * sampleRate * channels * (bitsPerSample / 8));
+
+        // Set the position in bytes.
+        if (!Bass.ChannelSetPosition(handler, bytes))
+        {
+            throw new InvalidOperationException($"Failed to set position to {bytes} bytes: {Bass.LastError}");
+        }
+    }
+
     /// <summary>
     /// Change volume.
     /// </summary>
