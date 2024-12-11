@@ -395,3 +395,6 @@ FodyWeavers.xsd
 /Sprout.Gtk/Sprout.Gtk.csproj
 /Gtkro/Gtkro.csproj
 /Gtkro/Program.cs
+/Gtkro/Gtk.App.csproj
+/Mikan.Toolkit/Window
+/SDL.App
