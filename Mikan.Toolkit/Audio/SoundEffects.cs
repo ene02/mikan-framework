@@ -30,6 +30,17 @@ public static class SoundEffects
             lFilter = type
         };
 
+        if (hz < 5) // Very small thresh holds are unnoticeable and for some reason they cause some weird behaviour, so its better to try to avoid them.
+        {
+            if (audioProcessor.GetFXHandler(EffectType.BQF) == 0)
+                return;
+
+            Bass.ChannelRemoveFX(handler, audioProcessor.GetFXHandler(EffectType.BQF));
+            audioProcessor.SetFXHandler(EffectType.BQF, 0);
+            Debug.WriteLine($"{DEBUG_TITLE} Filter removed.");
+            return;
+        }
+
         if (audioProcessor.GetFXHandler(EffectType.BQF) == 0) // create filter if it doesnt exist.
         {
             Debug.WriteLine($"{DEBUG_TITLE} Filter didnt exist, creating...");
@@ -44,18 +55,9 @@ public static class SoundEffects
                 throw new InvalidOperationException($"{DEBUG_TITLE} Failed to set {type.GetType().FullName} filter: {Bass.LastError}");
         }
 
-        if (audioProcessor.GetFXHandler(EffectType.BQF) != 0 && hz < 5) // Very small thresh holds are unnoticeable and for some reson they cause some weird behaviour.
-        {
-            Bass.ChannelRemoveFX(handler, audioProcessor.GetFXHandler(EffectType.BQF));
-            audioProcessor.SetFXHandler(EffectType.BQF, 0);
-            Debug.WriteLine($"{DEBUG_TITLE} Filter removed.");
-        }
-        else
-        {
-            // apply the filter parameters
-            if (!Bass.FXSetParameters(audioProcessor.GetFXHandler(EffectType.BQF), parameters))
-                throw new InvalidOperationException($"{DEBUG_TITLE} Failed to apply parameters for {type} filter: {Bass.LastError}");
-        }
+        // apply the filter parameters
+        if (!Bass.FXSetParameters(audioProcessor.GetFXHandler(EffectType.BQF), parameters))
+            throw new InvalidOperationException($"{DEBUG_TITLE} Failed to apply parameters for {type} filter: {Bass.LastError}");
     }
 
     public static void SetEchoEffect(this AudioProcessor audioProcessor, float delay, float feedback, float wetMix, float dryMix)
@@ -72,6 +74,17 @@ public static class SoundEffects
             fWetMix = wetMix    // Wet/Dry mix (0 to 1)
         };
 
+        if ((Math.Abs(delay) < 1f || feedback <= 0f || wetMix <= 0f))
+        {
+            if (audioProcessor.GetFXHandler(EffectType.Echo) == 0)
+                return;
+
+            Bass.ChannelRemoveFX(handler, audioProcessor.GetFXHandler(EffectType.Echo));
+            audioProcessor.SetFXHandler(EffectType.Echo, 0);
+            Debug.WriteLine($"{DEBUG_TITLE} Echo effect removed due to negligible or invalid parameters.");
+            return;
+        }
+
         if (audioProcessor.GetFXHandler(EffectType.Echo) == 0) // Create effect if it doesn't exist.
         {
             Debug.WriteLine($"{DEBUG_TITLE} Echo effect didn't exist, creating...");
@@ -86,19 +99,9 @@ public static class SoundEffects
                 throw new InvalidOperationException($"{DEBUG_TITLE} Failed to create Echo effect: {Bass.LastError}");
         }
 
-        if (audioProcessor.GetFXHandler(EffectType.Echo) != 0 && (Math.Abs(delay) < 1f || feedback <= 0f || wetMix <= 0f))
-        {
-            // Remove the effect if parameters result in an ineffective echo.
-            Bass.ChannelRemoveFX(handler, audioProcessor.GetFXHandler(EffectType.Echo));
-            audioProcessor.SetFXHandler(EffectType.Echo, 0);
-            Debug.WriteLine($"{DEBUG_TITLE} Echo effect removed due to negligible or invalid parameters.");
-        }
-        else
-        {
-            // Apply the echo effect parameters.
-            if (!Bass.FXSetParameters(audioProcessor.GetFXHandler(EffectType.Echo), parameters))
-                throw new InvalidOperationException($"{DEBUG_TITLE} Failed to apply parameters for Echo effect: {Bass.LastError}");
-        }
+        // Apply the echo effect parameters.
+        if (!Bass.FXSetParameters(audioProcessor.GetFXHandler(EffectType.Echo), parameters))
+            throw new InvalidOperationException($"{DEBUG_TITLE} Failed to apply parameters for Echo effect: {Bass.LastError}");
     }
 
     /// <summary>
