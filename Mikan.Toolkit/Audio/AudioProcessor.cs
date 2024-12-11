@@ -89,6 +89,12 @@ public abstract class AudioProcessor
 
         Debug.WriteLine($"[ManagedBass] BASS initialized successfully");
 
+        AppDomain.CurrentDomain.ProcessExit += (s, e) =>
+        {
+            Bass.Free();
+            Debug.WriteLine($"[ManagedBass] BASS resources were freed, bye bye.");
+        };
+
         switch (preset)
         {
             case Preset.Default:
