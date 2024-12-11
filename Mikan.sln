@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mikan", "Mikan.Framework\Mikan.csproj", "{66F82494-47B0-44B5-B690-0FFB62AB7EC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mikan.Toolkit", "Mikan.Toolkit\Mikan.Toolkit.csproj", "{66F82494-47B0-44B5-B690-0FFB62AB7EC2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mikan.NativeLibs", "Mikan.NativeLibs\Mikan.NativeLibs.csproj", "{E5282E48-2C18-49ED-855D-150CE429B8F6}"
 EndProject

@@ -2,7 +2,7 @@ using ManagedBass;
 using ManagedBass.Fx;
 using System.Diagnostics;
 
-namespace Mikan.Audio;
+namespace Mikan.Toolkit.Audio;
 
 /// <summary>
 /// QuickPlayer is designed for one-at-a-time audio playback. It dynamically creates a new stream for each playback request, ensuring that only one stream<br />
@@ -82,7 +82,7 @@ public class QuickPlayer : AudioProcessor
         {
             PlaybackEnded?.Invoke(this, EventArgs.Empty);
 
-            SoundEffects.RemoveAllFx(this);
+            this.RemoveAllFx();
             Bass.StreamFree(_streamHandle); // free the stream
             _streamHandle = 0;
         });
@@ -97,7 +97,7 @@ public class QuickPlayer : AudioProcessor
             return;
 
         Bass.ChannelStop(_streamHandle);
-        SoundEffects.RemoveAllFx(this);
+        this.RemoveAllFx();
         Bass.StreamFree(_streamHandle);
 
         _streamHandle = 0;

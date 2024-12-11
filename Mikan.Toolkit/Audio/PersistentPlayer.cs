@@ -2,7 +2,7 @@
 using ManagedBass;
 using System.Diagnostics;
 
-namespace Mikan.Audio;
+namespace Mikan.Toolkit.Audio;
 
 /// <summary>
 /// PersistentPlayer provides functionality to play audio from a reusable, persistent buffer. Unlike QuickPlayer, this class retains the audio data and stream<br />
@@ -116,7 +116,7 @@ public class PersistentPlayer : AudioProcessor
             return;
 
         Stop();
-        SoundEffects.RemoveAllFx(this);
+        this.RemoveAllFx();
         Bass.StreamFree(_streamHandle);
         _streamHandle = 0;
 

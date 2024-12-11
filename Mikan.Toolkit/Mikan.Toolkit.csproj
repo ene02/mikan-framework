@@ -2,11 +2,11 @@
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<PackageId>Mikan.Framework</PackageId>
-		<Version>0.0.6</Version>
+		<PackageId>Mikan.Toolkit</PackageId>
+		<Version>0.0.7</Version>
 		<Authors>Ene</Authors>
-		<Description>A framework to do stuff.</Description>
-		<PackageTags>mikan;lib;library;framework;games</PackageTags>
+		<Description>A toolkit library to do stuff.</Description>
+		<PackageTags>mikan;lib;library;bass;sdl2</PackageTags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/ene02/sprout-lib</RepositoryUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
@@ -32,7 +32,8 @@
 	<ItemGroup>
 		<PackageReference Include="ManagedBass" Version="3.1.1" />
 		<PackageReference Include="ManagedBass.Fx" Version="3.1.1" />
-		<PackageReference Include="Mikan.NativeLibs" Version="0.0.2" />
+		<PackageReference Include="Mikan.NativeLibs" Version="0.0.3" />
+		<PackageReference Include="ppy.SDL2-CS" Version="1.0.82" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
 	</ItemGroup>

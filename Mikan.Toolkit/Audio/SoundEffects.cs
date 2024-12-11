@@ -2,7 +2,7 @@
 using ManagedBass;
 using System.Diagnostics;
 
-namespace Mikan.Audio;
+namespace Mikan.Toolkit.Audio;
 
 /// <summary>
 /// Extension methods for effects of AudioProcessors.

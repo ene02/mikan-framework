@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Mikan.Audio;
+namespace Mikan.Toolkit.Audio;
 
 /// <summary>
 /// AudioMixer is an utility for managing and playing multiple audio samples simultaneously. It allows efficient playback<br />

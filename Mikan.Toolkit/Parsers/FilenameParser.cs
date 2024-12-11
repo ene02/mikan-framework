@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Mikan.Parsers;
+namespace Mikan.Toolkit.Parsers;
 
 public static class FilenameParser
 {
@@ -22,7 +22,7 @@ public static class FilenameParser
         {
             for (int i = filePath.Length - 1; i >= 0; i--)
             {
-                if (filePath[i] ==  leftBar || filePath[i] == rightBar)
+                if (filePath[i] == leftBar || filePath[i] == rightBar)
                 {
                     string fpn = fullParsedName.ToString();
                     string nxn = noExtParsedName.ToString();

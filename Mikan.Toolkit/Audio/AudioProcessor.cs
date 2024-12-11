@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using ManagedBass;
 
-namespace Mikan.Audio;
+namespace Mikan.Toolkit.Audio;
 
 /// <summary>
 /// Provides a foundational abstraction for audio processing, encapsulating methods and properties<br />

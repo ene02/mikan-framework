@@ -1,7 +1,7 @@
 ﻿using ManagedBass;
 using System.Diagnostics;
 
-namespace Mikan.Audio;
+namespace Mikan.Toolkit.Audio;
 
 /// <summary>
 /// Extension methods for attributes of AudioProcessors.
@@ -123,7 +123,7 @@ public static class SoundAttributes
         if (handler == 0)
             return;
 
-        if (seconds > 0 && seconds < GetAudioLenght(audioProcessor))
+        if (seconds > 0 && seconds < audioProcessor.GetAudioLenght())
         {
             // Retrieve stream info to get sample rate and channels (assuming it's a stream).
             int sampleRate = Bass.ChannelGetInfo(handler).Frequency;
