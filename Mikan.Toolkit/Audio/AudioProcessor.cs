@@ -76,40 +76,41 @@ public abstract class AudioProcessor
     }
     protected void CheckInit(Preset preset)
     {
-        if (Bass.Init())
-        {
-            Debug.WriteLine($"[ManagedBass] BASS initialized successfully");
-
-            switch (preset)
-            {
-                case Preset.Default:
-                    Bass.Configure(Configuration.DeviceBufferLength, 200);
-                    Bass.Configure(Configuration.DevicePeriod, 25);
-                    Bass.Configure(Configuration.UpdatePeriod, 25);
-                    Bass.Configure(Configuration.PlaybackBufferLength, 400);
-                    break;
-                case Preset.LowLatency:
-                    Bass.Configure(Configuration.DeviceBufferLength, 50);
-                    Bass.Configure(Configuration.DevicePeriod, 5);
-                    Bass.Configure(Configuration.UpdatePeriod, 5);
-                    Bass.Configure(Configuration.PlaybackBufferLength, 100);
-                    break;
-                case Preset.Realtime:
-                    Bass.Configure(Configuration.DeviceBufferLength, 10);
-                    Bass.Configure(Configuration.DevicePeriod, 3);
-                    Bass.Configure(Configuration.UpdatePeriod, 3);
-                    Bass.Configure(Configuration.PlaybackBufferLength, 20);
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
+        if (!Bass.Init())
         {
             if (Bass.LastError == Errors.Already)
             {
                 Debug.WriteLine($"[ManagedBass] BASS already initialized");
+                return;
             }
+
+            Debug.WriteLine($"[ManagedBass] Failed to initialize BASS: {Bass.LastError}");
+        }
+
+        Debug.WriteLine($"[ManagedBass] BASS initialized successfully");
+
+        switch (preset)
+        {
+            case Preset.Default:
+                Bass.Configure(Configuration.DeviceBufferLength, 200);
+                Bass.Configure(Configuration.DevicePeriod, 25);
+                Bass.Configure(Configuration.UpdatePeriod, 25);
+                Bass.Configure(Configuration.PlaybackBufferLength, 400);
+                break;
+            case Preset.LowLatency:
+                Bass.Configure(Configuration.DeviceBufferLength, 50);
+                Bass.Configure(Configuration.DevicePeriod, 5);
+                Bass.Configure(Configuration.UpdatePeriod, 5);
+                Bass.Configure(Configuration.PlaybackBufferLength, 100);
+                break;
+            case Preset.Realtime:
+                Bass.Configure(Configuration.DeviceBufferLength, 10);
+                Bass.Configure(Configuration.DevicePeriod, 3);
+                Bass.Configure(Configuration.UpdatePeriod, 3);
+                Bass.Configure(Configuration.PlaybackBufferLength, 20);
+                break;
+            default:
+                break;
         }
     }
 

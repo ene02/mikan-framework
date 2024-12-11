@@ -43,11 +43,8 @@ public class PersistentPlayer : AudioProcessor
     /// <exception cref="InvalidOperationException"></exception>
     public override void Play(object data = null)
     {
-        if (data is string)
+        if (data is string && !string.IsNullOrWhiteSpace((string)data) && File.Exists((string)data))
         {
-            if (string.IsNullOrWhiteSpace((string)data) || !File.Exists((string)data))
-                throw new ArgumentException($"{DEBUG_TITLE} Invalid file path", (string)data);
-
             AudioData = File.ReadAllBytes((string)data);
         }
         else if (data is byte[])

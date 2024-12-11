@@ -123,21 +123,21 @@ public static class SoundAttributes
         if (handler == 0)
             return;
 
-        if (seconds > 0 && seconds < audioProcessor.GetAudioLenght())
+        if (!(seconds > 0) && !(seconds < audioProcessor.GetAudioLenght()))
+            return;
+
+        // Retrieve stream info to get sample rate and channels (assuming it's a stream).
+        int sampleRate = Bass.ChannelGetInfo(handler).Frequency;
+        int channels = Bass.ChannelGetInfo(handler).Channels;
+        int bitsPerSample = 16;
+
+        // Convert seconds to bytes.
+        long bytes = (long)(seconds * sampleRate * channels * (bitsPerSample / 8));
+
+        // Set the position in bytes.
+        if (!Bass.ChannelSetPosition(handler, bytes))
         {
-            // Retrieve stream info to get sample rate and channels (assuming it's a stream).
-            int sampleRate = Bass.ChannelGetInfo(handler).Frequency;
-            int channels = Bass.ChannelGetInfo(handler).Channels;
-            int bitsPerSample = 16;
-
-            // Convert seconds to bytes.
-            long bytes = (long)(seconds * sampleRate * channels * (bitsPerSample / 8));
-
-            // Set the position in bytes.
-            if (!Bass.ChannelSetPosition(handler, bytes))
-            {
-                Debug.WriteLine("[ManagedBass] Position was invalid");
-            }
+            Debug.WriteLine("[ManagedBass] Position was invalid");
         }
     }
 

@@ -42,13 +42,13 @@ public class AudioMixer
     /// <param name="buffers"></param>
     public void RemoveBuffers(params byte[][] buffers)
     {
-        for (int i = 0; i < _staticPlayers.Count; i++)
+        for (int i = 0; i < _staticPlayers.Count; i++) // Go through each PersistentPlayer.
         {
-            for (int x = 0; i < buffers.Length; i++)
+            for (int x = 0; i < buffers.Length; i++) // Go through each audio buffer
             {
-                if (_staticPlayers[i].AudioData == buffers[x])
+                if (_staticPlayers[i].AudioData == buffers[x]) // If the current PersistenPlayer has the same data as the buffer selected by the loop.
                 {
-                    _staticPlayers.RemoveAt(i);
+                    _staticPlayers.RemoveAt(i); // Remove it.
                 }
             }
         }
@@ -106,6 +106,6 @@ public class AudioMixer
 
         _staticPlayers.Clear();
 
-        Debug.WriteLine($"{DEBUG_TITLE} All players and buffers disposed.");
+        Debug.WriteLine($"{DEBUG_TITLE} All players and buffers were disposed.");
     }
 }
