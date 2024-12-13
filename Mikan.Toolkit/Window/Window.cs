@@ -9,6 +9,16 @@ public class Window
 {
     private IntPtr _windowHandler = 0;
     private bool _isWindowRunning;
+    private int _maxHeight = -1, _minHeight = -1, _maxWidth = -1, _minWidth = -1;
+    private int _currentHeight = -1, _currentWidth = -1;
+    private bool _resizable = false;
+
+    public enum Mode
+    {
+        Fullscreen,
+        Borderless,
+        Windowed
+    }
 
     // SDL Event: Window Close
     /// <summary>
@@ -78,6 +88,9 @@ public class Window
 
     public Window()
     {
+        if (SDLChecker.IsSDLInitialized)
+            return;
+
         // Initialize SDL.
         if (SDL_Init(SDL_INIT_VIDEO) < 0)
         {
@@ -86,7 +99,7 @@ public class Window
         }
 
         Debug.WriteLine($"[SDL] Initiated!");
-
+        SDLChecker.IsSDLInitialized = true;
         AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
     }
 
@@ -99,12 +112,225 @@ public class Window
         SDL.SDL_Quit();
     }
 
+    public void Minimize()
+    {
+        if (_windowHandler == 0)
+            return;
+
+        SDL_MinimizeWindow(_windowHandler);
+    }
+
+    public void Maximize()
+    {
+        if (_windowHandler == 0)
+            return;
+
+        SDL_MaximizeWindow(_windowHandler);
+    }
+
+    public void Focus()
+    {
+        if (_windowHandler == 0)
+            return;
+
+        SDL_RaiseWindow(_windowHandler);
+    }
+
+    public void Restore()
+    {
+        if (_windowHandler == 0)
+            return;
+
+        SDL_RestoreWindow(_windowHandler);
+    }
+
+    public void Resizable(bool canResize)
+    {
+        if (_windowHandler == 0)
+            return;
+
+        if (canResize)
+        {
+            SDL_SetWindowResizable(_windowHandler, SDL_bool.SDL_TRUE);
+            _resizable = true;
+            Debug.WriteLine("[SDL] Window is permanently resizable");
+        }
+        else
+        {
+            SDL_SetWindowResizable(_windowHandler, SDL_bool.SDL_FALSE);
+            _resizable = false;
+            Debug.WriteLine("[SDL] Window is permanently not resizable");
+        }
+    }
+
+    private void TempResizable(bool canResize)
+    {
+        if (_windowHandler == 0)
+            return;
+
+        if (canResize)
+        {
+            SDL_SetWindowResizable(_windowHandler, SDL_bool.SDL_TRUE);
+            Debug.WriteLine("[SDL] Window is temporarily resizable");
+        }
+        else
+        {
+            SDL_SetWindowResizable(_windowHandler, SDL_bool.SDL_FALSE);
+            Debug.WriteLine("[SDL] Window is temporarily not resizable");
+        }
+    }
+
+    public void ChangePosition(int x, int y)
+    {
+        if (_windowHandler == 0)
+            return;
+
+        SDL_SetWindowPosition(_windowHandler, x, y);
+    }
+
+    public void ChangeOpacity(float alpha)
+    {
+        if (_windowHandler == 0 && alpha < 0)
+            return;
+
+        if (alpha > 1.0f) // Check for silyness.
+            alpha = 1.0f;
+
+        SDL_SetWindowOpacity(_windowHandler, alpha);
+    }
+
+    /// <summary>
+    /// Makes the window have no size limits.
+    /// </summary>
+    public void UnboundWindow()
+    {
+        SDL_DisplayMode desktopMode;
+
+        if (SDL_GetDesktopDisplayMode(0, out desktopMode) != 0)
+        {
+            Debug.WriteLine($"[SDL] Could not get desktop resolution!: {SDL_GetError()}");
+            return;
+        }
+
+        SetMaximumSize(desktopMode.w, desktopMode.h);
+        SetMinimumSize(0, 0);
+    }
+
+    public void ChangeWindowMode(Mode mode)
+    {
+        if (_windowHandler == 0)
+            return;
+
+        switch (mode)
+        {
+            case Mode.Fullscreen:
+                UnboundWindow();
+
+                if (!_resizable)
+                    TempResizable(true);
+
+                if (SDL_SetWindowFullscreen(_windowHandler, 0x00000001) != 0)
+                {
+                    Debug.WriteLine($"[SDL] Could not set window to fullscreen!: {SDL_GetError()}");
+                };
+                break;
+            case Mode.Borderless:
+                UnboundWindow();
+
+                if (!_resizable)
+                    TempResizable(true);
+
+                if (SDL_SetWindowFullscreen(_windowHandler, 0x00001000) != 0)
+                {
+                    Debug.WriteLine($"[SDL] Could not set window to borderless!: {SDL_GetError()}");
+                };
+                break;
+            case Mode.Windowed:
+                if (_maxWidth != -1 && _maxHeight != -1)
+                {
+                    SetMaximumSize(_maxWidth, _maxHeight);
+                }
+
+                if (_minWidth != -1 && _minHeight != -1)
+                {
+                    SetMinimumSize(_minWidth, _minHeight);
+                }
+
+                if (SDL_SetWindowFullscreen(_windowHandler, 0) != 0)
+                {
+                    Debug.WriteLine($"[SDL] Could not set window to windowed!: {SDL_GetError()}");
+                };
+
+                Resizable(_resizable);
+
+                ChangeSize(_currentWidth, _currentHeight);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void ChangeIcon(string file)
+    {
+        if (_windowHandler == 0)
+            return;
+
+        if (SDL_LoadBMP(file) == 0)
+        {
+            Debug.WriteLine($"[SDL] Failed to load image!: {SDL_GetError()}");
+        }
+
+        SDL_SetWindowIcon(_windowHandler, SDL_LoadBMP(file));
+    }
+
+    public void ChangeSize(int width, int height)
+    {
+        if (_windowHandler == 0 && width > 0 && height > 0)
+            return;
+
+        _currentHeight = height;
+        _currentWidth = width;
+
+        SDL_SetWindowSize(_windowHandler, width, height);
+    }
+
+    public void ChangeTitle(string title)
+    {
+        SDL_SetWindowTitle(_windowHandler, title);
+    }
+
+    public void SetMaximumSize(int maxWidth, int maxHeight)
+    {
+        if (_windowHandler == 0 && maxWidth > 0 && maxHeight > 0)
+            return;
+
+        SDL_SetWindowMaximumSize(_windowHandler, maxWidth, maxHeight);
+    }
+
+    public void SetMinimumSize(int minWidth, int minHeight)
+    {
+        if (_windowHandler == 0 && minWidth > 0 && minHeight > 0)
+            return;
+
+        SDL_SetWindowMinimumSize(_windowHandler, minWidth, minHeight);
+    }
+
     public void ShowWindow(string title, Int32 width, Int32 height, SDL_WindowFlags windowFlags)
     {
         if (_windowHandler != 0)
             return;
 
-        Debug.WriteLine($"[SDL] Making window with the next params: Title={title}, W={width}, H={height}");
+        Debug.WriteLine($"[SDL] Making window with the next params: Title={title}, W={width}, H={height}, Flags={windowFlags}");
+
+        if (windowFlags.HasFlag(SDL_WindowFlags.SDL_WINDOW_RESIZABLE))
+        {
+            _resizable = true;
+            Debug.WriteLine("[SDL] Window is initiatited as resizable");
+        }
+        else
+        {
+            Debug.WriteLine("[SDL] Window is initiatited as not resizable");
+        }
 
         // Create a window.
         _windowHandler = SDL_CreateWindow(
@@ -122,6 +348,9 @@ public class Window
             SDL_Quit();
             return;
         }
+
+        _currentHeight = height;
+        _currentWidth = width;
 
         Debug.WriteLine("[SDL] SDL window was created sucessfully, event loop started!");
         _isWindowRunning = true;
@@ -146,7 +375,6 @@ public class Window
                 {
                     // Trigger mouse button down event
                     OnMouseButtonDown?.Invoke(this, EventArgs.Empty);
-                    Debug.WriteLine("wawa");
                 }
                 else if (e.type == SDL.SDL_EventType.SDL_MOUSEBUTTONUP)
                 {
