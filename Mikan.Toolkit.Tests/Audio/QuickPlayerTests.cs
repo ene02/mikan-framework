@@ -25,7 +25,7 @@ namespace Mikan.Toolkit.Audio.Tests
 
             player.Stop();
 
-            Assert.AreSame(0, player.GetHandler());
+            Assert.AreEqual(0, player.GetHandler());
         }
 
         [TestMethod()]

@@ -414,8 +414,8 @@ public class Window
         if (_windowHandler != 0)
             return;
 
-        width = Math.Clamp(width, 0, Int32.MaxValue);
-        height = Math.Clamp(height, 0, Int32.MaxValue);
+        width = Math.Clamp(width, 1, Int32.MaxValue);
+        height = Math.Clamp(height, 1, Int32.MaxValue);
 
         Debug.WriteLine($"[SDL] Making window with the next params: Title={title}, W={width}, H={height}, Flags={windowFlags}");
 
