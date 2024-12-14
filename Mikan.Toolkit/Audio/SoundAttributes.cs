@@ -132,7 +132,7 @@ public static class SoundAttributes
         int bitsPerSample = 16;
 
         // Convert seconds to bytes.
-        long bytes = (long)(seconds * sampleRate * channels * (bitsPerSample / 8));
+        long bytes = (long)(seconds * sampleRate * channels * (bitsPerSample / 4));
 
         // Set the position in bytes.
         if (!Bass.ChannelSetPosition(handler, bytes))
