@@ -398,3 +398,5 @@ FodyWeavers.xsd
 /Gtkro/Gtk.App.csproj
 /Mikan.Toolkit/Window
 /SDL.App
+/Gtk.App/Gtk.App.csproj
+/Gtk.App/Program.cs
