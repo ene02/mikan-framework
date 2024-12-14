@@ -1,23 +1,63 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using SDL2;
+using static Mikan.Toolkit.Window.Window;
 using static SDL2.SDL;
 
 namespace Mikan.Toolkit.Window;
 
 public class Window
 {
-    private IntPtr _windowHandler = 0;
-    private bool _isWindowRunning;
-    private int _maxHeight = -1, _minHeight = -1, _maxWidth = -1, _minWidth = -1;
-    private int _currentHeight = -1, _currentWidth = -1;
-    private bool _resizable = false;
+    private nint _windowHandler = 0;
+    private string _title;
+    private bool _isWindowRunning = false, _resizable = false, _isMaximized = false, _isMinimized = false, _hasFocus = false;
+    private int _maxHeight = int.MaxValue, _minHeight = 0, _maxWidth = int.MaxValue, _minWidth = 0, _currentHeight = -1, _currentWidth = -1, _xPos = 0, _yPos = 0;
+    private float _currentOpacity = 1.0f;
+    private Mode _currentWindowMode = Mode.Windowed;
+    private nint _image = nint.Zero;
+
+    public bool IsWindowCreated { get { return _isWindowRunning; } }
+
+    public bool IsMinimized { get { return _isMinimized; } }
+
+    public bool IsMaximized { get { return _isMaximized; } }
+
+    public bool IsFocused { get { return _hasFocus; } }
+
+    public Mode CurrentMode { get { return _currentWindowMode; } }
+
+    public int Height { get { return _currentHeight; } }
+
+    public int Width { get { return _currentWidth; } }
+
+    public float Opacity { get { return _currentOpacity; } }
+
+    public string Title { get { return _title; } }
+
+    public int XPosition { get { return _xPos; } }
+
+    public int YPosition { get { return _yPos; } }
+
+    public nint ImageData { get { return _image; } }
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr SetFocus(IntPtr hWnd);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr GetDesktopWindow();
 
     public enum Mode
     {
         Fullscreen,
         Borderless,
         Windowed
+    }
+
+    public enum State
+    {
+        Minimized,
+        Maximized,
+        Normal,
     }
 
     // SDL Event: Window Close
@@ -86,6 +126,12 @@ public class Window
     /// </summary>
     public event Action OnAppTerminating;
 
+    public event Action OnWindowMinimized;
+
+    public event Action OnWindowMaximized;
+
+    public event Action OnWindowRestored;
+
     public Window()
     {
         if (SDLChecker.IsSDLInitialized)
@@ -118,6 +164,7 @@ public class Window
             return;
 
         SDL_MinimizeWindow(_windowHandler);
+        _isMinimized = true;
     }
 
     public void Maximize()
@@ -126,6 +173,7 @@ public class Window
             return;
 
         SDL_MaximizeWindow(_windowHandler);
+        _isMaximized = true;
     }
 
     public void Focus()
@@ -144,7 +192,7 @@ public class Window
         SDL_RestoreWindow(_windowHandler);
     }
 
-    public void Resizable(bool canResize)
+    public void SetResizable(bool canResize)
     {
         if (_windowHandler == 0)
             return;
@@ -180,21 +228,36 @@ public class Window
         }
     }
 
+    public void Close()
+    {
+        if (_windowHandler == 0)
+            return;
+
+        SDL.SDL_DestroyWindow(_windowHandler);
+        _isWindowRunning = false;
+        OnWindowClosed?.Invoke();
+    }
+
     public void ChangePosition(int x, int y)
     {
         if (_windowHandler == 0)
             return;
+
+        _xPos = x;
+        _yPos = y;
 
         SDL_SetWindowPosition(_windowHandler, x, y);
     }
 
     public void ChangeOpacity(float alpha)
     {
-        if (_windowHandler == 0 && alpha < 0)
+        if (_windowHandler == 0 || alpha < 0)
             return;
 
         if (alpha > 1.0f) // Check for silyness.
             alpha = 1.0f;
+
+        _currentOpacity = alpha;
 
         SDL_SetWindowOpacity(_windowHandler, alpha);
     }
@@ -232,7 +295,9 @@ public class Window
                 if (SDL_SetWindowFullscreen(_windowHandler, 0x00000001) != 0)
                 {
                     Debug.WriteLine($"[SDL] Could not set window to fullscreen!: {SDL_GetError()}");
+                    break;
                 };
+                _currentWindowMode = mode;
                 break;
             case Mode.Borderless:
                 UnboundWindow();
@@ -243,25 +308,23 @@ public class Window
                 if (SDL_SetWindowFullscreen(_windowHandler, 0x00001000) != 0)
                 {
                     Debug.WriteLine($"[SDL] Could not set window to borderless!: {SDL_GetError()}");
+                    break;
                 };
+                _currentWindowMode = mode;
                 break;
             case Mode.Windowed:
-                if (_maxWidth != -1 && _maxHeight != -1)
-                {
-                    SetMaximumSize(_maxWidth, _maxHeight);
-                }
-
-                if (_minWidth != -1 && _minHeight != -1)
-                {
-                    SetMinimumSize(_minWidth, _minHeight);
-                }
+                SetMaximumSize(_maxWidth, _maxHeight);
+                SetMinimumSize(_minWidth, _minHeight);
 
                 if (SDL_SetWindowFullscreen(_windowHandler, 0) != 0)
                 {
                     Debug.WriteLine($"[SDL] Could not set window to windowed!: {SDL_GetError()}");
+                    break;
                 };
 
-                Resizable(_resizable);
+                _currentWindowMode = mode;
+
+                SetResizable(_resizable);
 
                 ChangeSize(_currentWidth, _currentHeight);
                 break;
@@ -272,20 +335,25 @@ public class Window
 
     public void ChangeIcon(string file)
     {
-        if (_windowHandler == 0)
+        if (_windowHandler == 0 || !File.Exists(file))
             return;
 
-        if (SDL_LoadBMP(file) == 0)
+        _image = SDL_LoadBMP(file);
+        Debug.WriteLine(_image);
+        if (_image == 0)
         {
             Debug.WriteLine($"[SDL] Failed to load image!: {SDL_GetError()}");
         }
-
-        SDL_SetWindowIcon(_windowHandler, SDL_LoadBMP(file));
+        
+        SDL_SetWindowIcon(_windowHandler, _image);
     }
 
     public void ChangeSize(int width, int height)
     {
-        if (_windowHandler == 0 && width > 0 && height > 0)
+        if (_windowHandler == 0)
+            return;
+
+        if (width < 0 || height < 0 || width > _maxWidth || height > _maxHeight || width < _minWidth || height < _minHeight)
             return;
 
         _currentHeight = height;
@@ -296,28 +364,39 @@ public class Window
 
     public void ChangeTitle(string title)
     {
+        if (_windowHandler == 0)
+            return;
+
+        _title = title;
+
         SDL_SetWindowTitle(_windowHandler, title);
     }
 
     public void SetMaximumSize(int maxWidth, int maxHeight)
     {
-        if (_windowHandler == 0 && maxWidth > 0 && maxHeight > 0)
+        if (_windowHandler == 0 && maxWidth < 0 || maxHeight < 0)
             return;
+
+        _maxWidth = maxWidth;
+        _maxHeight = maxHeight;
 
         SDL_SetWindowMaximumSize(_windowHandler, maxWidth, maxHeight);
     }
 
     public void SetMinimumSize(int minWidth, int minHeight)
     {
-        if (_windowHandler == 0 && minWidth > 0 && minHeight > 0)
+        if (_windowHandler == 0 && minWidth < 0 || minHeight < 0)
             return;
+
+        _minHeight = minHeight;
+        _minWidth = minWidth;
 
         SDL_SetWindowMinimumSize(_windowHandler, minWidth, minHeight);
     }
 
     public void ShowWindow(string title, Int32 width, Int32 height, SDL_WindowFlags windowFlags)
     {
-        if (_windowHandler != 0)
+        if (_windowHandler != 0 && width < 0 || height < 0)
             return;
 
         Debug.WriteLine($"[SDL] Making window with the next params: Title={title}, W={width}, H={height}, Flags={windowFlags}");
@@ -330,6 +409,19 @@ public class Window
         else
         {
             Debug.WriteLine("[SDL] Window is initiatited as not resizable");
+        }
+
+        if (windowFlags.HasFlag(SDL_WindowFlags.SDL_WINDOW_FULLSCREEN))
+        {
+            _currentWindowMode = Mode.Fullscreen;
+        }
+        else if (windowFlags.HasFlag(SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP))
+        {
+            _currentWindowMode = Mode.Borderless;
+        }
+        else
+        {
+            _currentWindowMode = Mode.Windowed;
         }
 
         // Create a window.
@@ -352,16 +444,17 @@ public class Window
         _currentHeight = height;
         _currentWidth = width;
 
+        SDL_GetWindowPosition(_windowHandler, out int x, out int y);
+
+        _xPos = x;
+        _yPos = y;
+
         Debug.WriteLine("[SDL] SDL window was created sucessfully, event loop started!");
         _isWindowRunning = true;
 
-        uint myWindowID = SDL.SDL_GetWindowID(_windowHandler);
-
-        SDL_Event e;
-
         while (_isWindowRunning) // Keep running until we decide to stop
         {
-            while (SDL.SDL_WaitEvent(out e) != 0)
+            while (SDL.SDL_WaitEvent(out SDL_Event e) != 0)
             {
                 if (e.type == SDL.SDL_EventType.SDL_QUIT)
                 {
@@ -396,22 +489,6 @@ public class Window
                     // Trigger key up event
                     OnKeyUp?.Invoke(e.key.keysym.sym);
                 }
-                else if (e.type == SDL.SDL_EventType.SDL_WINDOWEVENT)
-                {
-                    // Handle window events
-                    if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED)
-                    {
-                        OnWindowResize?.Invoke(e.window.data1, e.window.data2);
-                    }
-                    else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED)
-                    {
-                        OnWindowFocusGained?.Invoke();
-                    }
-                    else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_LOST)
-                    {
-                        OnWindowFocusLost?.Invoke();
-                    }
-                }
                 else if (e.type == SDL.SDL_EventType.SDL_DROPFILE)
                 {
                     // Trigger file drop event
@@ -422,6 +499,51 @@ public class Window
                     // Trigger app termination event
                     OnAppTerminating?.Invoke();
                 }
+                else if (e.type == SDL.SDL_EventType.SDL_WINDOWEVENT)
+                {
+                    if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED)
+                    {
+                        SDL_GetWindowSize(_windowHandler, out int w, out int h);
+
+                        _currentHeight = h;
+                        _currentWidth = w;
+
+                        OnWindowResize?.Invoke(e.window.data1, e.window.data2);
+                    }
+                    else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED)
+                    {
+                        _hasFocus = true;
+                        OnWindowFocusGained?.Invoke();
+                    }
+                    else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_LOST)
+                    {
+                        _hasFocus = false;
+                        OnWindowFocusLost?.Invoke();
+                    }
+                    else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MINIMIZED)
+                    {
+                        _isMinimized = true;
+                        OnWindowMinimized?.Invoke();
+                    }
+                    else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MAXIMIZED)
+                    {
+                        _isMaximized = true;
+                        OnWindowMaximized?.Invoke();
+                    }
+                    else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESTORED)
+                    {
+                        if (_isMinimized)
+                        {
+                            _isMinimized = false;
+                        }
+                        else if (_isMaximized)
+                        {
+                            _isMaximized = false;
+                        }
+                        OnWindowRestored?.Invoke();
+                    }
+                }
+
             }
         }
     }
