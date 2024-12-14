@@ -26,6 +26,10 @@ namespace Mikan.Toolkit.Audio.Tests
 
             Assert.AreNotEqual(0, player.GetFXHandler(ManagedBass.EffectType.BQF));
 
+            Thread.Sleep(1000);
+
+            player.SetBiquadFilter(ManagedBass.Fx.BQFType.LowPass, -300);
+
             player.Clear();
         }
 
@@ -44,6 +48,10 @@ namespace Mikan.Toolkit.Audio.Tests
 
             Assert.AreNotEqual(0, player.GetFXHandler(ManagedBass.EffectType.Echo));
 
+            Thread.Sleep(1000);
+
+            player.SetEchoEffect(-1f, 2f, 3f, -0.4f);
+
             player.Clear();
         }
 
@@ -60,7 +68,7 @@ namespace Mikan.Toolkit.Audio.Tests
 
             Thread.Sleep(1000);
 
-            player.SetEchoEffect(1f, 0.1f, 0.4f, 0.4f);
+            player.SetEchoEffect(0.2f, 0.1f, 0.4f, 0.4f);
 
             Thread.Sleep(1000);
 
@@ -72,6 +80,22 @@ namespace Mikan.Toolkit.Audio.Tests
             Assert.AreEqual(0, player.GetFXHandler(ManagedBass.EffectType.Echo));
 
             player.Clear();
+
+            // Player with no effects added.
+            PersistentPlayer playerNoFX = new(AudioProcessor.Preset.Default);
+
+            playerNoFX.Play("the-builder.mp3");
+
+            Thread.Sleep(1000);
+
+            playerNoFX.RemoveAllFx();
+
+            Thread.Sleep(1000);
+
+            Assert.AreEqual(0, playerNoFX.GetFXHandler(ManagedBass.EffectType.BQF));
+            Assert.AreEqual(0, playerNoFX.GetFXHandler(ManagedBass.EffectType.Echo));
+
+            playerNoFX.Clear();
         }
     }
 }

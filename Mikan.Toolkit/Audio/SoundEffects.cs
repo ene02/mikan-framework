@@ -24,6 +24,8 @@ public static class SoundEffects
         if (handler == 0)
             return;
 
+        hz = Math.Clamp(hz, 0, float.MaxValue);
+
         BQFParameters parameters = new()
         {
             fCenter = hz, // cut-off frequency for LowPass or HighPass.
@@ -67,11 +69,17 @@ public static class SoundEffects
         if (handler == 0)
             return;
 
+        delay = Math.Clamp(delay, 0, float.MaxValue);
+        feedback = Math.Clamp(feedback, 0, 1);
+        wetMix = Math.Clamp(wetMix, 0, 1);
+        dryMix = Math.Clamp(dryMix, 0, 1);
+
         EchoParameters parameters = new()
         {
             fDelay = delay,           // Delay in milliseconds
             fFeedback = feedback,     // Feedback level (0 to 1)
-            fWetMix = wetMix    // Wet/Dry mix (0 to 1)
+            fWetMix = wetMix,    // Wet/Dry mix (0 to 1)
+            fDryMix = dryMix
         };
 
         if ((Math.Abs(delay) < 1f || feedback <= 0f || wetMix <= 0f))

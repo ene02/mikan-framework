@@ -11,7 +11,7 @@ public class Window
     private nint _windowHandler = 0;
     private string _title;
     private bool _isWindowRunning = false, _resizable = false, _isMaximized = false, _isMinimized = false, _hasFocus = false;
-    private int _maxHeight = int.MaxValue, _minHeight = 0, _maxWidth = int.MaxValue, _minWidth = 0, _currentHeight = -1, _currentWidth = -1, _xPos = 0, _yPos = 0;
+    private int _maxHeight = int.MaxValue, _minHeight = 1, _maxWidth = int.MaxValue, _minWidth = 1, _currentHeight = 0, _currentWidth = 0, _xPos = 0, _yPos = 0;
     private float _currentOpacity = 1.0f;
     private Mode _currentWindowMode = Mode.Windowed;
     private nint _image = nint.Zero;
@@ -243,6 +243,9 @@ public class Window
         if (_windowHandler == 0)
             return;
 
+        x = Math.Clamp(x, 0, int.MaxValue);
+        y = Math.Clamp(y, 0, int.MaxValue);
+
         _xPos = x;
         _yPos = y;
 
@@ -251,11 +254,10 @@ public class Window
 
     public void ChangeOpacity(float alpha)
     {
-        if (_windowHandler == 0 || alpha < 0)
+        if (_windowHandler == 0)
             return;
 
-        if (alpha > 1.0f) // Check for silyness.
-            alpha = 1.0f;
+        alpha = Math.Clamp(alpha, 0, 1.0f); // Check for sillyness :p
 
         _currentOpacity = alpha;
 
@@ -339,7 +341,7 @@ public class Window
             return;
 
         _image = SDL_LoadBMP(file);
-        Debug.WriteLine(_image);
+
         if (_image == 0)
         {
             Debug.WriteLine($"[SDL] Failed to load image!: {SDL_GetError()}");
@@ -353,35 +355,13 @@ public class Window
         if (_windowHandler == 0)
             return;
 
-        if (width < 0)
-        {
-            width = 0;
-        }
-        else if (height < 0)
-        {
-            height = 0;
-        }
-
-        if (width > _maxWidth)
-        {
-            width = _maxWidth;
-        }
-        else if (height > _maxHeight)
-        {
-            height = _maxHeight;
-        }
-
-        if (width < _minWidth)
-        {
-            width = _minWidth;
-        }
-        else if (height < _minHeight)
-        {
-            height = _minHeight;
-        }
+        width = Math.Clamp(width, _minWidth, _maxWidth);
+        height = Math.Clamp(height, _minHeight, _maxHeight);
 
         _currentHeight = height;
         _currentWidth = width;
+
+        Debug.WriteLine($"{height}, {width}");
 
         SDL_SetWindowSize(_windowHandler, width, height);
     }
@@ -398,30 +378,44 @@ public class Window
 
     public void SetMaximumSize(int maxWidth, int maxHeight)
     {
-        if (_windowHandler == 0 && maxWidth < 0 || maxHeight < 0)
+        if (_windowHandler == 0)
             return;
+
+        maxWidth = Math.Clamp(maxWidth, 1, Int32.MaxValue);
+        maxHeight = Math.Clamp(maxHeight, 1, Int32.MaxValue);
 
         _maxWidth = maxWidth;
         _maxHeight = maxHeight;
 
         SDL_SetWindowMaximumSize(_windowHandler, maxWidth, maxHeight);
+        ChangeSize(_currentWidth, _currentHeight);
     }
 
     public void SetMinimumSize(int minWidth, int minHeight)
     {
-        if (_windowHandler == 0 && minWidth < 0 || minHeight < 0)
+        if (_windowHandler == 0)
             return;
+
+        minWidth = Math.Clamp(minWidth, 1, Int32.MaxValue);
+        minHeight = Math.Clamp(minHeight, 1, Int32.MaxValue);
 
         _minHeight = minHeight;
         _minWidth = minWidth;
 
+        _currentHeight = Math.Clamp(_currentHeight, _minHeight, _maxHeight);
+        _currentWidth = Math.Clamp(_currentWidth, _minWidth, _maxWidth);
+
         SDL_SetWindowMinimumSize(_windowHandler, minWidth, minHeight);
+        ChangeSize(_currentWidth, _currentHeight);
     }
 
     public void ShowWindow(string title, Int32 width, Int32 height, SDL_WindowFlags windowFlags)
     {
-        if (_windowHandler != 0 && width < 0 || height < 0)
+        if (_windowHandler != 0)
             return;
+
+        width = Math.Clamp(width, 0, Int32.MaxValue);
+        height = Math.Clamp(height, 0, Int32.MaxValue);
 
         Debug.WriteLine($"[SDL] Making window with the next params: Title={title}, W={width}, H={height}, Flags={windowFlags}");
 

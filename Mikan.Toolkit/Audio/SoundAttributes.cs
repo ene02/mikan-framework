@@ -123,8 +123,8 @@ public static class SoundAttributes
         if (handler == 0)
             return;
 
-        if (!(seconds > 0) && !(seconds < audioProcessor.GetAudioLenght()))
-            return;
+        // Keep it in the range of the file lenght.
+        seconds = Math.Clamp(seconds, 0, (float)audioProcessor.GetAudioLenght());
 
         // Retrieve stream info to get sample rate and channels (assuming it's a stream).
         int sampleRate = Bass.ChannelGetInfo(handler).Frequency;
@@ -152,6 +152,8 @@ public static class SoundAttributes
         if (handler == 0)
             return;
 
+        value = Math.Clamp(value, 0, 1);
+
         Bass.ChannelSetAttribute(handler, ChannelAttribute.Volume, value);
     }
 
@@ -165,6 +167,8 @@ public static class SoundAttributes
 
         if (handler == 0)
             return;
+
+        value = Math.Clamp(value, -1, 1);
 
         Bass.ChannelSetAttribute(handler, ChannelAttribute.Pan, value);
     }
@@ -180,6 +184,8 @@ public static class SoundAttributes
         if (handler == 0)
             return;
 
+        value = Math.Clamp(value, 0, float.MaxValue);
+
         Bass.ChannelSetAttribute(handler, ChannelAttribute.Tempo, value);
     }
 
@@ -193,6 +199,8 @@ public static class SoundAttributes
 
         if (handler == 0)
             return;
+
+        value = Math.Clamp(value, 0, float.MaxValue);
 
         Bass.ChannelSetAttribute(handler, ChannelAttribute.Pitch, value);
     }

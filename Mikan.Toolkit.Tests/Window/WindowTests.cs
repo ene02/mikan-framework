@@ -29,7 +29,7 @@ namespace Mikan.Toolkit.Window.Tests
 
             Thread.Sleep(2000);
 
-            Assert.IsFalse(window.IsWindowCreated);
+            Assert.IsTrue(window.IsWindowCreated);
 
             window.Close();
         }
@@ -161,7 +161,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
                 });
             }
 
@@ -181,6 +181,41 @@ namespace Mikan.Toolkit.Window.Tests
             Assert.AreEqual(400, window.Width);
 
             window.Close();
+
+            Thread.Sleep(1000);
+
+            // Set size before maximum.
+            Window window2 = new();
+
+            async void MakeWindow2()
+            {
+                await Task.Run(() =>
+                {
+                    window2.ShowWindow("Welcome to MSTest part 2 electric boogaloo", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                });
+            }
+
+            MakeWindow2();
+
+            Thread.Sleep(1000);
+
+            window2.ChangeSize(1000, 1000);
+
+            Thread.Sleep(1000);
+
+            Assert.AreEqual(1000, window2.Height);
+            Assert.AreEqual(1000, window2.Width);
+
+            Thread.Sleep(1000);
+
+            window2.SetMaximumSize(300, 300);
+
+            Thread.Sleep(1000);
+
+            Assert.AreEqual(300, window2.Height);
+            Assert.AreEqual(300, window2.Width);
+
+            window2.Close();
         }
 
         [TestMethod()]
@@ -218,7 +253,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 500, 500, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window.ShowWindow("Welcome to MSTest", 500, 500, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
                 });
             }
 
@@ -237,7 +272,42 @@ namespace Mikan.Toolkit.Window.Tests
             Assert.AreEqual(400, window.Height);
             Assert.AreEqual(400, window.Width);
 
+            Thread.Sleep(1000);
+
             window.Close();
+
+            // Set size before minimum.
+            Window window2 = new();
+
+            async void MakeWindow2()
+            {
+                await Task.Run(() =>
+                {
+                    window2.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                });
+            }
+
+            MakeWindow2();
+
+            Thread.Sleep(1000);
+
+            window2.ChangeSize(300, 300);
+
+            Thread.Sleep(1000);
+
+            Assert.AreEqual(300, window2.Height);
+            Assert.AreEqual(300, window2.Width);
+
+            Thread.Sleep(1000);
+
+            window2.SetMinimumSize(400, 400);
+
+            Thread.Sleep(1000);
+
+            Assert.AreEqual(400, window2.Height);
+            Assert.AreEqual(400, window2.Width);
+
+            window2.Close();
         }
 
         [TestMethod()]
@@ -263,6 +333,17 @@ namespace Mikan.Toolkit.Window.Tests
 
             Assert.AreEqual(1000, window.Height);
             Assert.AreEqual(1000, window.Width);
+
+            Thread.Sleep(1000);
+
+            window.ChangeSize(-1, -1);
+
+            Thread.Sleep(1000);
+
+            Assert.AreEqual(1, window.Height);
+            Assert.AreEqual(1, window.Width);
+
+            Thread.Sleep(1000);
 
             window.Close();
         }
@@ -290,6 +371,22 @@ namespace Mikan.Toolkit.Window.Tests
 
             Assert.AreEqual(0.5f, window.Opacity);
 
+            Thread.Sleep(1000);
+
+            window.ChangeOpacity(11111f);
+
+            Thread.Sleep(1000);
+
+            Assert.AreEqual(1f, window.Opacity);
+
+            Thread.Sleep(1000);
+
+            window.ChangeOpacity(-1f);
+
+            Thread.Sleep(1000);
+
+            Assert.AreEqual(0, window.Opacity);
+
             window.Close();
         }
 
@@ -316,6 +413,15 @@ namespace Mikan.Toolkit.Window.Tests
 
             Assert.AreEqual(10, window.XPosition);
             Assert.AreEqual(10, window.YPosition);
+
+            Thread.Sleep(1000);
+
+            window.ChangePosition(-1, -1);
+
+            Thread.Sleep(1000);
+
+            Assert.AreEqual(0, window.XPosition);
+            Assert.AreEqual(0, window.YPosition);
 
             window.Close();
         }

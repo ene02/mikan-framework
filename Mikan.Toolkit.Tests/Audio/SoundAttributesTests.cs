@@ -110,6 +110,10 @@ namespace Mikan.Toolkit.Audio.Tests
 
             Assert.AreEqual(6.0f, player.GetPosition());
 
+            player.SetPositionInBytes(-1.0f); // Invalid value.
+
+            Assert.AreEqual(0.0f, player.GetPosition());
+
             player.Clear();
         }
 
@@ -128,6 +132,12 @@ namespace Mikan.Toolkit.Audio.Tests
 
             Assert.AreEqual(0.5f, player.GetVolume());
 
+            Thread.Sleep(1000);
+
+            player.SetVolume(-1.5f);
+
+            Assert.AreEqual(0.0f, player.GetVolume());
+
             player.Clear();
         }
 
@@ -141,6 +151,22 @@ namespace Mikan.Toolkit.Audio.Tests
             Thread.Sleep(1000);
 
             player.SetPanning(1.0f);
+
+            Thread.Sleep(1000);
+
+            Assert.AreEqual(1.0f, player.GetPanning());
+
+            Thread.Sleep(1000);
+
+            player.SetPanning(-2.0f);
+
+            Thread.Sleep(1000);
+
+            Assert.AreEqual(-1.0f, player.GetPanning());
+
+            Thread.Sleep(1000);
+
+            player.SetPanning(2.0f);
 
             Thread.Sleep(1000);
 
@@ -164,6 +190,14 @@ namespace Mikan.Toolkit.Audio.Tests
 
             Assert.AreEqual(100f, player.GetSpeed());
 
+            Thread.Sleep(1000);
+
+            player.SetSpeed(-100f);
+
+            Thread.Sleep(1000);
+
+            Assert.AreEqual(0f, player.GetSpeed());
+
             player.Clear();
         }
 
@@ -181,6 +215,14 @@ namespace Mikan.Toolkit.Audio.Tests
             Thread.Sleep(1000);
 
             Assert.AreEqual(6f, player.GetPitch());
+
+            Thread.Sleep(1000);
+
+            player.SetPitch(-2f);
+
+            Thread.Sleep(1000);
+
+            Assert.AreEqual(0f, player.GetPitch());
 
             player.Clear();
         }
