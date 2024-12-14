@@ -29,7 +29,7 @@ namespace Mikan.Toolkit.Window.Tests
 
             Thread.Sleep(2000);
 
-            Assert.IsTrue(!window.IsWindowCreated);
+            Assert.IsFalse(window.IsWindowCreated);
 
             window.Close();
         }
@@ -54,17 +54,17 @@ namespace Mikan.Toolkit.Window.Tests
             window.ChangeWindowMode(Window.Mode.Fullscreen);
 
             Thread.Sleep(1000);
-            Assert.IsTrue(window.CurrentMode == Window.Mode.Fullscreen);
+            Assert.AreEqual(Window.Mode.Fullscreen, window.CurrentMode);
 
             window.ChangeWindowMode(Window.Mode.Borderless);
 
             Thread.Sleep(1000);
-            Assert.IsTrue(window.CurrentMode == Window.Mode.Borderless);
+            Assert.AreEqual(Window.Mode.Borderless, window.CurrentMode);
 
             window.ChangeWindowMode(Window.Mode.Windowed);
 
             Thread.Sleep(1000);
-            Assert.IsTrue(window.CurrentMode == Window.Mode.Windowed);
+            Assert.AreEqual(Window.Mode.Windowed, window.CurrentMode);
 
             window.Close();
         }
@@ -94,7 +94,8 @@ namespace Mikan.Toolkit.Window.Tests
 
             Thread.Sleep(1000);
 
-            Assert.IsTrue(window.Height == 500 && window.Width == 500);
+            Assert.AreEqual(500, window.Height);
+            Assert.AreEqual(500, window.Width);
 
             window.Close();
         }
@@ -172,11 +173,12 @@ namespace Mikan.Toolkit.Window.Tests
 
             Thread.Sleep(1000);
 
-            window.ChangeSize(500, 500);
+            window.ChangeSize(600, 600);
 
             Thread.Sleep(1000);
 
-            Assert.IsTrue(window.Height == 400 && window.Width == 400);
+            Assert.AreEqual(400, window.Height);
+            Assert.AreEqual(400, window.Width);
 
             window.Close();
         }
@@ -202,7 +204,7 @@ namespace Mikan.Toolkit.Window.Tests
 
             Thread.Sleep(1000);
 
-            Assert.IsTrue(window.Title == "This is another title");
+            Assert.AreEqual("This is another title", window.Title);
 
             window.Close();
         }
@@ -216,7 +218,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window.ShowWindow("Welcome to MSTest", 500, 500, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
                 });
             }
 
@@ -232,7 +234,8 @@ namespace Mikan.Toolkit.Window.Tests
 
             Thread.Sleep(1000);
 
-            Assert.IsTrue(window.Height == 400 && window.Width == 400);
+            Assert.AreEqual(400, window.Height);
+            Assert.AreEqual(400, window.Width);
 
             window.Close();
         }
@@ -258,7 +261,8 @@ namespace Mikan.Toolkit.Window.Tests
 
             Thread.Sleep(1000);
 
-            Assert.IsTrue(window.Height == 1000 && window.Width == 1000);
+            Assert.AreEqual(1000, window.Height);
+            Assert.AreEqual(1000, window.Width);
 
             window.Close();
         }
@@ -284,7 +288,7 @@ namespace Mikan.Toolkit.Window.Tests
 
             Thread.Sleep(1000);
 
-            Assert.IsTrue(window.Opacity == 0.5f);
+            Assert.AreEqual(0.5f, window.Opacity);
 
             window.Close();
         }
@@ -310,7 +314,8 @@ namespace Mikan.Toolkit.Window.Tests
 
             Thread.Sleep(1000);
 
-            Assert.IsTrue(window.XPosition == 10 && window.YPosition == 10);
+            Assert.AreEqual(10, window.XPosition);
+            Assert.AreEqual(10, window.YPosition);
 
             window.Close();
         }
@@ -338,7 +343,8 @@ namespace Mikan.Toolkit.Window.Tests
 
             Thread.Sleep(1000);
 
-            Assert.IsTrue(window.Width == 600 && window.Height == 500);
+            Assert.AreEqual(600, window.Width);
+            Assert.AreEqual(500, window.Height);
 
             window.Close();
         }
@@ -402,7 +408,7 @@ namespace Mikan.Toolkit.Window.Tests
 
             Thread.Sleep(1000);
 
-            Assert.IsTrue(window.ImageData != 0);
+            Assert.AreNotEqual(0, window.ImageData);
 
             window.Close();
         }

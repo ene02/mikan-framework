@@ -17,11 +17,11 @@ namespace Mikan.Toolkit.Parsers.Tests
             string windowsPath = @"C:\Users\RandomUser\Documents\file.txt";
             string unixPath = "/home/usr/folder/file.txt";
 
-            Assert.IsTrue(FilenameParser.Get(windowsPath) == "file");
-            Assert.IsTrue(FilenameParser.Get(windowsPath, true) == "file.txt");
+            Assert.AreEqual("file", FilenameParser.Get(windowsPath));
+            Assert.AreEqual("file.txt", FilenameParser.Get(windowsPath, true));
 
-            Assert.IsTrue(FilenameParser.Get(unixPath) == "file");
-            Assert.IsTrue(FilenameParser.Get(unixPath, true) == "file.txt");
+            Assert.AreEqual("file", FilenameParser.Get(unixPath));
+            Assert.AreEqual("file.txt", FilenameParser.Get(unixPath, true));
         }
 
         [TestMethod()]
@@ -30,11 +30,11 @@ namespace Mikan.Toolkit.Parsers.Tests
             string windowsPath = @"C:\Users\RandomUser\Documents\file";
             string unixPath = "/home/usr/folder/file";
 
-            Assert.IsTrue(FilenameParser.Get(windowsPath) == "file");
-            Assert.IsTrue(FilenameParser.Get(windowsPath, true) == "file");
+            Assert.AreEqual("file", FilenameParser.Get(windowsPath));
+            Assert.AreEqual("file", FilenameParser.Get(windowsPath, true));
 
-            Assert.IsTrue(FilenameParser.Get(unixPath) == "file");
-            Assert.IsTrue(FilenameParser.Get(unixPath, true) == "file");
+            Assert.AreEqual("file", FilenameParser.Get(unixPath));
+            Assert.AreEqual("file", FilenameParser.Get(unixPath, true));
         }
 
         [TestMethod()]
@@ -43,11 +43,11 @@ namespace Mikan.Toolkit.Parsers.Tests
             string windowsPath = "a random string";
             string unixPath = "a random string";
 
-            Assert.IsTrue(FilenameParser.Get(windowsPath) == string.Empty);
-            Assert.IsTrue(FilenameParser.Get(windowsPath, true) == string.Empty);
+            Assert.AreEqual(string.Empty, FilenameParser.Get(windowsPath));
+            Assert.AreEqual(string.Empty, FilenameParser.Get(windowsPath, true));
 
-            Assert.IsTrue(FilenameParser.Get(unixPath) == string.Empty);
-            Assert.IsTrue(FilenameParser.Get(unixPath, true) == string.Empty);
+            Assert.AreEqual(string.Empty, FilenameParser.Get(unixPath));
+            Assert.AreEqual(string.Empty, FilenameParser.Get(unixPath, true));
         }
     }
 }

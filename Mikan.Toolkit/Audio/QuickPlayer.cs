@@ -85,6 +85,7 @@ public class QuickPlayer : AudioProcessor
             this.RemoveAllFx();
             Bass.StreamFree(_streamHandle); // free the stream
             _streamHandle = 0;
+            _isPlaying = false;
         });
     }
 
@@ -101,6 +102,7 @@ public class QuickPlayer : AudioProcessor
         Bass.StreamFree(_streamHandle);
 
         _streamHandle = 0;
+        _isPlaying = false;
 
         Debug.WriteLine($"{DEBUG_TITLE} Stream sound stopped.");
     }
@@ -114,6 +116,7 @@ public class QuickPlayer : AudioProcessor
             return;
 
         Bass.ChannelPause(_streamHandle);
+        _isPlaying = false;
         Debug.WriteLine($"{DEBUG_TITLE} Sound paused.");
     }
 
@@ -126,6 +129,7 @@ public class QuickPlayer : AudioProcessor
             return;
 
         Bass.ChannelPlay(_streamHandle);
+        _isPlaying = true;
         Debug.WriteLine($"{DEBUG_TITLE} Sound resumed.");
     }
 }

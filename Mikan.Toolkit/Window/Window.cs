@@ -353,8 +353,32 @@ public class Window
         if (_windowHandler == 0)
             return;
 
-        if (width < 0 || height < 0 || width > _maxWidth || height > _maxHeight || width < _minWidth || height < _minHeight)
-            return;
+        if (width < 0)
+        {
+            width = 0;
+        }
+        else if (height < 0)
+        {
+            height = 0;
+        }
+
+        if (width > _maxWidth)
+        {
+            width = _maxWidth;
+        }
+        else if (height > _maxHeight)
+        {
+            height = _maxHeight;
+        }
+
+        if (width < _minWidth)
+        {
+            width = _minWidth;
+        }
+        else if (height < _minHeight)
+        {
+            height = _minHeight;
+        }
 
         _currentHeight = height;
         _currentWidth = width;
