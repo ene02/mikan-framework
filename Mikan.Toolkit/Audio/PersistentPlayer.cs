@@ -74,6 +74,7 @@ public class PersistentPlayer : AudioProcessor
         Bass.ChannelSetSync(_streamHandle, SyncFlags.End, 0, (handle, channel, data, user) =>
         {
             PlaybackEnded?.Invoke(this, EventArgs.Empty);
+            _isPlaying = false;
         });
     }
 
@@ -83,6 +84,7 @@ public class PersistentPlayer : AudioProcessor
             return;
 
         Bass.ChannelStop(_streamHandle);
+        _isPlaying = false;
         Debug.WriteLine($"{DEBUG_TITLE} Stream sound stopped.");
     }
 
@@ -92,6 +94,7 @@ public class PersistentPlayer : AudioProcessor
             return;
 
         Bass.ChannelPause(_streamHandle);
+        _isPlaying = false;
         Debug.WriteLine($"{DEBUG_TITLE} Sound paused.");
     }
 
@@ -101,6 +104,7 @@ public class PersistentPlayer : AudioProcessor
             return;
 
         Bass.ChannelPlay(_streamHandle);
+        _isPlaying = true;
         Debug.WriteLine($"{DEBUG_TITLE} Sound resumed.");
     }
 
@@ -116,6 +120,7 @@ public class PersistentPlayer : AudioProcessor
         this.RemoveAllFx();
         Bass.StreamFree(_streamHandle);
         _streamHandle = 0;
+        _isPlaying = false;
 
         _data = Array.Empty<byte>();
     }

@@ -12,12 +12,7 @@ namespace Mikan.Toolkit.Audio;
 public abstract class AudioProcessor
 {
     // Audio states
-    protected bool _isDisposed, _isPlaying;
-
-    /// <summary>
-    /// Returns a true or false depending if the SoundPlayer was disposed.
-    /// </summary>
-    public bool IsDisposed => _isDisposed;
+    protected bool _isPlaying;
 
     /// <summary>
     /// Current playback state of the mixer.
@@ -29,26 +24,6 @@ public abstract class AudioProcessor
 
     // Handlers for each EffectType in BassFx.
     protected int[] _fxHandlers = new int[23]; // damn.
-    // 0 - DXChorus
-    // 1 - DXDistortion
-    // 2 - DXEcho
-    // 3 - DXFlanger
-    // 4 - DXCompressor
-    // 5 - DXGargle
-    // 6 - DX_I3DL2Reverb
-    // 7 - DXParamEQ
-    // 8 - DXReverb
-    // 9 - Rotate
-    // 10 - Volume
-    // 11 - PeakEQ
-    // 12 - Mix
-    // 13 - Damp
-    // 14 - AutoWah
-    // 15 - Phaser
-    // 16 - VolumeEnvelope
-    // 17 - BQF
-    // 18 - PitchShift
-    // 19 - Freeverb
 
     /// <summary>
     /// Checks if BASS was initialized.

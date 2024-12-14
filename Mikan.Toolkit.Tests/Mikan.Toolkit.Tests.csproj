@@ -19,6 +19,13 @@
             <TargetPath>little-sampling-ico.bmp</TargetPath>
         </None>
     </ItemGroup>
+
+	<ItemGroup>
+		<None Update="Resources\the-builder.mp3">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TargetPath>the-builder.mp3</TargetPath>
+		</None>
+	</ItemGroup>
 	
   <ItemGroup>
     <ProjectReference Include="..\Mikan.Toolkit\Mikan.Toolkit.csproj" />

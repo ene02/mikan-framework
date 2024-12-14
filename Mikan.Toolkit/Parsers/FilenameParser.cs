@@ -18,40 +18,37 @@ public static class FilenameParser
 
         char rightBar = '/';
 
-        if (File.Exists(filePath))
+        for (int i = filePath.Length - 1; i >= 0; i--)
         {
-            for (int i = filePath.Length - 1; i >= 0; i--)
+            if (filePath[i] == leftBar || filePath[i] == rightBar)
             {
-                if (filePath[i] == leftBar || filePath[i] == rightBar)
+                string fpn = fullParsedName.ToString();
+                string nxn = noExtParsedName.ToString();
+
+                if (canIncludeExtension || nxn == string.Empty)
                 {
-                    string fpn = fullParsedName.ToString();
-                    string nxn = noExtParsedName.ToString();
-
-                    if (canIncludeExtension || nxn == string.Empty)
-                    {
-                        return new string(fpn.Reverse().ToArray());
-                    }
-                    else
-                    {
-                        return new string(nxn.Reverse().ToArray());
-                    }
+                    return new string(fpn.Reverse().ToArray());
                 }
-
-                if (isExtensionDotFound)
+                else
                 {
-                    noExtParsedName.Append(filePath[i]);
+                    return new string(nxn.Reverse().ToArray());
                 }
-
-                if (filePath[i] == '.')
-                {
-                    isExtensionDotFound = true;
-                }
-
-                fullParsedName.Append(filePath[i]);
             }
+
+            if (isExtensionDotFound)
+            {
+                noExtParsedName.Append(filePath[i]);
+            }
+
+            if (filePath[i] == '.')
+            {
+                isExtensionDotFound = true;
+            }
+
+            fullParsedName.Append(filePath[i]);
         }
 
-        return "FileParser failed lmao xd";
+        return string.Empty;
     }
 }
 
