@@ -400,3 +400,4 @@ FodyWeavers.xsd
 /SDL.App
 /Gtk.App/Gtk.App.csproj
 /Gtk.App/Program.cs
+/Mikan.Toolkit.Tests/Audio/SoundAttributesTests.cs
