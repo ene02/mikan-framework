@@ -18,7 +18,7 @@ public class QuickPlayer : AudioProcessor
 
     public QuickPlayer(Preset preset)
     {
-        CheckInit(preset);
+        SetPreset(preset);
     }
 
     /// <summary>

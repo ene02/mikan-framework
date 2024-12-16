@@ -34,7 +34,7 @@ public class PersistentPlayer : AudioProcessor
 
     public PersistentPlayer(Preset preset)
     {
-        CheckInit(preset);
+        SetPreset(preset);
     }
 
     /// <summary>

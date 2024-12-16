@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using ManagedBass;
+﻿using ManagedBass;
+using Mikan.Toolkit.Handlers;
 
 namespace Mikan.Toolkit.Audio;
 
@@ -49,27 +49,14 @@ public abstract class AudioProcessor
         /// </summary>
         Realtime,
     }
-    protected void CheckInit(Preset preset)
+
+    public AudioProcessor()
     {
-        if (!Bass.Init())
-        {
-            if (Bass.LastError == Errors.Already)
-            {
-                Debug.WriteLine($"[ManagedBass] BASS already initialized");
-                return;
-            }
+        BassHandler.CheckBassInit();
+    }
 
-            Debug.WriteLine($"[ManagedBass] Failed to initialize BASS: {Bass.LastError}");
-        }
-
-        Debug.WriteLine($"[ManagedBass] BASS initialized successfully");
-
-        AppDomain.CurrentDomain.ProcessExit += (s, e) =>
-        {
-            Bass.Free();
-            Debug.WriteLine($"[ManagedBass] BASS resources were freed, bye bye.");
-        };
-
+    protected void SetPreset(Preset preset)
+    {
         switch (preset)
         {
             case Preset.Default:
