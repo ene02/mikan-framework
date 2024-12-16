@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mikan.Toolkit.Window;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

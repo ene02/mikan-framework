@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mikan.Toolkit.Window
+namespace Mikan.Toolkit.Interactions
 {
     public abstract class SDLChecker
     {

@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using SDL2;
-using static Mikan.Toolkit.Window.Window;
+using static Mikan.Toolkit.Interactions.Window.Window;
 using static SDL2.SDL;
 
-namespace Mikan.Toolkit.Window;
+namespace Mikan.Toolkit.Interactions.Window;
 
 public class Window
 {
@@ -92,10 +92,10 @@ public class Window
     private void CurrentDomain_ProcessExit(object sender, EventArgs e)
     {
         if (_isWindowRunning)
-            SDL.SDL_DestroyWindow(_windowHandler);
+            SDL_DestroyWindow(_windowHandler);
 
         // Quit SDL
-        SDL.SDL_Quit();
+        SDL_Quit();
     }
 
     public void Minimize()
@@ -174,7 +174,7 @@ public class Window
             return;
 
         Closed?.Invoke();
-        SDL.SDL_DestroyWindow(_windowHandler);
+        SDL_DestroyWindow(_windowHandler);
         _isWindowRunning = false;
     }
 
@@ -286,7 +286,7 @@ public class Window
         {
             Debug.WriteLine($"[SDL] Failed to load image!: {SDL_GetError()}");
         }
-        
+
         SDL_SetWindowIcon(_windowHandler, _image);
     }
 
@@ -321,8 +321,8 @@ public class Window
         if (_windowHandler == 0)
             return;
 
-        maxWidth = Math.Clamp(maxWidth, 1, Int32.MaxValue);
-        maxHeight = Math.Clamp(maxHeight, 1, Int32.MaxValue);
+        maxWidth = Math.Clamp(maxWidth, 1, int.MaxValue);
+        maxHeight = Math.Clamp(maxHeight, 1, int.MaxValue);
 
         _maxWidth = maxWidth;
         _maxHeight = maxHeight;
@@ -336,8 +336,8 @@ public class Window
         if (_windowHandler == 0)
             return;
 
-        minWidth = Math.Clamp(minWidth, 1, Int32.MaxValue);
-        minHeight = Math.Clamp(minHeight, 1, Int32.MaxValue);
+        minWidth = Math.Clamp(minWidth, 1, int.MaxValue);
+        minHeight = Math.Clamp(minHeight, 1, int.MaxValue);
 
         _minHeight = minHeight;
         _minWidth = minWidth;
@@ -349,13 +349,13 @@ public class Window
         ChangeSize(_currentWidth, _currentHeight);
     }
 
-    public void ShowWindow(string title, Int32 width, Int32 height, SDL_WindowFlags windowFlags)
+    public void ShowWindow(string title, int width, int height, SDL_WindowFlags windowFlags)
     {
         if (_windowHandler != 0)
             return;
 
-        width = Math.Clamp(width, 1, Int32.MaxValue);
-        height = Math.Clamp(height, 1, Int32.MaxValue);
+        width = Math.Clamp(width, 1, int.MaxValue);
+        height = Math.Clamp(height, 1, int.MaxValue);
 
         Debug.WriteLine($"[SDL] Making window with the next params: Title={title}, W={width}, H={height}, Flags={windowFlags}");
 
@@ -392,7 +392,7 @@ public class Window
             windowFlags
         );
 
-        if (_windowHandler == IntPtr.Zero)
+        if (_windowHandler == nint.Zero)
         {
             Debug.WriteLine($"[SDL] Window could not be created! SDL_Error: {SDL_GetError()}");
             SDL_Quit();
@@ -412,50 +412,50 @@ public class Window
 
         while (_isWindowRunning) // Keep running until we decide to stop
         {
-            while (SDL.SDL_WaitEvent(out SDL_Event e) != 0)
+            while (SDL_WaitEvent(out SDL_Event e) != 0)
             {
-                if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_NONE)
+                if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_NONE)
                 {
                     None?.Invoke();
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SHOWN)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_SHOWN)
                 {
                     Shown?.Invoke();
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_HIDDEN)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_HIDDEN)
                 {
                     Hidden?.Invoke();
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MOVED)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_MOVED)
                 {
                     Moved?.Invoke(e.window.data1, e.window.data2);
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_EXPOSED)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_EXPOSED)
                 {
                     Exposed?.Invoke();
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED)
                 {
                     Resized?.Invoke(e.window.data1, e.window.data2);
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED)
                 {
-                    SDL.SDL_GetWindowSize(_windowHandler, out int w, out int h);
+                    SDL_GetWindowSize(_windowHandler, out int w, out int h);
                     _currentWidth = w;
                     _currentHeight = h;
                     SizeChanged?.Invoke(w, h);
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MINIMIZED)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_MINIMIZED)
                 {
                     _isMinimized = true;
                     Minimized?.Invoke();
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MAXIMIZED)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_MAXIMIZED)
                 {
                     _isMaximized = true;
                     Maximized?.Invoke();
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESTORED)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_RESTORED)
                 {
                     if (_isMinimized)
                     {
@@ -467,33 +467,33 @@ public class Window
                     }
                     Restored?.Invoke();
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_ENTER)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_ENTER)
                 {
                     Enter?.Invoke();
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_LEAVE)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_LEAVE)
                 {
                     Leave?.Invoke();
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED)
                 {
                     _hasFocus = true;
                     FocusGained?.Invoke();
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_LOST)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_LOST)
                 {
                     _hasFocus = false;
                     FocusLost?.Invoke();
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE)
                 {
                     Closed?.Invoke();
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_TAKE_FOCUS)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_TAKE_FOCUS)
                 {
                     TakeFocus?.Invoke();
                 }
-                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_HIT_TEST)
+                else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_HIT_TEST)
                 {
                     HitTest?.Invoke();
                 }
