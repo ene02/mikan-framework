@@ -8,6 +8,24 @@ namespace Mikan.Toolkit.Window;
 
 public class Window
 {
+    public event Action None;
+    public event Action Shown;
+    public event Action Hidden;
+    public event Action<int, int> Moved;
+    public event Action Exposed;
+    public event Action<int, int> Resized;
+    public event Action<int, int> SizeChanged;
+    public event Action Minimized;
+    public event Action Maximized;
+    public event Action Restored;
+    public event Action Enter;
+    public event Action Leave;
+    public event Action FocusGained;
+    public event Action FocusLost;
+    public event Action Closed;
+    public event Action TakeFocus;
+    public event Action HitTest;
+
     private nint _windowHandler = 0;
     private string _title;
     private bool _isWindowRunning = false, _resizable = false, _isMaximized = false, _isMinimized = false, _hasFocus = false;
@@ -40,12 +58,6 @@ public class Window
 
     public nint ImageData { get { return _image; } }
 
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern IntPtr SetFocus(IntPtr hWnd);
-
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern IntPtr GetDesktopWindow();
-
     public enum Mode
     {
         Fullscreen,
@@ -59,78 +71,6 @@ public class Window
         Maximized,
         Normal,
     }
-
-    // SDL Event: Window Close
-    /// <summary>
-    /// Triggered when the window is closed (SDL_QUIT).
-    /// </summary>
-    public event Action OnWindowClosed;
-
-    // SDL Event: Mouse Button Down
-    /// <summary>
-    /// Triggered when a mouse button is pressed (SDL_MOUSEBUTTONDOWN).
-    /// </summary>
-    public EventHandler OnMouseButtonDown;
-
-    // SDL Event: Mouse Button Up
-    /// <summary>
-    /// Triggered when a mouse button is released (SDL_MOUSEBUTTONUP).
-    /// </summary>
-    public event Action<int, int> OnMouseButtonUp;
-
-    // SDL Event: Mouse Motion
-    /// <summary>
-    /// Triggered when the mouse is moved (SDL_MOUSEMOTION).
-    /// </summary>
-    public event Action<int, int> OnMouseMotion;
-
-    // SDL Event: Key Pressed
-    /// <summary>
-    /// Triggered when a key is pressed down (SDL_KEYDOWN).
-    /// </summary>
-    public event Action<SDL.SDL_Keycode> OnKeyDown;
-
-    // SDL Event: Key Released
-    /// <summary>
-    /// Triggered when a key is released (SDL_KEYUP).
-    /// </summary>
-    public event Action<SDL.SDL_Keycode> OnKeyUp;
-
-    // SDL Event: Window Resize
-    /// <summary>
-    /// Triggered when the window is resized (SDL_WINDOWEVENT).
-    /// </summary>
-    public event Action<int, int> OnWindowResize;
-
-    // SDL Event: Window Focus Gain
-    /// <summary>
-    /// Triggered when the window gains focus (SDL_WINDOWEVENT_FOCUS_GAINED).
-    /// </summary>
-    public event Action OnWindowFocusGained;
-
-    // SDL Event: Window Focus Lost
-    /// <summary>
-    /// Triggered when the window loses focus (SDL_WINDOWEVENT_FOCUS_LOST).
-    /// </summary>
-    public event Action OnWindowFocusLost;
-
-    // SDL Event: Drop File
-    /// <summary>
-    /// Triggered when a file is dropped onto the window (SDL_DROPFILE).
-    /// </summary>
-    public event Action<string> OnFileDropped;
-
-    // SDL Event: App Terminating
-    /// <summary>
-    /// Triggered when the application is about to terminate (SDL_APP_TERMINATING).
-    /// </summary>
-    public event Action OnAppTerminating;
-
-    public event Action OnWindowMinimized;
-
-    public event Action OnWindowMaximized;
-
-    public event Action OnWindowRestored;
 
     public Window()
     {
@@ -233,9 +173,9 @@ public class Window
         if (_windowHandler == 0)
             return;
 
+        Closed?.Invoke();
         SDL.SDL_DestroyWindow(_windowHandler);
         _isWindowRunning = false;
-        OnWindowClosed?.Invoke();
     }
 
     public void ChangePosition(int x, int y)
@@ -474,94 +414,89 @@ public class Window
         {
             while (SDL.SDL_WaitEvent(out SDL_Event e) != 0)
             {
-                if (e.type == SDL.SDL_EventType.SDL_QUIT)
+                if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_NONE)
                 {
-                    // Trigger the window close event
-                    SDL.SDL_DestroyWindow(_windowHandler);
-                    _isWindowRunning = false;
-                    OnWindowClosed?.Invoke();
-                    break;
+                    None?.Invoke();
                 }
-                else if (e.type == SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN)
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SHOWN)
                 {
-                    // Trigger mouse button down event
-                    OnMouseButtonDown?.Invoke(this, EventArgs.Empty);
+                    Shown?.Invoke();
                 }
-                else if (e.type == SDL.SDL_EventType.SDL_MOUSEBUTTONUP)
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_HIDDEN)
                 {
-                    // Trigger mouse button up event
-                    OnMouseButtonUp?.Invoke(e.button.x, e.button.y);
+                    Hidden?.Invoke();
                 }
-                else if (e.type == SDL.SDL_EventType.SDL_MOUSEMOTION)
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MOVED)
                 {
-                    // Trigger mouse motion event
-                    OnMouseMotion?.Invoke(e.motion.x, e.motion.y);
+                    Moved?.Invoke(e.window.data1, e.window.data2);
                 }
-                else if (e.type == SDL.SDL_EventType.SDL_KEYDOWN)
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_EXPOSED)
                 {
-                    // Trigger key down event
-                    OnKeyDown?.Invoke(e.key.keysym.sym);
+                    Exposed?.Invoke();
                 }
-                else if (e.type == SDL.SDL_EventType.SDL_KEYUP)
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESIZED)
                 {
-                    // Trigger key up event
-                    OnKeyUp?.Invoke(e.key.keysym.sym);
+                    Resized?.Invoke(e.window.data1, e.window.data2);
                 }
-                else if (e.type == SDL.SDL_EventType.SDL_DROPFILE)
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED)
                 {
-                    // Trigger file drop event
-                    OnFileDropped?.Invoke(Marshal.PtrToStringAnsi(e.drop.file));
+                    SDL.SDL_GetWindowSize(_windowHandler, out int w, out int h);
+                    _currentWidth = w;
+                    _currentHeight = h;
+                    SizeChanged?.Invoke(w, h);
                 }
-                else if (e.type == SDL.SDL_EventType.SDL_APP_TERMINATING)
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MINIMIZED)
                 {
-                    // Trigger app termination event
-                    OnAppTerminating?.Invoke();
+                    _isMinimized = true;
+                    Minimized?.Invoke();
                 }
-                else if (e.type == SDL.SDL_EventType.SDL_WINDOWEVENT)
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MAXIMIZED)
                 {
-                    if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED)
+                    _isMaximized = true;
+                    Maximized?.Invoke();
+                }
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESTORED)
+                {
+                    if (_isMinimized)
                     {
-                        SDL_GetWindowSize(_windowHandler, out int w, out int h);
-
-                        _currentHeight = h;
-                        _currentWidth = w;
-
-                        OnWindowResize?.Invoke(e.window.data1, e.window.data2);
+                        _isMinimized = false;
                     }
-                    else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED)
+                    else if (_isMaximized)
                     {
-                        _hasFocus = true;
-                        OnWindowFocusGained?.Invoke();
+                        _isMaximized = false;
                     }
-                    else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_LOST)
-                    {
-                        _hasFocus = false;
-                        OnWindowFocusLost?.Invoke();
-                    }
-                    else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MINIMIZED)
-                    {
-                        _isMinimized = true;
-                        OnWindowMinimized?.Invoke();
-                    }
-                    else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_MAXIMIZED)
-                    {
-                        _isMaximized = true;
-                        OnWindowMaximized?.Invoke();
-                    }
-                    else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_RESTORED)
-                    {
-                        if (_isMinimized)
-                        {
-                            _isMinimized = false;
-                        }
-                        else if (_isMaximized)
-                        {
-                            _isMaximized = false;
-                        }
-                        OnWindowRestored?.Invoke();
-                    }
+                    Restored?.Invoke();
                 }
-
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_ENTER)
+                {
+                    Enter?.Invoke();
+                }
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_LEAVE)
+                {
+                    Leave?.Invoke();
+                }
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_GAINED)
+                {
+                    _hasFocus = true;
+                    FocusGained?.Invoke();
+                }
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_FOCUS_LOST)
+                {
+                    _hasFocus = false;
+                    FocusLost?.Invoke();
+                }
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE)
+                {
+                    Closed?.Invoke();
+                }
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_TAKE_FOCUS)
+                {
+                    TakeFocus?.Invoke();
+                }
+                else if (e.window.windowEvent == SDL.SDL_WindowEventID.SDL_WINDOWEVENT_HIT_TEST)
+                {
+                    HitTest?.Invoke();
+                }
             }
         }
     }
