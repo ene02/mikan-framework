@@ -1,32 +1,106 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Mikan.Toolkit.SDL;
+using Mikan.Toolkit.Handlers;
 using SDL2;
 using static Mikan.Toolkit.Window.Window;
 using static SDL2.SDL;
 
 namespace Mikan.Toolkit.Window;
 
-public class Window : SDLCheck
+public class Window
 {
+    /// <summary>
+    /// Triggered when the window is in an idle state (no event has occurred).
+    /// </summary>
     public event Action None;
+
+    /// <summary>
+    /// Triggered when the window is shown (made visible).
+    /// </summary>
     public event Action Shown;
+
+    /// <summary>
+    /// Triggered when the window is hidden (made invisible).
+    /// </summary>
     public event Action Hidden;
+
+    /// <summary>
+    /// Triggered when the window is moved to a new position.
+    /// </summary>
+    /// <param name="x">The new X-coordinate of the window.</param>
+    /// <param name="y">The new Y-coordinate of the window.</param>
     public event Action<int, int> Moved;
+
+    /// <summary>
+    /// Triggered when the window is exposed (restored from being covered by another window).
+    /// </summary>
     public event Action Exposed;
+
+    /// <summary>
+    /// Triggered when the window is resized.
+    /// </summary>
+    /// <param name="width">The new width of the window.</param>
+    /// <param name="height">The new height of the window.</param>
     public event Action<int, int> Resized;
+
+    /// <summary>
+    /// Triggered when the size of the window changes, which may be either a resize or other size-related event.
+    /// </summary>
+    /// <param name="width">The new width of the window.</param>
+    /// <param name="height">The new height of the window.</param>
     public event Action<int, int> SizeChanged;
+
+    /// <summary>
+    /// Triggered when the window is minimized (typically by the user or the system).
+    /// </summary>
     public event Action Minimized;
+
+    /// <summary>
+    /// Triggered when the window is maximized (typically by the user or the system).
+    /// </summary>
     public event Action Maximized;
+
+    /// <summary>
+    /// Triggered when the window is restored from a minimized or maximized state.
+    /// </summary>
     public event Action Restored;
+
+    /// <summary>
+    /// Triggered when the cursor enters the window area.
+    /// </summary>
     public event Action Enter;
+
+    /// <summary>
+    /// Triggered when the cursor leaves the window area.
+    /// </summary>
     public event Action Leave;
+
+    /// <summary>
+    /// Triggered when the window gains focus (becomes the active window).
+    /// </summary>
     public event Action FocusGained;
+
+    /// <summary>
+    /// Triggered when the window loses focus (becomes inactive).
+    /// </summary>
     public event Action FocusLost;
+
+    /// <summary>
+    /// Triggered when the window is closed (either by the user or system).
+    /// </summary>
     public event Action Closed;
+
+    /// <summary>
+    /// Triggered when the window is ready to take focus, but it hasn't yet.
+    /// </summary>
     public event Action TakeFocus;
+
+    /// <summary>
+    /// Triggered when a hit-test event occurs on the window (e.g., checking if a specific point in the window is interactable).
+    /// </summary>
     public event Action HitTest;
 
+    // Private fields for the window state
     private nint _windowHandler = 0;
     private string _title;
     private bool _isWindowRunning = false, _resizable = false, _isMaximized = false, _isMinimized = false, _hasFocus = false;
@@ -35,68 +109,97 @@ public class Window : SDLCheck
     private Mode _currentWindowMode = Mode.Windowed;
     private nint _image = nint.Zero;
 
+    // Public properties
+    /// <summary>
+    /// Gets whether the window is created and running.
+    /// </summary>
     public bool IsWindowCreated { get { return _isWindowRunning; } }
 
+    /// <summary>
+    /// Gets whether the window is minimized.
+    /// </summary>
     public bool IsMinimized { get { return _isMinimized; } }
 
+    /// <summary>
+    /// Gets whether the window is maximized.
+    /// </summary>
     public bool IsMaximized { get { return _isMaximized; } }
 
+    /// <summary>
+    /// Gets whether the window currently has focus.
+    /// </summary>
     public bool IsFocused { get { return _hasFocus; } }
 
+    /// <summary>
+    /// Gets the current window mode (Fullscreen, Borderless, Windowed).
+    /// </summary>
     public Mode CurrentMode { get { return _currentWindowMode; } }
 
+    /// <summary>
+    /// Gets the current height of the window.
+    /// </summary>
     public int Height { get { return _currentHeight; } }
 
+    /// <summary>
+    /// Gets the current width of the window.
+    /// </summary>
     public int Width { get { return _currentWidth; } }
 
+    /// <summary>
+    /// Gets the current opacity of the window (between 0 and 1).
+    /// </summary>
     public float Opacity { get { return _currentOpacity; } }
 
+    /// <summary>
+    /// Gets the title of the window.
+    /// </summary>
     public string Title { get { return _title; } }
 
+    /// <summary>
+    /// Gets the current X-position of the window.
+    /// </summary>
     public int XPosition { get { return _xPos; } }
 
+    /// <summary>
+    /// Gets the current Y-position of the window.
+    /// </summary>
     public int YPosition { get { return _yPos; } }
 
+    /// <summary>
+    /// Gets the image data associated with the window.
+    /// </summary>
     public nint ImageData { get { return _image; } }
 
+    // Enum to represent window modes
     public enum Mode
     {
+        /// <summary>Full-screen window mode.</summary>
         Fullscreen,
+
+        /// <summary>Borderless window mode.</summary>
         Borderless,
+
+        /// <summary>Normal windowed mode.</summary>
         Windowed
     }
 
+    // Enum to represent window states
     public enum State
     {
+        /// <summary>Window is minimized.</summary>
         Minimized,
+
+        /// <summary>Window is maximized.</summary>
         Maximized,
+
+        /// <summary>Window is in its normal state.</summary>
         Normal,
     }
 
+
     public Window()
     {
-        if (Initialized)
-            return;
-
-        // Initialize SDL.
-        if (SDL_Init(SDL_INIT_VIDEO) < 0)
-        {
-            Debug.WriteLine($"[SDL] Could not initialize! SDL_Error: {SDL_GetError()}");
-            return;
-        }
-
-        Debug.WriteLine($"[SDL] Initiated!");
-        Initialized = true;
-        AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-    }
-
-    private void CurrentDomain_ProcessExit(object sender, EventArgs e)
-    {
-        if (_isWindowRunning)
-            SDL_DestroyWindow(_windowHandler);
-
-        // Quit SDL
-        SDL_Quit();
+        SDLHandler.CheckSDLInit();
     }
 
     public void Minimize()
@@ -487,6 +590,9 @@ public class Window : SDLCheck
                 else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_CLOSE)
                 {
                     Closed?.Invoke();
+
+                    if (_isWindowRunning)
+                        SDL_DestroyWindow(_windowHandler);
                 }
                 else if (e.window.windowEvent == SDL_WindowEventID.SDL_WINDOWEVENT_TAKE_FOCUS)
                 {
