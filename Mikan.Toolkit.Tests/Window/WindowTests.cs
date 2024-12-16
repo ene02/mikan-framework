@@ -460,12 +460,10 @@ namespace Mikan.Toolkit.Window.Tests
             Window window = new();
             bool restored = false;
 
-            window.OnWindowRestored += Window_OnWindowRestored;
-
-            void Window_OnWindowRestored()
+            window.Restored += () =>
             {
                 restored = true;
-            }
+            };
 
             async void MakeWindow()
             {
