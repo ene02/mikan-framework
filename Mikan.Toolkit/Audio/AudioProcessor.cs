@@ -52,7 +52,7 @@ public abstract class AudioProcessor
 
     public AudioProcessor()
     {
-        BassHandler.CheckBassInit();
+        InitHandler.CheckBassInit();
     }
 
     protected void SetPreset(Preset preset)
