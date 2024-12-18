@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using Mikan.Toolkit.Handlers;
@@ -22,29 +23,29 @@ namespace Mikan.Toolkit.Window;
 public class Window
 {
     /// <summary>
-    /// Triggered when a finger touches the screen, including the following details:
-    /// - The ID of the finger (a unique identifier for each touch).
-    /// - The X coordinate of the touch on the screen.
-    /// - The Y coordinate of the touch on the screen.
+    /// Triggered when a finger touches the screen, including the following details:<br/>
+    /// - The ID of the finger (a unique identifier for each touch).<br/>
+    /// - The X coordinate of the touch on the screen.<br/>
+    /// - The Y coordinate of the touch on the screen.<br/>
     /// - The pressure of the touch, ranging from 0 to 1.
     /// </summary>
     public event Action<long, float, float, float> FingerDown;
 
 
     /// <summary>
-    /// Triggered when a finger is lifted off the screen, providing the following details:
-    /// - The ID of the finger (a unique identifier for each touch).
-    /// - The X coordinate of the touch release.
-    /// - The Y coordinate of the touch release.
+    /// Triggered when a finger is lifted off the screen, providing the following details:<br/>
+    /// - The ID of the finger (a unique identifier for each touch).<br/>
+    /// - The X coordinate of the touch release.<br/>
+    /// - The Y coordinate of the touch release.<br/>
     /// - The pressure of the touch, ranging from 0 to 1.
     /// </summary>
     public event Action<long, float, float, float> FingerUp;
 
     /// <summary>
-    /// Triggered when a finger moves across the screen, including the following details:
-    /// - The ID of the finger (a unique identifier for each touch).
-    /// - The X coordinate of the touch movement.
-    /// - The Y coordinate of the touch movement.
+    /// Triggered when a finger moves across the screen, including the following details:<br/>
+    /// - The ID of the finger (a unique identifier for each touch).<br/>
+    /// - The X coordinate of the touch movement.<br/>
+    /// - The Y coordinate of the touch movement.<br/>
     /// - The pressure of the touch, ranging from 0 to 1.
     /// </summary>
     public event Action<long, float, float, float> FingerMotion;
@@ -103,19 +104,19 @@ public class Window
     public event Action AppDidEnterForeground;
 
     /// <summary>
-    /// Triggered when the user's locale preferences have changed.
-    /// <para>For example, this could happen if the user changes the system language or region settings.</para>
+    /// Triggered when the user's locale preferences have changed.<br/>
+    /// For example, this could happen if the user changes the system language or region settings.
     /// </summary>
     public event Action LocaleChanged;
 
     /// <summary>
-    /// Triggered when a new audio device is added, providing the following details:
+    /// Triggered when a new audio device is added, providing the following details:<br/>
     /// - The ID of the newly added audio device.
     /// </summary>
     public event Action<uint> AudioDeviceAdded;
 
     /// <summary>
-    /// Triggered when an audio device is removed, providing the following details:
+    /// Triggered when an audio device is removed, providing the following details:<br/>
     /// - The ID of the removed audio device.
     /// </summary>
     public event Action<uint> AudioDeviceRemoved;
@@ -127,7 +128,7 @@ public class Window
     public event Action ClipboardUpdated;
 
     /// <summary>
-    /// Triggered when a file is dropped, providing the following details:
+    /// Triggered when a file is dropped, providing the following details:<br/>
     /// - The path of the file that was dropped.
     /// </summary>
     public event Action<string> FileDropped;
@@ -143,152 +144,152 @@ public class Window
     public event Action DropComplete;
 
     /// <summary>
-    /// Triggered when a game controller axis moves, providing the following details:
-    /// - The ID of the game controller.
+    /// Triggered when a game controller axis moves, providing the following details:<br/>
+    /// - The ID of the game controller.<br/>
     /// - The value of the axis movement (e.g., -1 to 1 for a typical joystick axis).
     /// </summary>
     public event Action<int, int> ControllerAxisMotion;
 
     /// <summary>
-    /// Triggered when a game controller button is pressed, providing the following details:
-    /// - The ID of the game controller.
+    /// Triggered when a game controller button is pressed, providing the following details:<br/>
+    /// - The ID of the game controller.<br/>
     /// - The index of the button pressed.
     /// </summary>
     public event Action<int, int> ControllerButtonDown;
 
     /// <summary>
-    /// Triggered when a game controller button is released, providing the following details:
-    /// - The ID of the game controller.
+    /// Triggered when a game controller button is released, providing the following details:<br/>
+    /// - The ID of the game controller.<br/>
     /// - The index of the button released.
     /// </summary>
     public event Action<int, int> ControllerButtonUp;
 
     /// <summary>
-    /// Triggered when a game controller is added to the system, providing the following details:
+    /// Triggered when a game controller is added to the system, providing the following details:<br/>
     /// - The ID of the newly added game controller.
     /// </summary>
     public event Action<int> ControllerDeviceAdded;
 
     /// <summary>
-    /// Triggered when a game controller is removed from the system, providing the following details:
+    /// Triggered when a game controller is removed from the system, providing the following details:<br/>
     /// - The ID of the removed game controller.
     /// </summary>
     public event Action<int> ControllerDeviceRemoved;
 
     /// <summary>
-    /// Triggered when a game controller's mapping is updated, providing the following details:
+    /// Triggered when a game controller's mapping is updated, providing the following details:<br/>
     /// - The ID of the game controller whose mapping was updated.
     /// </summary>
     public event Action<int> ControllerDeviceRemapped;
 
     /// <summary>
-    /// Triggered when a dollar gesture is detected, providing the following details:
-    /// - The ID of the detected gesture.
-    /// - The X coordinate of the gesture's origin.
-    /// - The Y coordinate of the gesture's origin.
+    /// Triggered when a dollar gesture is detected, providing the following details:<br/>
+    /// - The ID of the detected gesture.<br/>
+    /// - The X coordinate of the gesture's origin.<br/>
+    /// - The Y coordinate of the gesture's origin.<br/>
     /// - The distance of the gesture's movement.
     /// </summary>
     public event Action<float, float, float, uint, long> DollarGesture;
 
     /// <summary>
-    /// Triggered when a multi-gesture is detected (such as pinch, rotate, etc.), providing the following details:
-    /// - The X coordinate of the gesture.
-    /// - The Y coordinate of the gesture.
-    /// - The rotation angle of the gesture.
+    /// Triggered when a multi-gesture is detected (such as pinch, rotate, etc.), providing the following details:<br/>
+    /// - The X coordinate of the gesture.<br/>
+    /// - The Y coordinate of the gesture.<br/>
+    /// - The rotation angle of the gesture.<br/>
     /// - The distance of the gesture's movement.
     /// </summary>
     public event Action<float, float, float, float> MultiGesture;
 
     /// <summary>
-    /// Triggered when a joystick axis moves, providing the following details:
-    /// - The ID of the joystick.
+    /// Triggered when a joystick axis moves, providing the following details:<br/>
+    /// - The ID of the joystick.<br/>
     /// - The value of the axis movement (e.g., -1 to 1 for a typical joystick axis).
     /// </summary>
     public event Action<int, int> JoystickAxisMotion;
 
     /// <summary>
-    /// Triggered when a joystick button is pressed, providing the following details:
-    /// - The ID of the joystick.
+    /// Triggered when a joystick button is pressed, providing the following details:<br/>
+    /// - The ID of the joystick.<br/>
     /// - The index of the button pressed.
     /// </summary>
     public event Action<int, int> JoystickButtonDown;
 
     /// <summary>
-    /// Triggered when a joystick button is released, providing the following details:
-    /// - The ID of the joystick.
+    /// Triggered when a joystick button is released, providing the following details:<br/>
+    /// - The ID of the joystick.<br/>
     /// - The index of the button released.
     /// </summary>
     public event Action<int, int> JoystickButtonUp;
 
     /// <summary>
-    /// Triggered when a joystick is added to the system, providing the following details:
+    /// Triggered when a joystick is added to the system, providing the following details:<br/>
     /// - The ID of the newly added joystick.
     /// </summary>
     public event Action<int> JoystickDeviceAdded;
 
     /// <summary>
-    /// Triggered when a joystick is removed from the system, providing the following details:
+    /// Triggered when a joystick is removed from the system, providing the following details:<br/>
     /// - The ID of the removed joystick.
     /// </summary>
     public event Action<int> JoystickDeviceRemoved;
 
     /// <summary>
-    /// Triggered when a key is pressed down, providing the following details:
+    /// Triggered when a key is pressed down, providing the following details:<br/>
     /// - The key code of the key that was pressed.
     /// </summary>
     public event Action<SDL.SDL_Keycode> KeyDown;
 
     /// <summary>
-    /// Triggered when a key is released, providing the following details:
+    /// Triggered when a key is released, providing the following details:<br/>
     /// - The key code of the key that was released.
     /// </summary>
     public event Action<SDL.SDL_Keycode> KeyUp;
 
     /// <summary>
-    /// Triggered when text is being composed, such as during input method editor (IME) usage, providing the following details:
+    /// Triggered when text is being composed, such as during input method editor (IME) usage, providing the following details:<br/>
     /// - The text currently being composed.
     /// </summary>
     public event Action<string> TextEditing;
 
     /// <summary>
-    /// Triggered when finalized text input is received, providing the following details:
+    /// Triggered when finalized text input is received, providing the following details:<br/>
     /// - The finalized input text.
     /// </summary>
     public event Action<string> TextInput;
 
 
     /// <summary>
-    /// Triggered when the keyboard layout or keymap changes due to a system event.
-    /// <para>This event may occur when the user changes the input language or keyboard layout.</para>
+    /// Triggered when the keyboard layout or keymap changes due to a system event.<br/>
+    /// This event may occur when the user changes the input language or keyboard layout.
     /// </summary>
     public event Action KeymapChanged;
 
     /// <summary>
-    /// Triggered when the mouse is moved, providing the following details:
-    /// - The X-coordinate of the mouse position.
+    /// Triggered when the mouse is moved, providing the following details:<br/>
+    /// - The X-coordinate of the mouse position.<br/>
     /// - The Y-coordinate of the mouse position.
     /// </summary>
     public event Action<int, int> MouseMotion;
 
     /// <summary>
-    /// Triggered when a mouse button is pressed, providing the following details:
-    /// - The button that was pressed (e.g., left, right, or middle).
-    /// - The X-coordinate of the mouse position at the time of the press.
+    /// Triggered when a mouse button is pressed, providing the following details:<br/>
+    /// - The button that was pressed (e.g., left, right, or middle).<br/>
+    /// - The X-coordinate of the mouse position at the time of the press.<br/>
     /// - The Y-coordinate of the mouse position at the time of the press.
     /// </summary>
     public event Action<int, int, int> MouseButtonDown;
 
     /// <summary>
-    /// Triggered when a mouse button is released, providing the following details:
-    /// - The button that was released (e.g., left, right, or middle).
-    /// - The X-coordinate of the mouse position at the time of the release.
+    /// Triggered when a mouse button is released, providing the following details:<br/>
+    /// - The button that was released (e.g., left, right, or middle).<br/>
+    /// - The X-coordinate of the mouse position at the time of the release.<br/>
     /// - The Y-coordinate of the mouse position at the time of the release.
     /// </summary>
     public event Action<int, int, int> MouseButtonUp;
 
     /// <summary>
-    /// Triggered when the mouse wheel is scrolled, providing the following details:
-    /// - The horizontal scroll amount (positive for right, negative for left).
+    /// Triggered when the mouse wheel is scrolled, providing the following details:<br/>
+    /// - The horizontal scroll amount (positive for right, negative for left).<br/>
     /// - The vertical scroll amount (positive for up, negative for down).
     /// </summary>
     public event Action<int, int> MouseWheel;
@@ -320,27 +321,27 @@ public class Window
     /// </summary>
     public event Action Hidden;
     /// <summary>
-    /// Triggered when the window is moved to a new position, providing the following details:
-    /// - The new X-coordinate of the window.
+    /// Triggered when the window is moved to a new position, providing the following details:<br/>
+    /// - The new X-coordinate of the window.<br/>
     /// - The new Y-coordinate of the window.
     /// </summary>
     public event Action<int, int> Moved;
 
     /// <summary>
-    /// Triggered when the window is exposed (restored from being covered by another window).
+    /// Triggered when the window is exposed (restored from being covered by another window).<br/>
     /// </summary>
     public event Action Exposed;
 
     /// <summary>
-    /// Triggered when the window is resized, providing the following details:
-    /// - The new width of the window.
+    /// Triggered when the window is resized, providing the following details:<br/>
+    /// - The new width of the window.<br/>
     /// - The new height of the window.
     /// </summary>
     public event Action<int, int> Resized;
 
     /// <summary>
-    /// Triggered when the size of the window changes, which may be either a resize or other size-related event, providing the following details:
-    /// - The new width of the window.
+    /// Triggered when the size of the window changes, which may be either a resize or other size-related event, providing the following details:<br/>
+    /// - The new width of the window.<br/>
     /// - The new height of the window.
     /// </summary>
     public event Action<int, int> SizeChanged;
@@ -397,15 +398,19 @@ public class Window
     public event Action HitTest;
 
     // Private fields for the window state
-    private nint _windowHandler = 0;
+    private nint _windowHandler = nint.Zero;
     private string _title;
     private bool _isWindowRunning = false, _resizable = false, _isMaximized = false, _isMinimized = false, _hasFocus = false;
-    private int _maxHeight = int.MaxValue, _minHeight = 1, _maxWidth = int.MaxValue, _minWidth = 1, _currentHeight = 0, _currentWidth = 0, _xPos = 0, _yPos = 0;
+    private int _maxHeight = int.MaxValue, _minHeight = 1, _maxWidth = int.MaxValue, _minWidth = 1, _height = 0, _width = 0, _xPos = 0, _yPos = 0;
     private float _currentOpacity = 1.0f;
-    private Mode _currentWindowMode = Mode.Windowed;
+    private Mode _windowMode = Mode.Windowed;
     private nint _image = nint.Zero;
+    private SDL.SDL_WindowFlags _windowFlags;
+    private SDL_SysWMinfo _wmInfo;
 
     // Public properties
+    public nint Handler { get { return _windowHandler; } }
+
     /// <summary>
     /// Gets whether the window is created and running.
     /// </summary>
@@ -429,17 +434,17 @@ public class Window
     /// <summary>
     /// Gets the current window mode (Fullscreen, Borderless, Windowed).
     /// </summary>
-    public Mode CurrentMode { get { return _currentWindowMode; } }
+    public Mode CurrentMode { get { return _windowMode; } }
 
     /// <summary>
     /// Gets the current height of the window.
     /// </summary>
-    public int Height { get { return _currentHeight; } }
+    public int Height { get { return _height; } }
 
     /// <summary>
     /// Gets the current width of the window.
     /// </summary>
-    public int Width { get { return _currentWidth; } }
+    public int Width { get { return _width; } }
 
     /// <summary>
     /// Gets the current opacity of the window (between 0 and 1).
@@ -466,7 +471,9 @@ public class Window
     /// </summary>
     public nint ImageData { get { return _image; } }
 
-    // Enum to represent window modes
+    /// <summary>
+    /// Enum to represent window modes
+    /// </summary>
     public enum Mode
     {
         /// <summary>Full-screen window mode.</summary>
@@ -493,9 +500,36 @@ public class Window
     }
 
 
-    public Window()
+    public Window(string title, int width, int height, SDL_WindowFlags windowFlags)
     {
         InitHandler.CheckSDLInit();
+
+        _title = title;
+        _width = width;
+        _height = height;
+        _windowFlags = windowFlags;
+    }
+
+    public IntPtr GetInstanceHandle()
+    {
+        if (_windowHandler == nint.Zero)
+            return 0;
+
+        SDL_GetWindowWMInfo(_windowHandler, ref _wmInfo);
+        IntPtr hInstance = _wmInfo.info.win.hinstance;
+
+        return hInstance;
+    }
+
+    public IntPtr GetWndHandle()
+    {
+        if (_windowHandler == nint.Zero)
+            return 0;
+
+        SDL_GetWindowWMInfo(_windowHandler, ref _wmInfo);
+        IntPtr hWnd = _wmInfo.info.win.window;
+
+        return hWnd;
     }
 
     /// <summary>
@@ -503,7 +537,7 @@ public class Window
     /// </summary>
     public void Minimize()
     {
-        if (_windowHandler == 0)
+        if (_windowHandler == nint.Zero)
             return;
 
         SDL_MinimizeWindow(_windowHandler);
@@ -515,7 +549,7 @@ public class Window
     /// </summary>
     public void Maximize()
     {
-        if (_windowHandler == 0)
+        if (_windowHandler == nint.Zero)
             return;
 
         SDL_MaximizeWindow(_windowHandler);
@@ -527,7 +561,7 @@ public class Window
     /// </summary>
     public void Focus()
     {
-        if (_windowHandler == 0)
+        if (_windowHandler == nint.Zero)
             return;
 
         SDL_RaiseWindow(_windowHandler);
@@ -538,7 +572,7 @@ public class Window
     /// </summary>
     public void Restore()
     {
-        if (_windowHandler == 0)
+        if (_windowHandler == nint.Zero)
             return;
 
         SDL_RestoreWindow(_windowHandler);
@@ -551,7 +585,7 @@ public class Window
     /// <param name="canResize">Indicates whether the window should be resizable. True to make it resizable, false to make it non-resizable.</param>
     public void SetResizable(bool canResize)
     {
-        if (_windowHandler == 0)
+        if (_windowHandler == nint.Zero)
             return;
 
         if (canResize)
@@ -576,7 +610,7 @@ public class Window
     /// <param name="canResize">Indicates whether the window should be temporarily resizable. True to make it resizable, false to make it non-resizable.</param>
     private void TempResizable(bool canResize)
     {
-        if (_windowHandler == 0)
+        if (_windowHandler == nint.Zero)
             return;
 
         if (canResize)
@@ -596,7 +630,7 @@ public class Window
     /// </summary>
     public void Close()
     {
-        if (_windowHandler == 0)
+        if (_windowHandler == nint.Zero)
             return;
 
         Closed?.Invoke();
@@ -612,7 +646,7 @@ public class Window
     /// <param name="y">The new Y-coordinate for the window.</param>
     public void ChangePosition(int x, int y)
     {
-        if (_windowHandler == 0)
+        if (_windowHandler == nint.Zero)
             return;
 
         x = Math.Clamp(x, 0, int.MaxValue);
@@ -631,7 +665,7 @@ public class Window
     /// <param name="alpha">The opacity of the window (0.0 to 1.0).</param>
     public void ChangeOpacity(float alpha)
     {
-        if (_windowHandler == 0)
+        if (_windowHandler == nint.Zero)
             return;
 
         alpha = Math.Clamp(alpha, 0, 1.0f); // Check for sillyness :p
@@ -647,6 +681,9 @@ public class Window
     /// </summary>
     public void UnboundWindow()
     {
+        if (_windowHandler == nint.Zero)
+            return;
+
         if (SDL_GetDesktopDisplayMode(0, out SDL_DisplayMode desktopMode) != 0)
         {
             Debug.WriteLine($"[SDL] Could not get desktop resolution!: {SDL_GetError()}");
@@ -664,7 +701,7 @@ public class Window
     /// <param name="mode">The desired window mode (e.g., fullscreen, borderless, or windowed).</param>
     public void ChangeWindowMode(Mode mode)
     {
-        if (_windowHandler == 0)
+        if (_windowHandler == nint.Zero)
             return;
 
         switch (mode)
@@ -680,7 +717,7 @@ public class Window
                     Debug.WriteLine($"[SDL] Could not set window to fullscreen!: {SDL_GetError()}");
                     break;
                 };
-                _currentWindowMode = mode;
+                _windowMode = mode;
                 break;
             case Mode.Borderless:
                 UnboundWindow();
@@ -693,7 +730,7 @@ public class Window
                     Debug.WriteLine($"[SDL] Could not set window to borderless!: {SDL_GetError()}");
                     break;
                 };
-                _currentWindowMode = mode;
+                _windowMode = mode;
                 break;
             case Mode.Windowed:
                 SetMaximumSize(_maxWidth, _maxHeight);
@@ -705,11 +742,11 @@ public class Window
                     break;
                 };
 
-                _currentWindowMode = mode;
+                _windowMode = mode;
 
                 SetResizable(_resizable);
 
-                ChangeSize(_currentWidth, _currentHeight);
+                ChangeSize(_width, _height);
                 break;
             default:
                 break;
@@ -750,8 +787,8 @@ public class Window
         width = Math.Clamp(width, _minWidth, _maxWidth);
         height = Math.Clamp(height, _minHeight, _maxHeight);
 
-        _currentHeight = height;
-        _currentWidth = width;
+        _height = height;
+        _width = width;
 
         Debug.WriteLine($"{height}, {width}");
 
@@ -764,7 +801,7 @@ public class Window
     /// <param name="title">The new title to be set for the window.</param>
     public void ChangeTitle(string title)
     {
-        if (_windowHandler == 0)
+        if (_windowHandler == nint.Zero)
             return;
 
         _title = title;
@@ -779,6 +816,9 @@ public class Window
     /// <param name="maxHeight">The maximum height of the window.</param>
     public void SetMaximumSize(int maxWidth, int maxHeight)
     {
+        if (_windowHandler == nint.Zero)
+            return;
+
         maxWidth = Math.Clamp(maxWidth, 1, int.MaxValue);
         maxHeight = Math.Clamp(maxHeight, 1, int.MaxValue);
 
@@ -786,7 +826,7 @@ public class Window
         _maxHeight = maxHeight;
 
         SDL_SetWindowMaximumSize(_windowHandler, maxWidth, maxHeight);
-        ChangeSize(_currentWidth, _currentHeight);
+        ChangeSize(_width, _height);
     }
 
     /// <summary>
@@ -796,17 +836,45 @@ public class Window
     /// <param name="minHeight">The minimum height of the window.</param>
     public void SetMinimumSize(int minWidth, int minHeight)
     {
+        if (_windowHandler == nint.Zero)
+            return;
+
         minWidth = Math.Clamp(minWidth, 1, int.MaxValue);
         minHeight = Math.Clamp(minHeight, 1, int.MaxValue);
 
         _minHeight = minHeight;
         _minWidth = minWidth;
 
-        _currentHeight = Math.Clamp(_currentHeight, _minHeight, _maxHeight);
-        _currentWidth = Math.Clamp(_currentWidth, _minWidth, _maxWidth);
+        _height = Math.Clamp(_height, _minHeight, _maxHeight);
+        _width = Math.Clamp(_width, _minWidth, _maxWidth);
 
         SDL_SetWindowMinimumSize(_windowHandler, minWidth, minHeight);
-        ChangeSize(_currentWidth, _currentHeight);
+        ChangeSize(_width, _height);
+    }
+
+    // Method to create Vulkan surface
+    public void CreateVulkanSurface(nint vulkanInstanceHandle)
+    {
+        // Ensure the window handler is valid and Vulkan flag is set
+        if (_windowHandler == nint.Zero || !_windowFlags.HasFlag(SDL.SDL_WindowFlags.SDL_WINDOW_VULKAN))
+        {
+            Console.WriteLine("Vulkan not supported or window handler is invalid.");
+            return;
+        }
+
+        // Ensure Vulkan instance handle is valid
+        if (vulkanInstanceHandle == nint.Zero)
+        {
+            throw new InvalidOperationException("Vulkan instance is not initialized.");
+        }
+
+        if (SDL_Vulkan_CreateSurface(_windowHandler, vulkanInstanceHandle, out ulong surface) == SDL_bool.SDL_FALSE)
+        {
+            throw new Exception($"Failed to create Vulkan surface: {SDL.SDL_GetError()}");
+        }
+
+        Console.WriteLine("Vulkan surface created successfully.");
+        // Optionally store the surface handle if you plan to use it later.
     }
 
     /// <summary>
@@ -816,17 +884,31 @@ public class Window
     /// <param name="width">The width of the window in pixels.</param>
     /// <param name="height">The height of the window in pixels.</param>
     /// <param name="windowFlags">Flags that define the window's behavior, such as resizable, fullscreen, etc.</param>
-    public void ShowWindow(string title, int width, int height, SDL_WindowFlags windowFlags)
+    public void Show()
     {
-        if (_windowHandler != 0)
+        if (_windowHandler != 0) // Only create if a window didnt exist.
             return;
 
-        width = Math.Clamp(width, 1, int.MaxValue);
-        height = Math.Clamp(height, 1, int.MaxValue);
+        Debug.WriteLine($"[SDL] Making window with the next params: Title={_title}, W={_width}, H={_height}, Flags={_windowFlags}");
 
-        Debug.WriteLine($"[SDL] Making window with the next params: Title={title}, W={width}, H={height}, Flags={windowFlags}");
+        // Create a window.
+        _windowHandler = SDL_CreateWindow(
+            _title,
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            _width,
+            _height,
+            _windowFlags
+        );
 
-        if (windowFlags.HasFlag(SDL_WindowFlags.SDL_WINDOW_RESIZABLE))
+        if (_windowHandler == nint.Zero)
+        {
+            Debug.WriteLine($"[SDL] Window could not be created! SDL_Error: {SDL_GetError()}");
+            Close();
+            return;
+        }
+
+        if (_windowFlags.HasFlag(SDL_WindowFlags.SDL_WINDOW_RESIZABLE))
         {
             _resizable = true;
             Debug.WriteLine("[SDL] Window is initiatited as resizable");
@@ -836,38 +918,18 @@ public class Window
             Debug.WriteLine("[SDL] Window is initiatited as not resizable");
         }
 
-        if (windowFlags.HasFlag(SDL_WindowFlags.SDL_WINDOW_FULLSCREEN))
+        if (_windowFlags.HasFlag(SDL_WindowFlags.SDL_WINDOW_FULLSCREEN))
         {
-            _currentWindowMode = Mode.Fullscreen;
+            _windowMode = Mode.Fullscreen;
         }
-        else if (windowFlags.HasFlag(SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP))
+        else if (_windowFlags.HasFlag(SDL_WindowFlags.SDL_WINDOW_FULLSCREEN_DESKTOP))
         {
-            _currentWindowMode = Mode.Borderless;
+            _windowMode = Mode.Borderless;
         }
         else
         {
-            _currentWindowMode = Mode.Windowed;
+            _windowMode = Mode.Windowed;
         }
-
-        // Create a window.
-        _windowHandler = SDL_CreateWindow(
-            title,
-            SDL_WINDOWPOS_CENTERED,
-            SDL_WINDOWPOS_CENTERED,
-            width,
-            height,
-            windowFlags
-        );
-
-        if (_windowHandler == nint.Zero)
-        {
-            Debug.WriteLine($"[SDL] Window could not be created! SDL_Error: {SDL_GetError()}");
-            SDL_Quit();
-            return;
-        }
-
-        _currentHeight = height;
-        _currentWidth = width;
 
         SDL_GetWindowPosition(_windowHandler, out int x, out int y);
 
@@ -1096,8 +1158,8 @@ public class Window
 
                         case SDL_WindowEventID.SDL_WINDOWEVENT_SIZE_CHANGED:
                             SDL_GetWindowSize(_windowHandler, out int w, out int h);
-                            _currentWidth = w;
-                            _currentHeight = h;
+                            _width = w;
+                            _height = h;
                             SizeChanged?.Invoke(w, h);
                             break;
 
@@ -1163,7 +1225,29 @@ public class Window
                 }
             }
         }
+        ResetWindowSettings();
+    }
 
-        Console.WriteLine("Loop ended");
+    private void ResetWindowSettings()
+    {
+        _windowHandler = nint.Zero;
+        _title = string.Empty;
+        _isWindowRunning = false;
+        _resizable = false;
+        _isMaximized = false;
+        _isMinimized = false;
+        _hasFocus = false;
+        _maxHeight = int.MaxValue;
+        _minHeight = 1;
+        _maxWidth = int.MaxValue;
+        _minWidth = 1;
+        _height = 0;
+        _width = 0;
+        _xPos = 0;
+        _yPos = 0;
+        _currentOpacity = 1.0f;
+        _windowMode = Mode.Windowed;
+        _image = nint.Zero;
+        _windowFlags = 0;
     }
 }
