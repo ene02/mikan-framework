@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Mikan.Toolkit.Window;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,13 +15,13 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void NegativeSizeShowWindowTest()
         {
-            Window window = new();
+            Window window = new("Goodbye to MSTest", -100, -100, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Goodbye to MSTest", -100, -100, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window.Show();
                 });
             }
 
@@ -36,13 +37,13 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ChangeWindowModeTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+                    window.Show();
                 });
             }
 
@@ -71,13 +72,20 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void UnboundWindowTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+
+            bool resizeEventTriggered = false;
+
+            window.SizeChanged += (w, h) =>
+            {
+                resizeEventTriggered = true;
+            };
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window.Show();
                 });
             }
 
@@ -95,6 +103,7 @@ namespace Mikan.Toolkit.Window.Tests
 
             Assert.AreEqual(500, window.Height);
             Assert.AreEqual(500, window.Width);
+            Assert.IsTrue(resizeEventTriggered);
 
             window.Close();
         }
@@ -102,13 +111,20 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void MinimizeTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+
+            bool minimizedEventTriggered = false;
+
+            window.Minimized += () =>
+            {
+                minimizedEventTriggered = true;
+            };
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window.Show();
                 });
             }
 
@@ -121,6 +137,7 @@ namespace Mikan.Toolkit.Window.Tests
             Thread.Sleep(1000);
 
             Assert.IsTrue(window.IsMinimized);
+            Assert.IsTrue(minimizedEventTriggered);
 
             window.Close();
         }
@@ -128,13 +145,20 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void MaximizeTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+
+            bool maximizedEventTriggered = false;
+
+            window.Maximized += () =>
+            {
+                maximizedEventTriggered = true;
+            };
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window.Show();
                 });
             }
 
@@ -147,6 +171,7 @@ namespace Mikan.Toolkit.Window.Tests
             Thread.Sleep(1000);
 
             Assert.IsTrue(window.IsMaximized);
+            Assert.IsTrue(maximizedEventTriggered);
 
             window.Close();
         }
@@ -154,13 +179,13 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void SetMaximumSizeTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window.Show();
                 });
             }
 
@@ -184,13 +209,13 @@ namespace Mikan.Toolkit.Window.Tests
             Thread.Sleep(1000);
 
             // Set size before maximum.
-            Window window2 = new();
+            Window window2 = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow2()
             {
                 await Task.Run(() =>
                 {
-                    window2.ShowWindow("Welcome to MSTest part 2 electric boogaloo", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window2.Show();
                 });
             }
 
@@ -220,13 +245,13 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ChangeTitleTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window.Show();
                 });
             }
 
@@ -246,13 +271,13 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void SetMinimumSizeTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 500, 500, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window.Show();
                 });
             }
 
@@ -276,13 +301,13 @@ namespace Mikan.Toolkit.Window.Tests
             window.Close();
 
             // Set size before minimum.
-            Window window2 = new();
+            Window window2 = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow2()
             {
                 await Task.Run(() =>
                 {
-                    window2.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window2.Show();
                 });
             }
 
@@ -312,13 +337,20 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ChangeSizeTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+
+            bool sizeChangedEventTriggered = false;
+
+            window.SizeChanged += (w, h) =>
+            {
+                sizeChangedEventTriggered = true;
+            };
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+                    window.Show();
                 });
             }
 
@@ -330,6 +362,7 @@ namespace Mikan.Toolkit.Window.Tests
 
             Thread.Sleep(1000);
 
+            Assert.IsTrue(sizeChangedEventTriggered);
             Assert.AreEqual(1000, window.Height);
             Assert.AreEqual(1000, window.Width);
 
@@ -350,13 +383,13 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ChangeOpacityTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+                    window.Show();
                 });
             }
 
@@ -392,13 +425,13 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ChangePositionTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+                    window.Show();
                 });
             }
 
@@ -428,13 +461,13 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void SetResizableTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN); // Not resizable.
+                    window.Show(); // Not resizable.
                 });
             }
 
@@ -457,7 +490,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void RestoreTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
             bool restored = false;
 
             window.Restored += () =>
@@ -469,7 +502,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window.Show();
                 });
             }
 
@@ -493,13 +526,13 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ChangeIconTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window.Show();
                 });
             }
 
@@ -519,13 +552,13 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ShowWindowTest()
         {
-            Window window = new();
+            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
                 await Task.Run(() =>
                 {
-                    window.ShowWindow("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+                    window.Show();
                 });
             }
 
