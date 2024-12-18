@@ -1,27 +1,24 @@
-# 🍊 Mikan.Toolkit
+# Mikan Toolkit
 
-**Mikan Toolkit** is a personal library I created to make use of **BASS**, **SDL**, and **Veldrid** easier for my own projects. It’s a toolkit, not a framework, and is designed to help with the specific tasks I need. While it’s not a comprehensive wrapper for all features of these libraries, it includes the parts that I found useful for my work. 
+**Mikan Toolkit** is a personal library I'm developing to simplify working with **BASS**, **SDL**, and **Veldrid** for my own projects. It’s a toolkit designed for specific tasks, and is not a full-featured framework or library.
 
-## What Mikan Is (and Isn’t)
+## What It Is
 
-Mikan is a toolkit, not a plug-and-play framework, some setup will be needed and stuff still needs initialization and some level of managment.
-
-## How It Works
-
-Mikan offers a set of abstractions that make working with **BASS**, **SDL**, and **Veldrid** easier, especially if you prefer a more object-oriented approach. It manages handlers internally and exposes higher-level methods that are safer and easier to work with than the raw handlers you’d normally use.
-
-Since Mikan is more focused on exposing more used methods, this might cause problems if you needed something i didnt offer directly, making you have to use libraries directly or directly with a binding.
+- A toolkit for my personal use, focused on the parts of **BASS**, **SDL**, and **Veldrid** that I need.
+- Not a complete binding of all features—only the parts I’ve found useful so far.
+- Still a work in progress (WIP), so features may be added or changed over time.
 
 ## Libraries Used
 
-- **BASS**: Used for audio processing, with only the necessary features exposed.
-- **SDL**: Handles windowing and input, but again, only the relevant parts are included.
-- **Veldrid**: Provides rendering capabilities, but only the features I required are wrapped.
+- **BASS**: Audio processing.
+- **SDL**: Windowing and input.
+- **Veldrid**: Rendering.
 
 ## Cross-Platform & Mobile Support
 
-Mikan is technically cross-platform, but I haven’t thoroughly tested it across all platforms. While mobile support is possible, it hasn’t been tested and I haven’t tried it myself.
+- Technically cross-platform, but not fully tested across all platforms.
+- Mobile support is possible but untested.
 
-## Why I Made This
+## Why It Exists
 
-I created Mikan because I wanted to simplify working with **BASS**, **SDL**, and **Veldrid** for my personal projects. It’s not designed to be a universal solution, just a toolkit that works for what I needed. I’ve included documentation in case others find it useful, but it’s very much a personal project that’s meant to save time and make development easier for me.
+Mikan was created to simplify my development workflow with these libraries. It’s not a universal solution, just something that works for what I need at the moment.
