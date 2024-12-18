@@ -1,4 +1,4 @@
-# Mikan Toolkit
+# 🍊 Mikan.Toolkit
 
 **Mikan Toolkit** is a personal library I'm developing to simplify working with **BASS**, **SDL**, and **Veldrid** for my own projects. It’s a toolkit designed for specific tasks, and is not a full-featured framework or library.
 
