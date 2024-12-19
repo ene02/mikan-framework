@@ -15,7 +15,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void NegativeSizeShowWindowTest()
         {
-            Window window = new("Goodbye to MSTest", -100, -100, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+            SdlWindow window = new("Goodbye to MSTest", -100, -100, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
 
             async void MakeWindow()
             {
@@ -37,7 +37,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ChangeWindowModeTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
@@ -51,20 +51,20 @@ namespace Mikan.Toolkit.Window.Tests
 
             Thread.Sleep(1000);
 
-            window.ChangeWindowMode(Window.Mode.Fullscreen);
+            window.ChangeWindowMode(SdlWindow.Mode.Fullscreen);
 
             Thread.Sleep(1000);
-            Assert.AreEqual(Window.Mode.Fullscreen, window.CurrentMode);
+            Assert.AreEqual(SdlWindow.Mode.Fullscreen, window.CurrentMode);
 
-            window.ChangeWindowMode(Window.Mode.Borderless);
-
-            Thread.Sleep(1000);
-            Assert.AreEqual(Window.Mode.Borderless, window.CurrentMode);
-
-            window.ChangeWindowMode(Window.Mode.Windowed);
+            window.ChangeWindowMode(SdlWindow.Mode.Borderless);
 
             Thread.Sleep(1000);
-            Assert.AreEqual(Window.Mode.Windowed, window.CurrentMode);
+            Assert.AreEqual(SdlWindow.Mode.Borderless, window.CurrentMode);
+
+            window.ChangeWindowMode(SdlWindow.Mode.Windowed);
+
+            Thread.Sleep(1000);
+            Assert.AreEqual(SdlWindow.Mode.Windowed, window.CurrentMode);
 
             window.Close();
         }
@@ -72,7 +72,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void UnboundWindowTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             bool resizeEventTriggered = false;
 
@@ -111,7 +111,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void MinimizeTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             bool minimizedEventTriggered = false;
 
@@ -145,7 +145,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void MaximizeTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             bool maximizedEventTriggered = false;
 
@@ -179,7 +179,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void SetMaximumSizeTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
@@ -209,7 +209,7 @@ namespace Mikan.Toolkit.Window.Tests
             Thread.Sleep(1000);
 
             // Set size before maximum.
-            Window window2 = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window2 = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow2()
             {
@@ -245,7 +245,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ChangeTitleTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
@@ -271,7 +271,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void SetMinimumSizeTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
@@ -301,7 +301,7 @@ namespace Mikan.Toolkit.Window.Tests
             window.Close();
 
             // Set size before minimum.
-            Window window2 = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window2 = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow2()
             {
@@ -337,7 +337,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ChangeSizeTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             bool sizeChangedEventTriggered = false;
 
@@ -383,7 +383,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ChangeOpacityTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
@@ -425,7 +425,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ChangePositionTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
@@ -461,7 +461,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void SetResizableTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
 
             async void MakeWindow()
             {
@@ -490,7 +490,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void RestoreTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
             bool restored = false;
 
             window.Restored += () =>
@@ -526,7 +526,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ChangeIconTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
@@ -552,7 +552,7 @@ namespace Mikan.Toolkit.Window.Tests
         [TestMethod()]
         public void ShowWindowTest()
         {
-            Window window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
+            SdlWindow window = new("Welcome to MSTest", 400, 400, SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL2.SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE);
 
             async void MakeWindow()
             {
