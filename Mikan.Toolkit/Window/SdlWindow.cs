@@ -405,27 +405,26 @@ public class SdlWindow
     // Private fields for the window state
     private IntPtr _windowHandler = nint.Zero;
     private string _title;
-    private bool _isWindowRunning = false, _isResizable = false, _isMaximized = false, _isMinimized = false, _hasFocus = false;
+    private bool _isWindowRunning = false, _isResizable = false, _isMaximized = false, _isMinimized = false, _hasFocus = false, _hasOpenGLContext;
     private int _maxHeight = int.MaxValue, _minHeight = 1, _maxWidth = int.MaxValue, _minWidth = 1, _height = 1, _width = 1, _xPos = 0, _yPos = 0;
     private float _currentOpacity = 1.0f;
     private Mode _windowMode = Mode.Windowed;
     private nint _image = nint.Zero;
     private SDL.SDL_WindowFlags _windowFlags;
     private SDL_SysWMinfo _wmInfo;
-    private nint _hWnd = 0;
-    private nint _hInstance = 0;
+#pragma warning disable IDE0044 // Agregar modificador de solo lectura
+    private IntPtr _externalHwnd = IntPtr.Zero;
+#pragma warning restore IDE0044 // Agregar modificador de solo lectura
 
     // Public properties
     public nint SDLHandler { get { return _windowHandler; } }
-
-    public nint InstanceHandler { get { return _hInstance; } }
-
-    public nint HWndHandler { get { return _hWnd; } }
 
     /// <summary>
     /// Gets whether the window is created and running.
     /// </summary>
     public bool IsWindowCreated { get { return _isWindowRunning; } }
+
+    public bool HasOpenGLContext { get { return _hasOpenGLContext; } }
 
     /// <summary>
     /// Gets whether the window is minimized.
@@ -525,10 +524,34 @@ public class SdlWindow
     {
         InitHandler.CheckSDLInit();
 
-        _hWnd = hWnd;
+        _externalHwnd = hWnd;
     }
 
-    private IntPtr GetInstanceHandle()
+    public void CreateOpenGLContext(bool vsync)
+    {
+        if (_windowHandler == nint.Zero)
+            return;
+
+        IntPtr glContext = SDL_GL_CreateContext(_windowHandler);
+
+        if (glContext == IntPtr.Zero)
+        {
+            return;
+        }
+
+        _hasOpenGLContext = true;
+
+        if (vsync)
+        {
+            _ = SDL_GL_SetSwapInterval(1);
+        }
+        else
+        {
+            _ = SDL_GL_SetSwapInterval(0);
+        }
+    }
+
+    public IntPtr GetInstanceHandle()
     {
         if (_windowHandler == nint.Zero)
             return 0;
@@ -539,7 +562,7 @@ public class SdlWindow
         return hInstance;
     }
 
-    private IntPtr GetWndHandle()
+    public IntPtr GetHwndHandle()
     {
         if (_windowHandler == nint.Zero)
             return 0;
@@ -649,7 +672,14 @@ public class SdlWindow
 
         Closed?.Invoke();
         SDL_DestroyWindow(_windowHandler);
+        SDL_GL_DeleteContext(_windowHandler);
+
         _isWindowRunning = false;
+    }
+
+    public void GLSwapBuffer()
+    {
+        SDL_GL_SwapWindow(_windowHandler);
     }
 
     /// <summary>
@@ -872,7 +902,7 @@ public class SdlWindow
         if (_windowHandler != 0) // Only create if a window didnt exist.
             return;
 
-        if (_hWnd == 0)
+        if (_externalHwnd == 0)
         {
             // Create a window.
             _windowHandler = SDL_CreateWindow(
@@ -904,7 +934,7 @@ public class SdlWindow
         }
         else
         {
-            _windowHandler = SDL_CreateWindowFrom(_hWnd);
+            _windowHandler = SDL_CreateWindowFrom(_externalHwnd);
 
             // Retrieve window title
             _title = SDL_GetWindowTitle(_windowHandler);
@@ -926,7 +956,7 @@ public class SdlWindow
             _minHeight = mh;
 
             // Retrieve opacity
-            SDL_GetWindowOpacity(_windowHandler, out float opacity);
+            _ = SDL_GetWindowOpacity(_windowHandler, out float opacity);
             _currentOpacity = opacity;
 
             // Retrieve window flags
@@ -1294,5 +1324,6 @@ public class SdlWindow
         _windowMode = Mode.Windowed;
         _image = nint.Zero;
         _windowFlags = 0;
+        _hasOpenGLContext = false;
     }
 }
