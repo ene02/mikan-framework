@@ -397,11 +397,16 @@ public class SdlWindow
     /// </summary>
     public event Action HitTest;
 
+    /// <summary>
+    /// Triggered when a window is created for the first time.
+    /// </summary>
+    public event Action Loaded;
+
     // Private fields for the window state
-    private nint _windowHandler = nint.Zero;
+    private IntPtr _windowHandler = nint.Zero;
     private string _title;
     private bool _isWindowRunning = false, _isResizable = false, _isMaximized = false, _isMinimized = false, _hasFocus = false;
-    private int _maxHeight = int.MaxValue, _minHeight = 1, _maxWidth = int.MaxValue, _minWidth = 1, _height = 0, _width = 0, _xPos = 0, _yPos = 0;
+    private int _maxHeight = int.MaxValue, _minHeight = 1, _maxWidth = int.MaxValue, _minWidth = 1, _height = 1, _width = 1, _xPos = 0, _yPos = 0;
     private float _currentOpacity = 1.0f;
     private Mode _windowMode = Mode.Windowed;
     private nint _image = nint.Zero;
@@ -516,7 +521,7 @@ public class SdlWindow
         _windowFlags = windowFlags;
     }
 
-    public SdlWindow(nint hWnd = 0)
+    public SdlWindow(nint hWnd)
     {
         InitHandler.CheckSDLInit();
 
@@ -605,13 +610,11 @@ public class SdlWindow
         {
             SDL_SetWindowResizable(_windowHandler, SDL_bool.SDL_TRUE);
             _isResizable = true;
-            Debug.WriteLine("[SDL] Window is permanently resizable");
         }
         else
         {
             SDL_SetWindowResizable(_windowHandler, SDL_bool.SDL_FALSE);
             _isResizable = false;
-            Debug.WriteLine("[SDL] Window is permanently not resizable");
         }
     }
 
@@ -629,12 +632,10 @@ public class SdlWindow
         if (canResize)
         {
             SDL_SetWindowResizable(_windowHandler, SDL_bool.SDL_TRUE);
-            Debug.WriteLine("[SDL] Window is temporarily resizable");
         }
         else
         {
             SDL_SetWindowResizable(_windowHandler, SDL_bool.SDL_FALSE);
-            Debug.WriteLine("[SDL] Window is temporarily not resizable");
         }
     }
 
@@ -699,8 +700,7 @@ public class SdlWindow
 
         if (SDL_GetDesktopDisplayMode(0, out SDL_DisplayMode desktopMode) != 0)
         {
-            Debug.WriteLine($"[SDL] Could not get desktop resolution!: {SDL_GetError()}");
-            return;
+            throw new Exception($"[SDL] Could not get desktop resolution!: {SDL_GetError()}");
         }
 
         SetMaximumSize(desktopMode.w, desktopMode.h);
@@ -727,8 +727,7 @@ public class SdlWindow
 
                 if (SDL_SetWindowFullscreen(_windowHandler, 0x00000001) != 0)
                 {
-                    Debug.WriteLine($"[SDL] Could not set window to fullscreen!: {SDL_GetError()}");
-                    break;
+                    throw new Exception($"[SDL] Could not set window to fullscreen!: {SDL_GetError()}");
                 };
                 _windowMode = mode;
                 break;
@@ -740,8 +739,7 @@ public class SdlWindow
 
                 if (SDL_SetWindowFullscreen(_windowHandler, 0x00001000) != 0)
                 {
-                    Debug.WriteLine($"[SDL] Could not set window to borderless!: {SDL_GetError()}");
-                    break;
+                    throw new Exception($"[SDL] Could not set window to borderless!: {SDL_GetError()}");
                 };
                 _windowMode = mode;
                 break;
@@ -751,8 +749,7 @@ public class SdlWindow
 
                 if (SDL_SetWindowFullscreen(_windowHandler, 0) != 0)
                 {
-                    Debug.WriteLine($"[SDL] Could not set window to windowed!: {SDL_GetError()}");
-                    break;
+                    throw new Exception($"[SDL] Could not set window to windowed!: {SDL_GetError()}");
                 };
 
                 _windowMode = mode;
@@ -767,7 +764,7 @@ public class SdlWindow
     }
 
     /// <summary>
-    /// Changes the window icon to the image located at the specified <paramref name="file"/> path.<br/>
+    /// Changes the window icon to the BMP image located at the specified <paramref name="file"/> path.<br/>
     /// If the file does not exist the operation is ignored.
     /// </summary>
     /// <param name="file">The path to the image file to be used as the window icon.</param>
@@ -780,7 +777,7 @@ public class SdlWindow
 
         if (_image == 0)
         {
-            Debug.WriteLine($"[SDL] Failed to load image!: {SDL_GetError()}");
+            throw new ArgumentException(SDL_GetError());
         }
 
         SDL_SetWindowIcon(_windowHandler, _image);
@@ -802,8 +799,6 @@ public class SdlWindow
 
         _height = height;
         _width = width;
-
-        Debug.WriteLine($"{height}, {width}");
 
         SDL_SetWindowSize(_windowHandler, width, height);
     }
@@ -865,44 +860,17 @@ public class SdlWindow
         ChangeSize(_width, _height);
     }
 
-    // Method to create Vulkan surface
-    public void CreateVulkanSurface(nint vulkanInstanceHandle)
-    {
-        // Ensure the window handler is valid and Vulkan flag is set
-        if (_windowHandler == nint.Zero || !_windowFlags.HasFlag(SDL.SDL_WindowFlags.SDL_WINDOW_VULKAN))
-        {
-            Console.WriteLine("Vulkan not supported or window handler is invalid.");
-            return;
-        }
-
-        // Ensure Vulkan instance handle is valid
-        if (vulkanInstanceHandle == nint.Zero)
-        {
-            throw new InvalidOperationException("Vulkan instance is not initialized.");
-        }
-
-        if (SDL_Vulkan_CreateSurface(_windowHandler, vulkanInstanceHandle, out ulong surface) == SDL_bool.SDL_FALSE)
-        {
-            throw new Exception($"Failed to create Vulkan surface: {SDL.SDL_GetError()}");
-        }
-
-        Console.WriteLine("Vulkan surface created successfully.");
-        // Optionally store the surface handle if you plan to use it later.
-    }
-
     /// <summary>
-    /// Initializes and shows the window with the specified parameters.<br/> The window will be created, and its event loop will start running until the window is closed.
+    /// Initializes and shows the window.<br/> The window will be created, and its event loop will start running until the window is closed.
     /// </summary>
     /// <param name="title">The title of the window.</param>
     /// <param name="width">The width of the window in pixels.</param>
     /// <param name="height">The height of the window in pixels.</param>
     /// <param name="windowFlags">Flags that define the window's behavior, such as resizable, fullscreen, etc.</param>
-    public void Show()
+    public void Start()
     {
         if (_windowHandler != 0) // Only create if a window didnt exist.
             return;
-
-        Debug.WriteLine($"[SDL] Making window with the next params: Title={_title}, W={_width}, H={_height}, Flags={_windowFlags}");
 
         if (_hWnd == 0)
         {
@@ -932,11 +900,6 @@ public class SdlWindow
             if (_windowFlags.HasFlag(SDL_WindowFlags.SDL_WINDOW_RESIZABLE))
             {
                 _isResizable = true;
-                Debug.WriteLine("[SDL] Window is initiatited as resizable");
-            }
-            else
-            {
-                Debug.WriteLine("[SDL] Window is initiatited as not resizable");
             }
         }
         else
@@ -950,6 +913,8 @@ public class SdlWindow
             SDL_GetWindowSize(_windowHandler, out int w, out int h);
             _width = w;
             _height = h;
+
+            Debug.WriteLine($"[SDL] Title: {_title}, W={w}, H={h}");
 
             // Retrieve max and min sizes
             SDL_GetWindowMaximumSize(_windowHandler, out int Mw, out int Mh);
@@ -978,11 +943,31 @@ public class SdlWindow
 
             // Resizable state
             _isResizable = (flags & (uint)SDL_WindowFlags.SDL_WINDOW_RESIZABLE) != 0;
+
+            // What the heeeel
+            if (_maxHeight == 0)
+            {
+                _maxHeight = int.MaxValue;
+            }
+
+            if (_maxWidth == 0)
+            {
+                _maxWidth = int.MaxValue;
+            }
+
+            if (_minHeight == 0)
+            {
+                _minHeight = 1;
+            }
+
+            if (_minWidth == 0)
+            {
+                _minWidth = 1;
+            }
         }
 
         if (_windowHandler == nint.Zero)
         {
-            Debug.WriteLine($"[SDL] Window could not be created! SDL_Error: {SDL_GetError()}");
             Close();
             return;
         }
@@ -992,10 +977,11 @@ public class SdlWindow
         _xPos = x;
         _yPos = y;
 
-        Debug.WriteLine("[SDL] SDL window was created sucessfully, event loop started!");
         _isWindowRunning = true;
 
-        while (_isWindowRunning) // Keep running until we decide to stop
+        Loaded?.Invoke();
+
+        while (_isWindowRunning) // Keep running until we decide to stop+
         {
             while (SDL_WaitEvent(out SDL_Event e) != 0)
             {
@@ -1182,6 +1168,10 @@ public class SdlWindow
                         case SDL_EventType.SDL_MOUSEWHEEL:
                             MouseWheel?.Invoke(e.wheel.x, e.wheel.y);
                             break;
+
+                        // Default case if no match found
+                        default:
+                            throw new Exception($"An event was triggered but was not recognized: {e.type}");
                     }
                 }
                 else
@@ -1275,8 +1265,7 @@ public class SdlWindow
 
                         // Default case if no match found
                         default:
-                            Console.WriteLine($"Unhandled window event: {e.window.windowEvent}");
-                            break;
+                            throw new Exception($"An event was triggered but was not recognized: {e.window.windowEvent}");
                     }
                 }
             }

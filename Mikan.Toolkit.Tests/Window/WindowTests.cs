@@ -21,7 +21,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
@@ -43,7 +43,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
@@ -85,7 +85,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
@@ -124,7 +124,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
@@ -158,7 +158,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
@@ -185,7 +185,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
@@ -215,7 +215,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window2.Show();
+                    window2.Start();
                 });
             }
 
@@ -251,7 +251,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
@@ -277,7 +277,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
@@ -307,7 +307,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window2.Show();
+                    window2.Start();
                 });
             }
 
@@ -350,7 +350,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
@@ -389,7 +389,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
@@ -431,7 +431,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
@@ -467,7 +467,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show(); // Not resizable.
+                    window.Start(); // Not resizable.
                 });
             }
 
@@ -502,7 +502,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
@@ -532,7 +532,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
@@ -558,7 +558,7 @@ namespace Mikan.Toolkit.Window.Tests
             {
                 await Task.Run(() =>
                 {
-                    window.Show();
+                    window.Start();
                 });
             }
 
