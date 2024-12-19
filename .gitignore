@@ -404,3 +404,5 @@ FodyWeavers.xsd
 /Mikan.Toolkit.Tests/Audio/SoundAttributesTests.cs
 /SDL.ForgeinWindowTest
 /Veldrid.Tests
+/opengl/OpenGlue.csproj
+/opengl/OpenGlue.cs

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ManagedBass;
+using SDL2;
 using static SDL2.SDL;
 
 namespace Mikan.Toolkit.Handlers;
@@ -27,13 +28,15 @@ public static class InitHandler
         // Initialize SDL.
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
         {
-            Debug.WriteLine($"[SDL] Could not initialize! SDL_Error: {SDL_GetError()}");
-            return;
+            throw new Exception($"[SDL] Could not initialize! SDL_Error: {SDL_GetError()}");
         }
 
-        Debug.WriteLine($"[SDL] Initiated!");
-        Debug.WriteLine($"[SDL] Flags: SDL_INIT_VIDEO,  SDL_INIT_EVENTS!");
         _isSDLInitialized = true;
+
+        // Set OpenGL attributes (optional, but recommended)
+        _ = SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+        _ = SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_MINOR_VERSION, 4);
+        _ = SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_PROFILE_MASK, (int)SDL_GLprofile.SDL_GL_CONTEXT_PROFILE_CORE);
 
         AppDomain.CurrentDomain.ProcessExit += (s, e) =>
         {
@@ -48,8 +51,6 @@ public static class InitHandler
 
         SDL_Quit();
         _isSDLInitialized = false;
-
-        Debug.WriteLine($"[SDL] Bye bye!");
     }
 
     public static void CheckBassInit()
@@ -58,14 +59,12 @@ public static class InitHandler
         {
             if (Bass.LastError == Errors.Already)
             {
-                Debug.WriteLine($"[ManagedBass] BASS already initialized");
                 return;
             }
 
-            Debug.WriteLine($"[ManagedBass] Failed to initialize BASS: {Bass.LastError}");
+            throw new Exception($"[ManagedBass] Failed to initialize BASS: {Bass.LastError}");
         }
 
-        Debug.WriteLine($"[ManagedBass] BASS initialized successfully");
         _isBASSInitialized = true;
 
         AppDomain.CurrentDomain.ProcessExit += (s, e) =>
@@ -81,7 +80,6 @@ public static class InitHandler
 
         Bass.Free();
         _isBASSInitialized = false;
-        Debug.WriteLine($"[ManagedBass] BASS resources were freed");
     }
 
     public static void EndEverything()
