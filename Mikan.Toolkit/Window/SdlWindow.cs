@@ -412,9 +412,7 @@ public class SdlWindow
     private nint _image = nint.Zero;
     private SDL.SDL_WindowFlags _windowFlags;
     private SDL_SysWMinfo _wmInfo;
-#pragma warning disable IDE0044 // Agregar modificador de solo lectura
     private IntPtr _externalHwnd = IntPtr.Zero;
-#pragma warning restore IDE0044 // Agregar modificador de solo lectura
 
     // Public properties
     public nint SDLHandler { get { return _windowHandler; } }
@@ -679,6 +677,9 @@ public class SdlWindow
 
     public void GLSwapBuffer()
     {
+        if (_windowHandler == nint.Zero || !_hasOpenGLContext)
+            return;
+
         SDL_GL_SwapWindow(_windowHandler);
     }
 
