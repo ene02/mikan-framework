@@ -33,11 +33,6 @@ public static class InitHandler
 
         _isSDLInitialized = true;
 
-        // Set OpenGL attributes (optional, but recommended)
-        _ = SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-        _ = SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_MINOR_VERSION, 4);
-        _ = SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_PROFILE_MASK, (int)SDL_GLprofile.SDL_GL_CONTEXT_PROFILE_CORE);
-
         AppDomain.CurrentDomain.ProcessExit += (s, e) =>
         {
             EndEverything();
