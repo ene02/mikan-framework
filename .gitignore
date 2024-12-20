@@ -406,3 +406,5 @@ FodyWeavers.xsd
 /Veldrid.Tests
 /opengl/OpenGlue.csproj
 /opengl/OpenGlue.cs
+/opengl/NotVulkan.cs
+/opengl/NotVulkan.csproj

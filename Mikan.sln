@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mikan.NativeLibs", "Mikan.N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mikan.Toolkit.Tests", "Mikan.Toolkit.Tests\Mikan.Toolkit.Tests.csproj", "{06A13F80-FB72-49A9-86B9-0089EAE77EA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenGlue", "opengl\OpenGlue.csproj", "{883AE9FC-9BA3-4FA7-BA56-995E4B53775C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotVulkan", "opengl\NotVulkan.csproj", "{883AE9FC-9BA3-4FA7-BA56-995E4B53775C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

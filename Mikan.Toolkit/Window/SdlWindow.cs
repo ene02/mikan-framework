@@ -409,6 +409,7 @@ public class SdlWindow
     private int _maxHeight = int.MaxValue, _minHeight = 1, _maxWidth = int.MaxValue, _minWidth = 1, _height = 1, _width = 1, _xPos = 0, _yPos = 0;
     private float _currentOpacity = 1.0f;
     private Mode _windowMode = Mode.Windowed;
+    private VSync _vsyncState = VSync.Unknown;
     private nint _image = nint.Zero;
     private SDL.SDL_WindowFlags _windowFlags;
     private SDL_SysWMinfo _wmInfo;
@@ -443,6 +444,8 @@ public class SdlWindow
     /// Gets the current window mode (Fullscreen, Borderless, Windowed).
     /// </summary>
     public Mode CurrentMode { get { return _windowMode; } }
+
+    public VSync CurrentVSyncState { get { return _vsyncState; } }
 
     /// <summary>
     /// Gets the current height of the window.
@@ -494,7 +497,9 @@ public class SdlWindow
         Windowed
     }
 
-    // Enum to represent window states
+    /// <summary>
+    /// Enum to represent window states
+    /// </summary>
     public enum State
     {
         /// <summary>Window is minimized.</summary>
@@ -507,6 +512,15 @@ public class SdlWindow
         Normal,
     }
 
+    /// <summary>
+    /// Enum to represent VSync states.
+    /// </summary>
+    public enum VSync
+    {
+        Enabled,
+        Disabled,
+        Unknown
+    }
 
     public SdlWindow(string title, int width, int height, SDL_WindowFlags windowFlags)
     {
@@ -525,7 +539,7 @@ public class SdlWindow
         _externalHwnd = hWnd;
     }
 
-    public void CreateOpenGLContext(bool vsync)
+    public void CreateOpenGLContext(VSync vsync)
     {
         if (_windowHandler == nint.Zero)
             return;
@@ -539,7 +553,7 @@ public class SdlWindow
 
         _hasOpenGLContext = true;
 
-        if (vsync)
+        if (vsync == VSync.Enabled)
         {
             _ = SDL_GL_SetSwapInterval(1);
         }
@@ -547,6 +561,8 @@ public class SdlWindow
         {
             _ = SDL_GL_SetSwapInterval(0);
         }
+
+        _vsyncState = vsync;
     }
 
     public IntPtr GetInstanceHandle()
