@@ -448,14 +448,46 @@ public class SdlWindow
     public VSync CurrentVSyncState { get { return _vsyncState; } }
 
     /// <summary>
-    /// Gets the current height of the window.
+    /// Gets the saved height of the window.
     /// </summary>
     public int Height { get { return _height; } }
 
     /// <summary>
-    /// Gets the current width of the window.
+    /// Gets the saved width of the window.
     /// </summary>
     public int Width { get { return _width; } }
+
+    /// <summary>
+    /// Gets the current height of the window in realtime.
+    /// </summary>
+    public int RtHeight
+    { 
+        get
+        {
+            if (_windowHandler == nint.Zero)
+                throw new InvalidOperationException($"Theres no window created to get its size!, current window handler: {_windowHandler}");
+
+            SDL_GetWindowSize(_windowHandler, out int w, out int h);
+
+            return h;
+        } 
+    }
+
+    /// <summary>
+    /// Gets the current width of the window in realtime.
+    /// </summary>
+    public int RtWidth
+    {
+        get
+        {
+            if (_windowHandler == nint.Zero)
+                throw new InvalidOperationException($"Theres no window created to get its size!, current window handler: {_windowHandler}");
+
+            SDL_GetWindowSize(_windowHandler, out int w, out int h);
+
+            return w;
+        }
+    }
 
     /// <summary>
     /// Gets the current opacity of the window (between 0 and 1).
@@ -599,7 +631,14 @@ public class SdlWindow
         _hasOpenGLContext = true;
 
         // Configure VSync
-        SDL_GL_SetSwapInterval(vsync == VSync.Enabled ? 1 : 0);
+        if (vsync == VSync.Enabled)
+        {
+            _ = SDL_GL_SetSwapInterval(1);
+        }
+        else
+        {
+            _ = SDL_GL_SetSwapInterval(0);
+        }
 
         _vsyncState = vsync;
     }
