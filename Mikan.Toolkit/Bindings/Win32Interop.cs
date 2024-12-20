@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Mikan.Toolkit.Window
+namespace Mikan.Toolkit.Bindings
 {
     public static class Win32Interop
     {
@@ -31,53 +31,53 @@ namespace Mikan.Toolkit.Window
         public struct NOTIFYICONDATA
         {
             public uint cbSize;
-            public IntPtr hWnd;
+            public nint hWnd;
             public uint uID;
             public uint uFlags;
             public uint uCallbackMessage;
-            public IntPtr hIcon;
+            public nint hIcon;
             public string szTip;
         }
 
         // Methods
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        private static extern nint FindWindow(string lpClassName, string lpWindowName);
 
         [DllImport("user32.dll")]
-        private static extern bool GetWindowRect(IntPtr windowHandle, out RECT windowRect);
+        private static extern bool GetWindowRect(nint windowHandle, out RECT windowRect);
 
         [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool SetWindowPos(IntPtr windowHandle, IntPtr windowAfter, int x, int y, int width, int height, uint flags);
+        private static extern bool SetWindowPos(nint windowHandle, nint windowAfter, int x, int y, int width, int height, uint flags);
 
         [DllImport("user32.dll", SetLastError = true)]
-        private static extern int GetWindowLong(IntPtr windowHandle, int nIndex);
+        private static extern int GetWindowLong(nint windowHandle, int nIndex);
 
         [DllImport("user32.dll")]
-        private static extern IntPtr GetFocus();
+        private static extern nint GetFocus();
 
         [DllImport("user32.dll", SetLastError = true)]
-        private static extern int SetWindowLong(IntPtr windowHandle, int nIndex, int newLongValue);
+        private static extern int SetWindowLong(nint windowHandle, int nIndex, int newLongValue);
 
         [DllImport("user32.dll")]
-        private static extern IntPtr SetFocus(IntPtr windowHandle);
+        private static extern nint SetFocus(nint windowHandle);
 
         [DllImport("user32.dll")]
-        private static extern bool GetWindowInfo(IntPtr windowHandle, ref WINDOWINFO windowInfo);
+        private static extern bool GetWindowInfo(nint windowHandle, ref WINDOWINFO windowInfo);
 
         [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool SetLayeredWindowAttributes(IntPtr windowHandle, uint colorKey, byte alpha, uint flags);
+        private static extern bool SetLayeredWindowAttributes(nint windowHandle, uint colorKey, byte alpha, uint flags);
 
         [DllImport("shell32.dll")]
         private static extern bool Shell_NotifyIcon(uint message, ref NOTIFYICONDATA notificationData);
 
         [DllImport("user32.dll")]
-        private static extern int GetClassName(IntPtr windowHandle, StringBuilder classNameBuffer, int maxLength);
+        private static extern int GetClassName(nint windowHandle, StringBuilder classNameBuffer, int maxLength);
 
         /// <summary>
         /// Finds a window by its class name and window title.
         /// </summary>
-        public static IntPtr FindWindowByClassName(string className)
+        public static nint FindWindowByClassName(string className)
         {
             return FindWindow(className, null);
         }
@@ -85,7 +85,7 @@ namespace Mikan.Toolkit.Window
         /// <summary>
         /// Finds a window by its title.
         /// </summary>
-        public static IntPtr FindWindowByTitle(string windowName)
+        public static nint FindWindowByTitle(string windowName)
         {
             return FindWindow(null, windowName);
         }
@@ -93,7 +93,7 @@ namespace Mikan.Toolkit.Window
         /// <summary>
         /// Gets the rectangle coordinates of the window.
         /// </summary>
-        public static bool GetWindowBounds(IntPtr windowHandle, out RECT windowRect)
+        public static bool GetWindowBounds(nint windowHandle, out RECT windowRect)
         {
             return GetWindowRect(windowHandle, out windowRect);
         }
@@ -101,15 +101,15 @@ namespace Mikan.Toolkit.Window
         /// <summary>
         /// Sets the position and size of the window.
         /// </summary>
-        public static bool SetWindowPosition(IntPtr windowHandle, int x, int y, int width, int height, uint flags = 0)
+        public static bool SetWindowPosition(nint windowHandle, int x, int y, int width, int height, uint flags = 0)
         {
-            return SetWindowPos(windowHandle, IntPtr.Zero, x, y, width, height, flags);
+            return SetWindowPos(windowHandle, nint.Zero, x, y, width, height, flags);
         }
 
         /// <summary>
         /// Gets a property from the window.
         /// </summary>
-        public static int GetWindowLongProperty(IntPtr windowHandle, int nIndex)
+        public static int GetWindowLongProperty(nint windowHandle, int nIndex)
         {
             return GetWindowLong(windowHandle, nIndex);
         }
@@ -117,7 +117,7 @@ namespace Mikan.Toolkit.Window
         /// <summary>
         /// Sets a property for the window.
         /// </summary>
-        public static int SetWindowLongProperty(IntPtr windowHandle, int nIndex, int newLongValue)
+        public static int SetWindowLongProperty(nint windowHandle, int nIndex, int newLongValue)
         {
             return SetWindowLong(windowHandle, nIndex, newLongValue);
         }
@@ -125,7 +125,7 @@ namespace Mikan.Toolkit.Window
         /// <summary>
         /// Gets the currently focused window handle.
         /// </summary>
-        public static IntPtr GetCurrentFocus()
+        public static nint GetCurrentFocus()
         {
             return GetFocus();
         }
@@ -133,7 +133,7 @@ namespace Mikan.Toolkit.Window
         /// <summary>
         /// Sets the focus to the specified window.
         /// </summary>
-        public static IntPtr SetWindowFocus(IntPtr windowHandle)
+        public static nint SetWindowFocus(nint windowHandle)
         {
             return SetFocus(windowHandle);
         }
@@ -143,7 +143,7 @@ namespace Mikan.Toolkit.Window
         /// <summary>
         /// Gets information about a window.
         /// </summary>
-        public static bool GetWindowInformation(IntPtr windowHandle, ref WINDOWINFO windowInfo)
+        public static bool GetWindowInformation(nint windowHandle, ref WINDOWINFO windowInfo)
         {
             return GetWindowInfo(windowHandle, ref windowInfo);
         }
@@ -152,7 +152,7 @@ namespace Mikan.Toolkit.Window
         /// <summary>
         /// Sets the layered window attributes (transparency).
         /// </summary>
-        public static bool SetWindowTransparency(IntPtr windowHandle, uint colorKey, byte alpha, uint flags)
+        public static bool SetWindowTransparency(nint windowHandle, uint colorKey, byte alpha, uint flags)
         {
             return SetLayeredWindowAttributes(windowHandle, colorKey, alpha, flags);
         }
@@ -170,7 +170,7 @@ namespace Mikan.Toolkit.Window
         /// <summary>
         /// Gets the class name of a window.
         /// </summary>
-        public static string GetWindowClassName(IntPtr windowHandle)
+        public static string GetWindowClassName(nint windowHandle)
         {
             StringBuilder classNameBuffer = new StringBuilder(256);
             int length = GetClassName(windowHandle, classNameBuffer, classNameBuffer.Capacity);
