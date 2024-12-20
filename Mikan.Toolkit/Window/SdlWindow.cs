@@ -522,6 +522,13 @@ public class SdlWindow
         Unknown
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SdlWindow"/> class with specified parameters.
+    /// </summary>
+    /// <param name="title">The title of the window.</param>
+    /// <param name="width">The width of the window in pixels.</param>
+    /// <param name="height">The height of the window in pixels.</param>
+    /// <param name="windowFlags">Flags that define the window's behavior and appearance.</param>
     public SdlWindow(string title, int width, int height, SDL_WindowFlags windowFlags)
     {
         InitHandler.CheckSDLInit();
@@ -532,6 +539,10 @@ public class SdlWindow
         _windowFlags = windowFlags;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SdlWindow"/> class using an existing native window handle.
+    /// </summary>
+    /// <param name="hWnd">The handle to an existing window (HWND).</param>
     public SdlWindow(nint hWnd)
     {
         InitHandler.CheckSDLInit();
@@ -539,36 +550,71 @@ public class SdlWindow
         _externalHwnd = hWnd;
     }
 
-    public void CreateOpenGLContext(VSync vsync)
+    /// <summary>
+    /// Creates an OpenGL context for the SDL window and configures its attributes.
+    /// </summary>
+    /// <param name="vsync">Specifies whether vertical synchronization (VSync) should be enabled or disabled. 
+    /// Use <see cref="VSync.Enabled"/> to prevent screen tearing, or <see cref="VSync.Disabled"/> for potentially higher frame rates.</param>
+    /// <param name="majorVersion">The major version of OpenGL to target (e.g., 4 for OpenGL 4.x). 
+    /// Recommended: 3 or higher for modern OpenGL applications.</param>
+    /// <param name="minorVersion">The minor version of OpenGL to target (e.g., 5 for OpenGL 4.5). 
+    /// Match this with your chosen <paramref name="majorVersion"/>.</param>
+    /// <param name="deepSize">The size of the depth buffer in bits (e.g., 24 for a 24-bit depth buffer). 
+    /// Recommended: 24 for 3D applications, 0 if depth testing is not required.</param>
+    /// <param name="stencilSize">The size of the stencil buffer in bits (e.g., 8 for an 8-bit stencil buffer). 
+    /// Recommended: 8 if stencil operations (e.g., shadows, outlines) are needed, otherwise 0.</param>
+    /// <param name="doubleBuffer">Indicates whether double buffering should be enabled (1 for enabled, 0 for disabled). 
+    /// Recommended: 1 for most applications to reduce flickering during rendering.</param>
+    /// <param name="multiSampleBuffers">The number of buffers used for multisampling (anti-aliasing). 
+    /// Set to 1 to enable multisampling, 0 to disable it. Recommended: 1 for smoother edges in 3D scenes.</param>
+    /// <param name="multiSampleSamples">The number of samples per pixel for multisampling. 
+    /// Typical values are 2, 4, or 8. Recommended: 4 for balanced performance and quality.</param>
+    /// <param name="sRGBCapable">Specifies whether the framebuffer should support sRGB color space (1 for enabled, 0 for disabled). 
+    /// Recommended: 1 if your application uses gamma-correct rendering.</param>
+    /// <param name="profile">The OpenGL profile to use. 
+    /// Use <see cref="SDL_GLprofile.SDL_GL_CONTEXT_PROFILE_CORE"/> for modern OpenGL, or <see cref="SDL_GLprofile.SDL_GL_CONTEXT_PROFILE_COMPATIBILITY"/> for legacy support. Default is Core Profile.</param>
+    public void CreateOpenGLContext(VSync vsync, int majorVersion, int minorVersion, int deepSize, int stencilSize, int doubleBuffer, int multiSampleBuffers, int multiSampleSamples, int sRGBCapable, SDL_GLprofile profile = SDL_GLprofile.SDL_GL_CONTEXT_PROFILE_CORE)
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to make an OpenGL context!, current window handler: {_windowHandler}");
 
+        // Set OpenGL attributes
+        SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_MAJOR_VERSION, majorVersion);
+        SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_MINOR_VERSION, minorVersion);
+        SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_DEPTH_SIZE, deepSize);
+        SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_STENCIL_SIZE, stencilSize);
+        SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_DOUBLEBUFFER, doubleBuffer);
+        SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_MULTISAMPLEBUFFERS, multiSampleBuffers);
+        SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_MULTISAMPLESAMPLES, multiSampleSamples);
+        SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, sRGBCapable);
+        SDL_GL_SetAttribute(SDL_GLattr.SDL_GL_CONTEXT_PROFILE_MASK, (int)profile);
+
+        // Create the OpenGL context
         IntPtr glContext = SDL_GL_CreateContext(_windowHandler);
-
         if (glContext == IntPtr.Zero)
         {
-            return;
+            throw new ArgumentException("Failed to create OpenGL context: " + SDL_GetError());
         }
 
         _hasOpenGLContext = true;
 
-        if (vsync == VSync.Enabled)
-        {
-            _ = SDL_GL_SetSwapInterval(1);
-        }
-        else
-        {
-            _ = SDL_GL_SetSwapInterval(0);
-        }
+        // Configure VSync
+        SDL_GL_SetSwapInterval(vsync == VSync.Enabled ? 1 : 0);
 
         _vsyncState = vsync;
     }
 
+
+    /// <summary>
+    /// Retrieves the instance handle (HINSTANCE) associated with the SDL window on Windows platforms.
+    /// </summary>
+    /// <returns>
+    /// The instance handle of the SDL window, or <c>0</c> if the window is not initialized.
+    /// </returns>
     public IntPtr GetInstanceHandle()
     {
         if (_windowHandler == nint.Zero)
-            return 0;
+            throw new InvalidOperationException($"Theres no window created to get a handler from!, current window handler: {_windowHandler}");
 
         SDL_GetWindowWMInfo(_windowHandler, ref _wmInfo);
         IntPtr hInstance = _wmInfo.info.win.hinstance;
@@ -576,10 +622,16 @@ public class SdlWindow
         return hInstance;
     }
 
+    /// <summary>
+    /// Retrieves the window handle (HWND) associated with the SDL window on Windows platforms.
+    /// </summary>
+    /// <returns>
+    /// The window handle of the SDL window, or <c>0</c> if the window is not initialized.
+    /// </returns>
     public IntPtr GetHwndHandle()
     {
         if (_windowHandler == nint.Zero)
-            return 0;
+            throw new InvalidOperationException($"Theres no window created to get a handler from!, current window handler: {_windowHandler}");
 
         SDL_GetWindowWMInfo(_windowHandler, ref _wmInfo);
         IntPtr hWnd = _wmInfo.info.win.window;
@@ -593,7 +645,7 @@ public class SdlWindow
     public void Minimize()
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to trigger this action!, current window handler: {_windowHandler}");
 
         SDL_MinimizeWindow(_windowHandler);
         _isMinimized = true;
@@ -605,7 +657,7 @@ public class SdlWindow
     public void Maximize()
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to trigger this action!, current window handler: {_windowHandler}"); ;
 
         SDL_MaximizeWindow(_windowHandler);
         _isMaximized = true;
@@ -617,7 +669,7 @@ public class SdlWindow
     public void Focus()
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to trigger this action!, current window handler: {_windowHandler}"); ;
 
         SDL_RaiseWindow(_windowHandler);
     }
@@ -628,7 +680,7 @@ public class SdlWindow
     public void Restore()
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to trigger this action!, current window handler: {_windowHandler}"); ;
 
         SDL_RestoreWindow(_windowHandler);
     }
@@ -641,7 +693,7 @@ public class SdlWindow
     public void SetResizable(bool canResize)
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to resize!, current window handler: {_windowHandler}"); ;
 
         if (canResize)
         {
@@ -664,7 +716,7 @@ public class SdlWindow
     private void TempResizable(bool canResize)
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to trigger this action!, current window handler: {_windowHandler}"); ;
 
         if (canResize)
         {
@@ -682,7 +734,7 @@ public class SdlWindow
     public void Close()
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to trigger this action!, current window handler: {_windowHandler}"); ;
 
         Closed?.Invoke();
         SDL_DestroyWindow(_windowHandler);
@@ -694,7 +746,7 @@ public class SdlWindow
     public void GLSwapBuffer()
     {
         if (_windowHandler == nint.Zero || !_hasOpenGLContext)
-            return;
+            throw new InvalidOperationException($"Theres no window created to swap buffers!, current window handler: {_windowHandler}"); ;
 
         SDL_GL_SwapWindow(_windowHandler);
     }
@@ -708,7 +760,7 @@ public class SdlWindow
     public void ChangePosition(int x, int y)
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to trigger this action!, current window handler: {_windowHandler}"); ;
 
         x = Math.Clamp(x, 0, int.MaxValue);
         y = Math.Clamp(y, 0, int.MaxValue);
@@ -727,7 +779,7 @@ public class SdlWindow
     public void ChangeOpacity(float alpha)
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to trigger this action!, current window handler: {_windowHandler}"); ;
 
         alpha = Math.Clamp(alpha, 0, 1.0f); // Check for sillyness :p
 
@@ -743,7 +795,7 @@ public class SdlWindow
     public void UnboundWindow()
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to trigger this action!, current window handler: {_windowHandler}"); ;
 
         if (SDL_GetDesktopDisplayMode(0, out SDL_DisplayMode desktopMode) != 0)
         {
@@ -762,7 +814,7 @@ public class SdlWindow
     public void ChangeWindowMode(Mode mode)
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to change modes!, current window handler: {_windowHandler}"); ;
 
         switch (mode)
         {
@@ -818,7 +870,7 @@ public class SdlWindow
     public void ChangeIcon(string file)
     {
         if (_windowHandler == 0 || !File.Exists(file))
-            return;
+            throw new InvalidOperationException($"Theres no window created to change an icon!, current window handler: {_windowHandler}"); ;
 
         _image = SDL_LoadBMP(file);
 
@@ -839,7 +891,7 @@ public class SdlWindow
     public void ChangeSize(int width, int height)
     {
         if (_windowHandler == 0)
-            return;
+            throw new InvalidOperationException($"Theres no window created to trigger this action!, current window handler: {_windowHandler}"); ;
 
         width = Math.Clamp(width, _minWidth, _maxWidth);
         height = Math.Clamp(height, _minHeight, _maxHeight);
@@ -857,7 +909,7 @@ public class SdlWindow
     public void ChangeTitle(string title)
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to trigger this action!, current window handler: {_windowHandler}"); ;
 
         _title = title;
 
@@ -872,7 +924,7 @@ public class SdlWindow
     public void SetMaximumSize(int maxWidth, int maxHeight)
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to trigger this action!, current window handler: {_windowHandler}"); ;
 
         maxWidth = Math.Clamp(maxWidth, 1, int.MaxValue);
         maxHeight = Math.Clamp(maxHeight, 1, int.MaxValue);
@@ -892,7 +944,7 @@ public class SdlWindow
     public void SetMinimumSize(int minWidth, int minHeight)
     {
         if (_windowHandler == nint.Zero)
-            return;
+            throw new InvalidOperationException($"Theres no window created to trigger this action!, current window handler: {_windowHandler}"); ;
 
         minWidth = Math.Clamp(minWidth, 1, int.MaxValue);
         minHeight = Math.Clamp(minHeight, 1, int.MaxValue);
@@ -917,7 +969,7 @@ public class SdlWindow
     public void Start()
     {
         if (_windowHandler != 0) // Only create if a window didnt exist.
-            return;
+            throw new InvalidOperationException($"This instance of SdlWindow already has a window initiatited, current window handler: {_windowHandler}"); ;
 
         if (_externalHwnd == 0)
         {
@@ -960,8 +1012,6 @@ public class SdlWindow
             SDL_GetWindowSize(_windowHandler, out int w, out int h);
             _width = w;
             _height = h;
-
-            Debug.WriteLine($"[SDL] Title: {_title}, W={w}, H={h}");
 
             // Retrieve max and min sizes
             SDL_GetWindowMaximumSize(_windowHandler, out int Mw, out int Mh);
@@ -1312,7 +1362,7 @@ public class SdlWindow
 
                         // Default case if no match found
                         default:
-                            throw new Exception($"An event was triggered but was not recognized: {e.window.windowEvent}");
+                            throw new Exception($"A window event was triggered but was not recognized: {e.window.windowEvent}");
                     }
                 }
             }
